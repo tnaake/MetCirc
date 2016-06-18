@@ -1,0 +1,24 @@
+Package: MetCirc
+Type: Package
+Title: MetCirc - a workflow to analyse and visualise metabolomics data
+Version: 0.99.1
+Date: 2016-01-15
+Authors@R: c(person(given = "Thomas", family = "Naake", email =
+        "naake@stud.uni-heidelberg.de", role = c("aut","cre")),
+        person(given = "Emmanuel", family = "Gaquerel", email =
+        "emmanuel.gaquerel@cos.uni-heidelberg.de", role = "aut"))
+Author: Thomas Naake <naake@stud.uni-heidelberg.de> and Emmanuel
+        Gaquerel <emmanuel.gaquerel@cos.uni-heidelberg.de>
+Maintainer: Thomas Naake <naake@stud.uni-heidelberg.de>
+VignetteBuilder: knitr
+Depends: R (>= 3.3), amap (>= 0.8), circlize (>= 0.3.5), graphics (>=
+        3.3), grDevices (>= 3.3), methods (>= 3.3), scales (>= 0.3.0),
+        shiny (>= 0.13.1), stats (>= 3.3)
+Suggests: BiocGenerics, knitr (>= 1.11)
+biocViews: Metabolomics, MassSpectrometry, Visualization
+Description: MetCirc comprises a workflow to interactively explore
+        metabolomics data: create MSP, bin m/z values, calculate
+        similarity between precursors and visualise similarities.
+License: GPL-2
+RoxygenNote: 5.0.1
+NeedsCompilation: no

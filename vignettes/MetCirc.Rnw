@@ -1,0 +1,606 @@
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Workflow for Metabolomics}
+%\VignetteKeywords{Mass Spectrometry, MS, MSMS, Metabolomics, Visualization}
+%\VignettePackage{MetCirc-vignette}
+
+\documentclass[11pt,a4paper,english,arial,twoside]{article}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{geometry}
+\geometry{verbose,
+    tmargin=25mm,
+    bmargin=25mm,
+    lmargin=25mm,
+    rmargin=25mm}
+\setlength\parindent{0pt}
+
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{textcomp}
+\usepackage{longtable}
+
+%\definecolor{red}{rgb}{1,0,0}
+%\definecolor{blue}{rgb}{0,0,1}
+
+%\usepackage{breakurl}
+\usepackage{hyperref}
+\hypersetup{%
+  pdfusetitle,
+  bookmarks = {true},
+  bookmarksnumbered = {true},
+  bookmarksopen = {true},
+  bookmarksopenlevel = 2,
+  unicode = {true},
+  breaklinks = {false},
+  hyperindex = {true},
+  colorlinks = {true},
+  linktocpage = {true},
+  plainpages = {false},
+  linkcolor = {blue},
+ % citecolor = {blue},
+ % urlcolor = {red},
+  pdfstartview = {Fit},
+  pdfpagemode = {UseOutlines},
+  pdfview = {XYZ null null null}
+}
+
+\widowpenalty10000
+\clubpenalty10000
+
+\newcommand{\email}[1]{\href{mailto:#1}{\normalfont\texttt{#1}}}
+\newcommand{\R}{\texttt{R}}
+\newcommand{\code}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\mbox{\normalfont\textsf{#1}}}}
+
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\usepackage[nottoc]{tocbibind}
+
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+
+\usepackage{graphicx}
+%\usepackage[font=footnotesize]{subfig}
+
+\usepackage[english]{babel}
+\usepackage{color}
+
+\usepackage[backend=bibtex,natbib,style=authoryear,maxcitenames=2]{biblatex}
+\addbibresource{MetCirc-citations}
+
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{authblk} 
+\author[]{Thomas Naake and Emmanuel Gaquerel}
+
+
+
+\affil{
+    Plant Defense Metabolism \\
+    Centre for Organismal Studies
+}
+
+\title{MetCirc: A~\R~workflow for circular visualisation of mass spectral similarity in metabolomics data}
+% \textit{In silico} evolutionary model allows for the emergence of a quorum 
+% sensing network in \textit{Bacillus subtilis}
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The \Rpackage{MetCirc} package comprises functionalities to display and 
+(interactively) explore metabolomics data. It is especially designed to 
+improve the interactive exploration of metabolomics data obtained from 
+cross-species/cross-tissues comparative experiments. Notably, \Rpackage{MetCirc} 
+includes functions to calculate the similarity between individual MS/MS 
+spectra based on a normalised dot product (NDP, see \citet{Li2015} for further 
+details) calculation taking into account shared fragments and main neutral 
+losses. This vignette 
+uses as a case study data from \citet{Li2015} and unpublished MS/MS data 
+collected from different organs of tobacco flowers to navigate through the 
+analysis pipeline. The pipeline includes creation of an \code{.msp} object, 
+binning of fragment ions, calculation of a similarity measure (NDP), 
+assignment to a similarity matrix and visualisation of similarity based 
+on interactive and non-interactive graphical tools using the 
+\Rpackage{circlize} framework \citep{Gu2014}. \newline
+
+\Rpackage{MetabolomicsTools} is currently under active development. If you 
+discover any bugs, typos or develop ideas of improving 
+\Rpackage{MetabolomicsTools} feel free to raise an issue via 
+\href{https://github.com/PlantDefenseMetabolism/MetCirc}{GitHub} or 
+send a mail to the developers. 
+
+<<knitr, include=FALSE, cache=FALSE>>=
+library("knitr")
+@
+
+\section{Prepare the environment}
+Before starting, load the \Rpackage{MetCirc} package. This will also
+load the required packages \Rpackage{circlize}, \Rpackage{amap},
+\Rpackage{scales} and \Rpackage{shiny}: 
+<<eval=TRUE>>=
+library(MetCirc)
+@
+
+Load example data sets from \citet{Li2015}. sd01\_outputXCMS is the 
+output of the \Rpackage{XCMS} and \Rpackage{CAMERA} processing and statistical
+analysis and \Rpackage{XCMS} and \Rpackage{CAMERA} scripts (see \citet{Li2015}
+for further information). sd02\_deconvoluted comprises 360 idMS/MS 
+deconvoluted spectra with fragment ions (m/z, retention time, relative
+intensity in \%) and the corresponding principal component group with the 
+precursor ion.
+<<eval=TRUE,echo=c(1:3)>>=
+## load data
+data("sd01_outputXCMS", package = "MetCirc")
+data("sd02_deconvoluted", package = "MetCirc")
+
+
+## load binnedMSP
+data("binnedMSP", package = "MetCirc")
+## load similarityMat
+data("similarityMat", package = "MetCirc")
+@
+
+\section{Prepare data for mass spectral similarity calculations}
+Here, we convert examplatory data into objects in .msp format that
+is used later as input for mass spectral similarity calculations. The .msp
+format is an ASCII text format used by mass spectral libraries. The 
+function \Rfunction{convert2MSP} creates an entry for each precursor and 
+identifies the m/z and retention time of fragment ions. Each entry of 
+.msp formats have the following entries: \code{NAME}, \code{RETENTIONTIME},
+\code{PRECURSORMZ}, \code{METABOLITENAME}, \code{ADDUCTIONNAME}, 
+\code{Num Peaks} (Number of peaks) and all fragment ions together with their 
+relative intensity in \%. The retention time calcuated by the function 
+\Rfunction{convert2MSP} is the average value of the retention time values 
+of all fragment ions belonging to the specific precursor. The actual \code{msp}
+\Robject{data.frame} can be accessed by \Robject{getMSP(mspObject)}.
+
+\subsection{Preparing the sd02\_deconvoluted data set for analysis}
+Here, we convert \Robject{sd02\_deconvoluted} into an object in .msp format. 
+<<eval=c(1:2)>>=
+## identify precursor mz
+finalMSPLi2015 <- convert2MSP(sd02_deconvoluted, split = " _ ", splitInd = 2)
+
+## optional:
+## write finalMSPLi2015 to idMSMStoMSPLi2015.RData
+save(finalMSPLi2015, file = "idMSMStoMSPLi2015.RData")
+@
+
+For the \Rfunction{binning} function used later, we need to pass a vector
+containing the groups (compartments, times, species, etc.) of the metabolites.
+Here, we will create a vector, \Robject{compartment}, with randomised 
+assignment of compartments to show functionality. This can be replaced with 
+a vector comprising actual compartments, with dummy variables or with any 
+other affilitation to a group relevant to the comparitive experiment conducted.
+<<eval=TRUE>>=
+compartment <- sample(c("yl", "ol", "s","r"), size = length(finalMSPLi2015), 
+    replace=TRUE) 
+@
+
+\subsection{Preparing the tissue data set for analysis}
+\paragraph{Convert \Robject{idMSMStissueproject} into .msp file format.} 
+The data set used in this section comes from the data-independent MS/MS 
+collection of different floral organs from tobacco plants. Using our pipeline, 
+this data set will be used to visualise shared metabolites between tissues as 
+well as structural relationships among within- and between-organ MS/MS spectra.
+MS/MS data are merged across floral organs in one unique data file 
+\Robject{idMSMStissueproject.Rdata} as \Robject{tissue}. Information on the 
+organ-localisation of each MS/MS spectrum is stored in  
+\Robject{compartmentTissue}. \newline 
+
+Often, the data is not in the right format to initiate the analysis - please
+make sure that the fourth column contains information about the precursor ion 
+and that the data contains the column names \code{mz}, \code{intensity} and
+\code{rt}. The order of these columns (except the fourth column) is not 
+important. \Rfunction{convert2MSP} will check internally if the data complies 
+these requirements.
+<<eval=TRUE>>=
+## load idMSMStissueproject and display the first six rows
+data("idMSMStissueproject", package = "MetCirc")
+head(tissue)
+@
+
+We would like to restrict the proof-of-function analysis to four tissues 
+(sepal, SPL; limb, LIM; anther, ANT; 
+style, STY). We will truncate \Robject{tissue} in order that it contains only these 
+instances belonging to these types of tissue. In a next step, we will 
+create a msp object, \Robject{finalMSP}, comprising the features found 
+in the tissues SPL, LIM, ANT and STY. 
+<<eval=c(1:18)>>=
+## create vectors with precursor names present in tissue
+tissueSPL <- compartmentTissue[compartmentTissue[,"SPL"] == TRUE, 1]
+tissueLIM <- compartmentTissue[compartmentTissue[,"LIM"] == TRUE, 1]
+tissueANT <- compartmentTissue[compartmentTissue[,"ANT"] == TRUE, 1]
+tissueSTY <- compartmentTissue[compartmentTissue[,"STY"] == TRUE, 1]
+
+## truncate tissue
+tissueSPL <- tissue[tissue[,4] %in% tissueSPL,] 
+tissueLIM <- tissue[tissue[,4] %in% tissueLIM,]
+tissueANT <- tissue[tissue[,4] %in% tissueANT,]
+tissueSTY <- tissue[tissue[,4] %in% tissueSTY,]
+
+## create msp and combine msp objects of different tissues
+finalMSP <- convert2MSP(tissueSPL)
+finalMSP <- combine(finalMSP, convert2MSP(tissueLIM))
+finalMSP <- combine(finalMSP, convert2MSP(tissueANT))
+finalMSP <- combine(finalMSP, convert2MSP(tissueSTY))
+
+## optional:
+## write finalMSP to idMSMStoMSP.RData
+save(finalMSP, file = "idMSMStoMSP.RData")
+@
+
+For the \Rfunction{binning} function, we will derive a vector, 
+\Robject{compartment}, which gives the compartment for each entry of 
+\Robject{finalMSP}. \Robject{compartment} refers here to floral organs, but 
+could be species names, experimental conditions, etc., too; i.e. the object can
+be any biological identifier relevant to the comparitive experiment conducted.
+<<eval=TRUE>>=
+## create vector with compartments
+compSPL <- rep("SPL", length(convert2MSP(tissueSPL)))
+compLIM <- rep("LIM", length(convert2MSP(tissueLIM)))
+compANT <- rep("ANT", length(convert2MSP(tissueANT)))
+compSTY <- rep("STY", length(convert2MSP(tissueSTY)))
+
+compartment <- c(compSPL, compLIM, compANT, compSTY)
+@
+
+%' \section{Convert \Robject{sd02\_deconvoluted} precursor ions and 
+%' \Robject{sd01\_outputXCMS} into a format as in \Robject{convertExampleDF} 
+%' (not part of the workflow)}
+%' 
+%' First, we would like to have a look on the format of \Robject{convertExampleDF}:
+%' <<eval=TRUE>>=
+%' data("convertExampleDF", package = "MetCirc")
+%' head(convertExampleDF)
+%' @
+%' \Robject{convertExampleDF} is a \Robject{data.frame} which comprises information 
+%' on a specific metabolite per row stating the average retention time, 
+%' average m/z, the name of the metabolite, the adduct ion name, the spectrum 
+%' reference file name and TRIO/LVS???. \Rfunction{allocatePrecursor2mz} uses 
+%' \Robject{data.frame}s of the kind of \Robject{sd01\_outputXCMS} and 
+%' \Robject{sd02\_deconvoluted} to create a \Robject{data.frame} of the kind of 
+%' \Robject{convertExampleDF}. Allocation of precursor ions to candidate
+%' m/z values is based on minimal distance of m/z and deviance of retention time 
+%' based on an objective function. We can specify threshold values for m/z and
+%' retention time to be used in \Rfunction{allocatePrecursor2mz}, as well as 
+%' the number of neighbours based on deviation from m/z values. Also, we can 
+%' specify the weight to base the selection on the m/z compared to
+%' the retention time (\code{mzVsRTbalance}). This might be useful because 
+%' m/z values might differ less than the retention time in 
+%' \Robject{sd01\_outputXCMS} and \Robject{sd02\_deconvoluted}. Please note, 
+%' that it might be problematic to compare \Robject{sd01\_outputXCMS} and 
+%' \Robject{sd02\_deconvoluted} and allocate precursor ions therefrom, 
+%' especially when data were acquired under different conditions.
+%' 
+%' <<eval=c(1:2),results='hide',message=FALSE>>=
+%' finalCluster <- allocatePrecursor2mz(sd01 = sd01_outputXCMS, 
+%'     sd02 = sd02_deconvoluted, rtCheck = 60, mzVsRTbalance = 1000) 
+%' 
+%' ## optional:
+%' ## write finalCluster to finalCluster.csv
+%' write.table(finalCluster, file = "finalCluster.csv", sep=";", dec=".",
+%'             row.names=FALSE, col.names=TRUE,quote=FALSE)
+%' @
+
+\section{Binning and calculation of similarity matrix}
+
+\subsection{Workflow for \Robject{tissue} data set using fragment ions}
+
+\paragraph{Binning.} Due to slight differences in m/z values over measurements 
+fragments might have m/z values which differ from other 
+fragments even though they are in theory identical. \Rfunction{binning} 
+will bin together fragment ions which are similar (set by the parameter
+\code{tol} for tolerance). In the following this will allow for comparison
+between m/z values. The functions \Rfunction{binning} bins fragments together 
+based on minimal distance to bins which were calculated either by the mean or 
+the median of fragments which were put in intervals according to the 
+\code{tol} parameter. \newline
+
+\Rfunction{binning} expects a vector (\Robject{group}) which comprises 
+membership of the entries in the \Robject{msp} object, to a compartment, 
+species, individual, etc. If \Robject{group} is not specified 
+\Rfunction{binning} will create an internal dummy variable group ("a" with 
+the length of the \Robject{msp} object). We use here the \Robject{tissue} data 
+set.
+
+<<eval=FALSE>>=
+## create data.frame with binned fragments
+binnedMSP <- binning(msp = finalMSP, tol = 0.001, group = compartment, method = "median")
+@
+
+\paragraph{Calculation of the similarity matrix.} The normalised dot product 
+(NDP) is the similarity coefficient to calculate 
+the similarity between two precursor ions and their fragments, respectively. 
+The NDP uses the m/z value of fragment/precursor ions and their 
+peak intensityof two metabolites, respectively. The NDP is calculated 
+according to:
+\begin{equation}
+    NDP = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2) },
+\end{equation}
+with $W = [ peak~intensity] ^{m} \cdot [m/z]^n$
+For further information see \parencite{Li2015}.
+
+\Rfunction{createSimilarityMatrix} calculates the NDP between all 
+precursor ions and their respective fragment ions. 
+\Rfunction{createSimilarityMatrix} needs a matrix as an argument which 
+has the fragment ions as rows (m/z / retention time) and all fragment ions 
+as columns. Entries of such a matrix are intensities for a specific 
+fragment ion (intensity will be zero if fragment ion does not occur for the 
+respective precursor). The function \Rfunction{binning} will return 
+a matrix with such properties.
+<<eval=FALSE>>=
+## similarity Matrix 
+similarityMat <- createSimilarityMatrix(binnedMSP)
+@
+\Rfunction{createSimilarityMatrix} returns a matrix with 
+precursor m/z / retention time as column and row names. The entries of 
+the returned matrix are NDP scores ranging between 0 and 1 which indicate 
+the similarity between the features.
+
+\paragraph{Clustering/Visualisation.} At this stage, we would like to visualise 
+the similarity after clustering them.
+Many functions are available to cluster features such as \Rfunction{hclust}
+from \Rpackage{stats}, \Rfunction{Mclust} from \Rpackage{mclust} or 
+\Rfunction{hcluster} from \Rpackage{amap}. We would like to use the latter 
+(a combination of \Rfunction{hclust} and \Rfunction{dist} from \Rpackage{stats})
+to cluster similar features. To cluster features and visualise the clustering 
+we enter:
+<<cluster,eval=TRUE,fig.show='hide'>>=
+## load package amap
+hClustMSP <- hcluster(similarityMat, method = "spearman")
+## visualise clusters
+plot(hClustMSP, labels = FALSE, xlab="", sub="")
+@
+
+\begin{figure}
+    \center
+    \includegraphics{./figure/cluster-1}
+    \caption{Cluster dendrogramm for similarity matrix based on fragment 
+    ion NDP calculation}
+\end{figure}
+
+To promote readibility we will not show labels. These can be printed to the 
+\R~console by \code{colnames(similarityMat)[hClustMSP\$order]}. \newline
+
+% To create a similarityMatrix with ordered rows and columns according to
+% clustering
+% <<eval=TRUE>>=
+% ## order newSim according to order of clustering
+% newSim <- matrix(data=NA, nrow = dim(similarityMat)[1], 
+%                  ncol = dim(similarityMat)[1])
+% newColnames <- colnames(similarityMat)[hClustMSP$order]
+% colnames(newSim) <- rownames(newSim) <- newColnames
+% @
+
+% reorder rows in similarityMatrix according to clustering
+%<<eval=c(1:6)>>=
+%for (i in 1:dim(similarityMat)[1]) {
+%    newValues <- similarityMat[hClustMSP$order, hClustMSP$order[i]] 
+%    if (all(names(newSim[,i]) == names(newValues))) {
+%        newSim[,i] <- newValues
+%    } else {print("error");break}
+%}
+%@
+
+\subsection{Workflow for \Robject{tissue} data set using neutral losses}
+Another way to compare the similarity of metabolites is based on neutral losses
+(cf. \ref{tab:neutrallosses} for a selection of common neutral losses):
+common neutral losses are shared among structurally-related metabolites. 
+\Rpackage{MetCirc} contains functionality to 
+calculate neutral losses from \Robject{MSP} objects. 
+To convert an object in .msp file format to an object in .msp file format 
+with neutral losses we enter:
+
+<<eval=TRUE>>=
+nlMSP <- msp2FunctionalLossesMSP(finalMSP)
+@
+
+
+\begin{longtable}{l | l } 
+    \caption{The following table gives examplatory fractionation of precursors 
+    into neutral losses (given their m/z and the corresponding atoms):} 
+    \label{tab:neutrallosses} \\
+    CH$_2$ & 14.0157 \\
+    CH$_4$ & 16.0313 \\
+    NH$_3$ &  17.0265 \\
+    H$_2$O & 18.0106 \\
+    K$^+$ to NH$_4$$^+$" & 20.9293 \\
+    Na$^+$ to H$^+$ & 21.9819 \\
+    C$_2$H$_2$ & 26.0157 \\
+    CO & 27.9949 \\
+    C$_2$H$_4$ & 28.0313 \\
+    CH$_3$N & 29.0266 \\
+    CH$_2$O & 30.0106 \\
+    CH$_5$N & 31.0422 \\
+    S & 31.9721 \\
+    H$_2$S & 33.9877 \\
+    K$^+$to H$^+$ &  37.9559 \\
+    C$_2$H$_2$O & 42.0106 \\
+    C$_3$H$_6$ & 42.0470 \\
+    CHNO & 43.0058 \\
+    CO$_2$ & 43.9898 \\
+    CH$_2$ O$_2$ & 46.0055 \\
+    C$_4$H$_8$ & 56.0626 \\
+    C$_3$H$_9$N & 59.0735 \\
+    C$_2$H$_4$ O$_2$ & 60.0211 \\
+    CH$_4$N$_2$O & 60.0324 \\
+    SO$_2$ & 63.9619 \\
+    C$_5$H$_8$ & 68.0626 \\
+    C$_3$H$_6$ O$_2$ & 74.0368 \\
+    C$_6$H$_6$ & 78.0470 \\
+    SO$_3$ & 79.9568 \\
+    C$_3$H$_2$O$_3$ & 86.0004 \\
+    C$_4$H$_8$O$_2$ & 88.0517 \\
+    C$_4$H$_{12}$N$_2$ & 88.1000 \\
+    H$_2$(SO)$_4$ & 97.9674 \\
+    H$_3$(PO)$_4$ & 97.9769 \\
+    C$_5$H$_{10}$O$_2$ & 102.0618 \\
+    C$_3$H$_4$O$_4$ & 104.0110 \\
+    C$_6$H$_{12}$O$_2$ & 116.0861 \\
+    C$_2$H$_5$O$_4$P & 123.9926 \\
+    C$_5$H$_8$O$_4$ & 132.0423 \\
+    C$_7$H$_{19}$N$_3$ & 145.1579 \\
+    C$_6$H$_{10}$O$_4$ & 146.0579 \\
+    C$_6$H$_{10}$O$_5$ & 162.0528 \\
+    C$_6$H$_{12}$O$_5$ & 164.0685 \\ 
+    C$_6$H$_8$O$_6$ & 176.0321 \\
+    C$_6$H$_{12}$O$_6$ & 180.0634 \\
+    C$_6$H$_{10}$O$_7$ & 194.0427 \\
+    C$_8$H$_{12}$O$_6$ & 204.0655 \\
+    C$_{11}$H$_{10}$O$_4$ & 206.0579 \\
+    C$_{10}$H$_{15}$N$_3$ O$_6$ S & 305.0682 \\
+    C$_{10}$H$_{17}$N$_3$ O$_6$ S & 307.0838 \\
+    C$_{12}$H$_{20}$O$_{10}$ & 324.1057 \\
+    C$_{12}$H$_{22}$O$_{11}$ & 342.1162 \\
+    \hline
+\end{longtable}
+
+
+\paragraph{Binning and calculation of the similarity matrix.} Analogously to 
+the MSP object with fragments we can bin the \Robject{nlMSP} and create a 
+similarity matrix:
+<<eval=FALSE>>=
+## bin msp file with functional losses, create table with same fragments 
+## (binning)
+mlBinnedMSP <- binning(nlMSP, tol = 0.001, group = compartment, method = "median")
+## similarity Matrix
+nlSimilarityMat <- createSimilarityMatrix(nlBinnedMSP)
+@
+
+
+\paragraph{Clustering/Visualisation.} Analogously to the \Robject{MSP} object 
+with fragment ions, we are able to 
+cluster the similarity matrix based on neutral losses. 
+<<eval=FALSE>>=
+## Clustering
+nlHClustMSP <- hcluster(nlSimilarityMat, method = "spearman")
+@
+
+To visualise the clustering enter the following line of code 
+(labels will not be displayed due to readibility but can be reproduced 
+in the console by entering 
+\code{colnames(nlSimilarityMat)[nlHClustMSP\$order]}):
+<<eval=FALSE>>=
+plot(nlHClustMSP, labels = FALSE)
+@
+
+
+% ordering according to clustering
+%<<eval=FALSE>>=
+%for (i in 1:dim(nlSimilarityMat)[1]) {
+%    nlNewValues <- nlSimilarityMat[nlHClustMSP$order, nlHClustMSP$order[i]] 
+%    if (all(names(nlNewSim[,i]) == names(nlNewValues))) {
+%        nlNewSim[,i] <- nlNewValues
+%    } else {print("error"); break}
+%}
+
+\section{Visualisation using the \Rpackage{shiny}/\Rpackage{circlize} framework}
+\Rpackage{MetCirc} comprises functionality to visualise metabolomics
+data and exploring it interactively. One of the key features of the implemented
+interactive framework is, that groups can be compared. A group 
+specifies the affiliation of the sample: it can be 
+any biological identifier relevant to the comparitive experiment conducted,
+e.g. it can be a specific tissue, different
+times, different species, etc. The visualisation tools implemented in 
+\Rpackage{MetCirc} allow then to display similarity between 
+precursor ions between and/or inside of groups.
+
+\Rfunction{shinyCircos} uses the function \Rfunction{createLinkMatrix} which 
+comprises per row these precursor ions which are linked by a normalised dot 
+product $\geq$ \Robject{threshold} to the precursor ion in the same row. 
+Internally, in \Rfunction{shinyCircos}, \Rfunction{createLinkMatrix} will be 
+called to produce link matrices based on the given threshold. 
+<<eval=TRUE>>=
+linkMat <- createLinkMatrix(similarityMatrix = similarityMat, threshold=0.5)
+@
+
+As we have calculated similarity coefficients between precursors, we would
+like to visualise these connections interactively and explore the data. 
+The \Rpackage{MetCirc} package implements \Rfunction{shinyCircos} 
+that allows for such kind of exploration. It is based on the \Rpackage{shiny}
+and on \Rpackage{circlize} framework. Inside of \Rfunction{shinyCircos} 
+information of precursor ions are displayed by hovering over precursors. 
+Precursors can also be permanently selected by clicking on them. The similarity
+coefficients can be thresholded by changing the slider input. Also, on the 
+sidebar panel, the type of link to be displayed can be selected: 
+should only links between groups be displayed, should only links within groups 
+be displayed or should all links be displayed? Ordering inside of groups 
+can be changed by selecting the respective option in the sidebar panel. 
+Momentarily, there are options to reorder features based on clustering, 
+the m/z or the retention time of the precursor ion.
+On exiting the shiny application
+via the exit button in the sidebar panel, selected precursors will
+be returned which are allocated here to \Robject{selectedFeatures}. 
+\Robject{selectedFeatures} is a vector of the precursor names.
+
+To start the shiny app, run
+<<eval=FALSE>>=
+selectedFeatures <- shinyCircos(similarityMat)
+@
+
+\Rpackage{MetCirc} allows also to create such figures outside of an
+interactive context, which might be helpful to create figures and export them 
+e.g. in .pdf or .jpeg format. \Rfunction{shinyCircos} does currently not 
+support to export figures as they can be easily rebuilt outside of 
+\Rfunction{shinyCircos}; building figures outside of the interactive context
+also promotes reproducibility of such figures.
+To rebuild the figure in a non-interactive environment, run 
+<<circos,eval=TRUE,results='hide',message=FALSE,fig.show='hide'>>=
+## order similarity matrix according to retention time
+simM <- createOrderedSimMat(similarityMat, order = "retentionTime")
+groupname <- rownames(simM)
+## create link matrix
+linkMat <- createLinkMatrix(similarityMatrix = simM, threshold=0.95)
+## cut link matrix (here: only display links between groups)
+linkMat_cut <- cutLinkMatrix(linkMat, type = "inter")
+
+## set circlize paramters
+circos.par(gap.degree = 0, cell.padding = c(0, 0, 0, 0), 
+            track.margin = c(0, 0))
+
+## here set indSelected arbitrarily
+indSelected <- c(1, 101, 201, 300)
+selectedFeatures <- groupname[c(1,101,201,300)]
+
+## actual plotting
+plotCircos(groupname, linkMat_cut, initialize = TRUE, featureNames = TRUE, 
+    cexFeatureNames = 0.2, groupSector = TRUE, groupName = FALSE, 
+    links = FALSE, highlight = TRUE)
+
+highlight(groupname = groupname, ind = indSelected, LinkMatrix = 
+            linkMat_cut)
+
+## plot without highlighting
+plotCircos(groupname, linkMat_cut, initialize = TRUE, featureNames = TRUE, 
+    cexFeatureNames = 0.2, groupSector = TRUE, groupName = FALSE, links = TRUE, 
+    highlight = FALSE)
+@
+
+\begin{figure}[h!]
+    \center
+    \includegraphics{./figure/circos-1}
+    \caption{Examplary plot where arbitrary features are highlighted. Upon
+        highlighting all links will be plotted in grey (expect links to and 
+        from highlighted features). The intensity
+        of the background colour of features will be reduced as well. Features
+        belonging to a group (species, individual, organ, different time) will 
+        be indicated by the same background colour.}
+\end{figure}
+
+\newpage
+\printbibliography
+
+\section{Session information}
+
+All software and respective versions to build this vignette are listed here:
+<<session,eval=TRUE,echo=FALSE>>=
+sessionInfo()
+@
+
+
+\end{document}
