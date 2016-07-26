@@ -147,6 +147,7 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
                         plotOutput("circosLegend"))
                 ), 
                         htmlOutput("hoverConnectedFeature"),
+                        verbatimTextOutput("help"),
                         verbatimTextOutput("clickFeature")
             )
         )
@@ -183,7 +184,6 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
         ## calculateLink0Matrix
         link0Matrix <- reactive(createLink0Matrix(simMat()))
         
-        ## create reactive expression for LinkMatrix
         ## create reactive expression for LinkMatrix which is cut according to 
         ## set radioButton (input$choiceLinks)
         LinkMatrix_cut <- reactive(cutLinkMatrix(link0Matrix(), 
@@ -229,7 +229,6 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
                 indHover$ind <- minFragCart2Polar(input$circosHover$x, 
                                                   input$circosHover$y, 
                                                   degreeFeatures()) 
-            
         })
         
         ## click: which is the current sector?
@@ -248,7 +247,8 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
             }
         })
         
-        
+        ## reactive value which stores clicked indices (inds = storage, 
+        ## new = new indices)
         indClick <- reactiveValues(ind = NULL, new = NULL)
         observe({
             if (!is.null(input$circosClick$x)) {
@@ -396,6 +396,9 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
             getLinkMatrixIndices(GN()[indHover$ind], LinkMatrix_threshold())
         })
         
+        ##
+        output$help <- renderText({c(dim(LinkMatrix_threshold()))})
+        
         output$hoverConnectedFeature <- renderUI({ 
             if (!is.null(onCircle$is)) {
                 if (onCircle$is)
@@ -513,8 +516,10 @@ printInformationHover <- function(groupname, msp = NULL,
         hovFeat <- groupname[ind] 
         ## connected features
         connect <- unique(as.vector(lMatThr[lMatIndHover, c("name1", "name2")]))
+        ## remove duplicated hovFeat in connect
+        if (hovFeat %in% connect) connect <- connect[-which(connect == hovFeat)]
         mzRTcon <- sapply(strsplit(connect, split="_"), function(x) x[3])
-                
+        
         if (length(connect) == 0) {
             return(paste0(hovFeat, " (", getName(hoveredFeat), ", ", 
                 getMetaboliteName(hoveredFeat), ", ", 
@@ -525,7 +530,7 @@ printInformationHover <- function(groupname, msp = NULL,
             connFeat <- msp[matchedConn]
             connChar <- character()
             degreeSimilarity <- similarityMatrix[hovFeat, ]
-            for (i in 1:length(connFeat)) {
+            for (i in 1:length(connect)) {
                 connFeatI <- connFeat[i]
                 connectI <- connect[i]
                 degreeSimilarityI <- round(degreeSimilarity[connectI],3)
