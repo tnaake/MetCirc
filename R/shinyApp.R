@@ -147,7 +147,6 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
                         plotOutput("circosLegend"))
                 ), 
                         htmlOutput("hoverConnectedFeature"),
-                        verbatimTextOutput("help"),
                         verbatimTextOutput("clickFeature")
             )
         )
@@ -317,9 +316,13 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
         })
         
         ## plotting
-        initializePlot <- reactive(plotCircos(GN(), NULL, initialize = TRUE, 
-                featureNames = FALSE, groupName = FALSE, groupSector = FALSE,
-                links = FALSE, highlight = FALSE))
+        initializePlot <- reactive({
+            circos.initialize(factor(GN()),
+                xlim = matrix(rep(c(0,1), dim(similarityMatrix)[1]), ncol = 2, 
+                byrow = TRUE) )
+            circos.trackPlotRegion(GN(), ylim=c(0,1))  
+        })
+        
         output$circos <- renderPlot({
             initializePlot()
             ##if (!is.null(PlotFilled2)) {
@@ -395,9 +398,6 @@ shinyCircos <- function(similarityMatrix, msp = NULL, size = 400) {
         linkMatIndsHover <- reactive({
             getLinkMatrixIndices(GN()[indHover$ind], LinkMatrix_threshold())
         })
-        
-        ##
-        output$help <- renderText({c(dim(LinkMatrix_threshold()))})
         
         output$hoverConnectedFeature <- renderUI({ 
             if (!is.null(onCircle$is)) {
