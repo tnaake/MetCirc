@@ -39,7 +39,8 @@
 #' ## order similarityMat according to retentionTime
 #' simM <- createOrderedSimMat(similarityMat, order = "retentionTime")
 #' ## create link matrix
-#' linkMat <- createLinkMatrix(similarityMatrix = simM, threshold=0.8)
+#' linkMat <- createLinkMatrix(similarityMatrix = simM, 
+#'      threshold_low=0.8, threshold_high=1)
 #' ## cut link matrix (here: only display links between groups)
 #' linkMat_cut <- cutLinkMatrix(linkMat, type = "inter")
 #' ## set circlize paramters
@@ -57,7 +58,7 @@ plotCircos <- function(groupname, linkMat, initialize = c(TRUE, FALSE),
         groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
         links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), 
         colour = NULL, transparency = 0.2) {
-    
+
     ## get group and name from groupname argument
     ## groupname is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
@@ -118,7 +119,7 @@ plotCircos <- function(groupname, linkMat, initialize = c(TRUE, FALSE),
 
         transparency <- if (highlight) transparency - 0.1 else transparency 
         if (is.null(colour)) {
-            colour <- alpha(1:length(uniqueGroup) + 1, transparency)
+            colour <- alpha(palette()[as.numeric(as.factor(uniqueGroup))+1], transparency)
         } else {
             colour <- alpha(colour, transparency)
         }
@@ -190,7 +191,8 @@ plotCircos <- function(groupname, linkMat, initialize = c(TRUE, FALSE),
 #'  ## order similarityMat according to retentionTime and update rownames
 #'  simM <- createOrderedSimMat(similarityMat, order = "retentionTime")
 #'  ## create link matrix
-#'  linkMat <- createLinkMatrix(similarityMatrix = simM, threshold=0.95)
+#'  linkMat <- createLinkMatrix(similarityMatrix = simM, 
+#'      threshold_low = 0.95, threshold_high = 1)
 #'  ## cut link matrix (here: only display links between groups)
 #'  linkMat_cut <- cutLinkMatrix(linkMat, type = "inter")
 #'  ## set circlize parameters
