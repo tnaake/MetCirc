@@ -1,38 +1,3 @@
-#' @name getBegEndIndMSP
-#' @title Get beginning and end indices of each entry in a data.frame in 
-#' msp format
-#' @description Get beginning and end indices of each entry in a data.frame in 
-#' msp format
-#' @usage getBegEndIndMSP(msp)
-#' @param msp data.frame in msp format, see ?convert2MSP for further information
-#' @details Internal use to retrieve indices when fragments start and end. 
-#' @return getBegEndIndMSP returns a list of length 2 where the first entry
-#' contains the start indices and the second the end indices
-#' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
-#' @examples 
-#' data("sd02_deconvoluted", package = "MetCirc")
-#' finalMSP <- convert2MSP(sd02_deconvoluted, split = " _ ", 
-#'                          splitIndMZ = 2, splitIndRT = 3)
-#' finalMSPdf <- getMSP(finalMSP)
-#' getBegEndIndMSP(finalMSPdf)
-#' @export
-getBegEndIndMSP <- function(msp) {
-    
-    ## beginning 
-    indPeaks <- which(msp[,1] == "Num Peaks: ")
-    indLosses <- which(msp[,1] == "Num Losses: ")
-    
-    if (length(indPeaks) > length(indLosses)) indNumPeaks <- indPeaks
-    ## <=: to get all possibilities
-    if (length(indPeaks) <= length(indLosses)) indNumPeaks <- indLosses 
-    
-    indEnd <- as.numeric(as.character(msp[indNumPeaks, 2]))
-    indBeg <- indNumPeaks + 1 
-    indEnd <- indEnd + indBeg - 1 
-    
-    return(list(indBeg, indEnd))
-}
-
 #' @name binning
 #' @title Bin m/z values
 #' @description Bin m/z values
@@ -64,7 +29,7 @@ binning <- function(msp, tol = 0.01, group = NULL, method = c("median", "mean"))
     precmz <- getPrecursorMZ(msp)
     rt <- getRT(msp)
     
-    msp <- getMSP(msp)
+    msp <- peaks(msp)
     
     if (is.null(group)) {
         print("argument group is not specified, will create dummy group")
@@ -91,21 +56,31 @@ binning <- function(msp, tol = 0.01, group = NULL, method = c("median", "mean"))
     frag_s <- sort(frag)
     ##frag_order <- order(frag)
     
-    steps <- (max(frag_s) - min(frag_s)) / tol
-
-    if (method == "median") {
-        ## calculate median of values in bins
-        bins <- tapply(frag_s, cut(frag_s, steps), median)
+    
+    ## three cases for tol: smaller 0, equal to 0, greater to 0
+    if (tol < 0) stop("tol has to be positive ")
+    
+    if (tol == 0) {
+        bins <- frag_s
     }
     
-    if (method == "mean") {
-        ## calculate mean of values in bins
-        bins <- tapply(frag_s, cut(frag_s, steps), mean)
+    if (tol > 0) {
+        steps <- (max(frag_s) - min(frag_s)) / tol
+
+        if (method == "median") {
+            ## calculate median of values in bins
+            bins <- tapply(frag_s, cut(frag_s, steps), median)
+        }
+    
+        if (method == "mean") {
+            ## calculate mean of values in bins
+            bins <- tapply(frag_s, cut(frag_s, steps), mean)
+        }
+        ## remove bins which no not show up
+        bins <- bins[!is.na(bins)]
+        ## vectorise bins (do not use named vector)
+        bins <- as.vector(bins)
     }
-    ## remove bins which no not show up
-    bins <- bins[!is.na(bins)]
-    ## vectorise bins (do not use named vector)
-    bins <- as.vector(bins)
     
     mm <- matrix(data = 0, nrow = length(precmz), ncol = length(bins))
     ## convoluted MZ is column names
@@ -134,5 +109,9 @@ binning <- function(msp, tol = 0.01, group = NULL, method = c("median", "mean"))
     }
     
     class(mm) <- "numeric"
+    
+    ## scale back to percent
+    mm <- apply(mm, 1, function(x) {x / max(x) * 100})
+    mm <- t(mm)
     return(mm)
 }

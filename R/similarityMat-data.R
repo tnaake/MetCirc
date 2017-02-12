@@ -7,6 +7,9 @@
 #' @usage similarityMat
 #' @return matrix
 #' @format matrix
-#' @source internal 
+#' @source 
+#' data("binnedMSP", package = "MetCirc")
+#' similarityMat <- createSimilarityMatrix(binnedMSP)
+#' save(similarityMat, file = "similarityMat.RData", compress = "xz")
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com} 
 NULL  

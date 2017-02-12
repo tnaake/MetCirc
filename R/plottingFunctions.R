@@ -5,7 +5,7 @@
 #' @title Circular plot to visualise similarity
 #' @description Circular plot to visualise similarity
 #' @usage plotCircos(groupname, linkMat, initialize = c(TRUE, FALSE), 
-#'      featureNames = c(TRUE, FALSE), cexFeatureNames = 0.2, 
+#'      featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
 #'      groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
 #'      links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
 #'      transparency = 0.2)
@@ -49,16 +49,18 @@
 #' groupname <- rownames(simM)
 #' ## actual plotting
 #' plotCircos(groupname, linkMat_cut, initialize = TRUE, 
-#'     featureNames = TRUE, cexFeatureNames = 0.2, groupSector = TRUE, 
+#'     featureNames = TRUE, cexFeatureNames = 0.3, groupSector = TRUE, 
 #'      groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL, 
 #'      transparency = 0.2)
 #' @export
 plotCircos <- function(groupname, linkMat, initialize = c(TRUE, FALSE), 
-        featureNames = c(TRUE, FALSE), cexFeatureNames = 0.2, 
+        featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
         groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
         links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), 
         colour = NULL, transparency = 0.2) {
 
+    #cexFeaturenames <- length(groupname) 
+    
     ## get group and name from groupname argument
     ## groupname is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
@@ -277,9 +279,10 @@ highlight <- function(groupname, ind, LinkMatrix, colour = NULL, transparency = 
 #' @name truncateName
 #' @title Truncate names
 #' @description A function to truncate names
-#' @usage truncateName(groupname, roundDigits = 2)
+#' @usage truncateName(groupname, roundDigits = 2, group = FALSE)
 #' @param groupname vector with group and unique idenfier (name)
 #' @param roundDigits numeric, how many digits should be displayed?
+#' @param group logical, should groups be returned?
 #' @details \code{groupname} is a vector of \code{character} strings consisting 
 #'      of a group, retention time and m/z value, separated by "_". It is 
 #'      cumbersome to display such long strings. \code{truncateName} 
@@ -291,33 +294,44 @@ highlight <- function(groupname, ind, LinkMatrix, colour = NULL, transparency = 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
 #'      groupname <- "a_100.12345/10.12345"
-#'      truncateName(groupname, roundDigits = 2)
+#'      truncateName(groupname, roundDigits = 2, group = FALSE)
 #' @export
-truncateName <- function (groupname, roundDigits = 2) {
+truncateName <- function (groupname, roundDigits = 2, group = FALSE) {
     
     ## select last element which is mz/retention time
     names <- lapply(strsplit(groupname, split = "_"), function (x) x[length(x)])
     names <- unlist(names)
     
     truncateL <- strsplit(names, "/")
-    truncateL <- lapply(truncateL, function(x) 
-        c(round(as.numeric(x[1]), roundDigits), 
-          round(as.numeric(x[2]), roundDigits)))
+    
+    ## round only when roundDigits is numeric
+    if (is.numeric(roundDigits)) {
+        truncateL <- lapply(truncateL, function(x) 
+            c(round(as.numeric(x[1]), roundDigits), 
+                round(as.numeric(x[2]), roundDigits)))
+    }
+
     newName <- lapply(truncateL, function(x) paste(x[1], x[2], sep="/"))
     newName <- unlist(newName)
+    if (group) {
+        groups <- lapply(strsplit(groupname, split = "_"), "[", 1)
+        groups <- unlist(groups)
+        newName <- paste(groups, newName, sep ="_")
+    }
     return(newName)
 }
 
 #' @name circosLegend
 #' @title Plot a legend for circos plot
 #' @description circosLegend plots a legend for circos plot using group names .
-#' @usage circosLegend(groupname, highlight = c(TRUE, FALSE), colour = NULL)
+#' @usage circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 #' @param groupname vector containing "group" and "name" to display, that is 
 #' a unique identifier of the features, "group" and "name" have to be separated
 #' by "_" where "group" is the first and "name" is the last element
 #' @param highlight logical, should colours be adjusted to highlight settings?
 #' @param colour NULL or character, colour defines the colours which are used
 #'  for plotting, if NULL default colours are used
+#' @param cex numeric, parameter that controls size of the legend in the plot
 #' @details Internal use for shiny app or outside of shiny to reproduce 
 #'      figures.
 #' @return The function will open a new plot and display colours together 
@@ -331,9 +345,9 @@ truncateName <- function (groupname, roundDigits = 2) {
 #'  similarityMat <- createSimilarityMatrix(binnedMSP)  
 #'  groupname <- rownames(similarityMat)
 #'  ## plot legend
-#'  circosLegend(groupname, highlight = TRUE, colour = NULL)
+#'  circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 #' @export
-circosLegend <- function(groupname, highlight = c(TRUE, FALSE), colour = NULL) {
+circosLegend <- function(groupname, highlight = TRUE, colour = NULL, cex = 1) {
     
     ## get group and name from groupname argument
     ## groupname is a vector containing information about group and name,
@@ -350,15 +364,42 @@ circosLegend <- function(groupname, highlight = c(TRUE, FALSE), colour = NULL) {
         colours <- colour[uniqNumGroup + 1]
     }
     
-    plot(x=c(0,1), y=c(0,1), type="n", xlab = "", ylab = "",
+    plot(x=c(0,0.5), y=c(0,0.5), type="n", xlab = "", ylab = "",
          axes = FALSE, frame.plot = FALSE)
     if (highlight) {
-        legend(x = c(0,1), y = c(1,0), legend = levels(group), 
-               bty = "n",
-               fill =  alpha(colours, 0.3),  border = alpha(colours, 0.3))
+        ##par(mar = c(0, 0, 0, 0), xaxs="i", yaxs="i")
+        ##par(mar = c(1, 1, 1, 1), xpd = NA)
+        ##par(xpd = NA)
+        plot.new()
+        ##legend( "center",legend = levels(group), bty = "n", 
+        ##        fill = alpha(colours, 0.3),  border = alpha(colours, 0.3), cex = 1)
+        ##y <- 0:1
+        ##x <- 0:1
+        
+        ##plot(0,xaxt='n',yaxt='n',bty='n',pch='',ylab='',xlab='')
+        ##plot.new()
+        ##my.legend <- legend( "center",legend = levels(group), bty = "n", 
+        ##       fill = alpha(colours, 0.3),  border = alpha(colours, 0.3), cex = 1, plot = F)
+        ##rangeY <- range(y)
+        ##rangeY[1] <- (my.legend$rect$top)
+        ##rangeY[2] <- (my.legend$rect$w)
+        ##rangeX <- range(x)
+        ##rangeX[1] <- (my.legend$rect$left)
+        ##rangeX[2] <- (my.legend$rect$h)
+        
+        ##plot(x=rangeX, y=rangeY, ylim=rangeY, xlim=rangeX, type="n")
+        leg <- legend(x = par("usr")[1:2], y= par("usr")[3:4], legend = levels(group), bty = "n", 
+                fill = alpha(colours, 0.3),  border = alpha(colours, 0.3))
+        ##legend(x = par("usr")[1:2], y= par("usr")[3:4], ...)
+        ##op <- par(mar = rep(0, 4))
+        #plot(1:10)
+        #par(op)
+        # legend(x = c(0,0.1), legend = levels(group), 
+        #        bty = "n",
+        #        fill =  alpha(colours, 0.3),  border = alpha(colours, 0.3), cex = cex)
     } else { ## if not highlight
-        legend(x = c(0,1), y = c(1,0), legend = levels(group), bty = "n",
-               fill =  colours, border = colours)
+        legend(x = par("usr")[1:2], y = par("usr")[3:4], legend = levels(group), bty = "n",
+               fill =  colours, border = colours, cex = cex)
     }
 }
 
