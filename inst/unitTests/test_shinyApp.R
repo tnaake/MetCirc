@@ -1,6 +1,3 @@
-## 
-## no unit test for shinyCircos since it is a shiny application
-## 
 
 ## create objects which will be used in unit tests
 data("idMSMStoMSP", package = "MetCirc")
@@ -18,6 +15,13 @@ linkMatInds <- getLinkMatrixIndices(groupname[ind], linkMat_thr)
 ##  msp = NULL, ind = ind, lMatInd = linkMatInds, 
 ##  linkMatrixThreshold = linkMat_thr, highlight = TRUE, 
 ##  similarityMatrix = simMat)
+
+## START unit test shinyCircos
+test_shinyCircos <- function() {
+    checkException(shinyCircos(1:2, NULL))
+    checkException(shinyCircos(similarityMat, "a"))
+}
+## END unit test shinyCircos
 
 
 ## START unit test printInformationSelect 
