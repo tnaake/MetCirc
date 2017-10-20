@@ -1,8 +1,8 @@
-CHANGES IN VERSION 1.3.0
+CHANGES IN VERSION 1.5.0
 ------------------------
  o no changes, check if package passes R CMD build and R CMD check without
    any error messages and vignette can be run without any errors
-   [2017-10-14 Sat]
+   [2017-10-20 Fri]
 
 
 CHANGES IN VERSION 1.1.6
