@@ -44,6 +44,7 @@ NDP <- function(matrow1, matrow2, m = 0.5, n = 2, mass) {
     ## calculate weights 
     WS1[which(S1 != 0)] <- S1[which(S1 != 0)] ^ m * mass[which(S1 != 0)] ^ n
     WS2[which(S2 != 0)] <- S2[which(S2 != 0)] ^ m * mass[which(S2 != 0)] ^ n 
+
     ## calculate NDP
     NDP <- ( sum(WS1 * WS2) ) ^ 2 / (sum(WS1 ^ 2 ) * sum(WS2 ^ 2))
     return(NDP)
