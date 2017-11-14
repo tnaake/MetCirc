@@ -38,9 +38,12 @@ NDP <- function(matrow1, matrow2, m = 0.5, n = 2, mass) {
     if (length(mass) != length(S1)) 
         stop("mass has not same length as matrow1 and matrow2")
 
+    
+    WS1 <- numeric(length(S1))
+    WS2 <- numeric(length(S2))
     ## calculate weights 
-    WS1 <- S1 ^ m * mass ^ n
-    WS2 <- S2 ^ m * mass ^ n
+    WS1[which(S1 != 0)] <- S1[which(S1 != 0)] ^ m * mass[which(S1 != 0)] ^ n
+    WS2[which(S2 != 0)] <- S2[which(S2 != 0)] ^ m * mass[which(S2 != 0)] ^ n 
     ## calculate NDP
     NDP <- ( sum(WS1 * WS2) ) ^ 2 / (sum(WS1 ^ 2 ) * sum(WS2 ^ 2))
     return(NDP)
