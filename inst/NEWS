@@ -1,3 +1,13 @@
+CHANGES IN VERSION 1.9.0
+------------------------
+ o no changes, check if package passes R CMD build and R CMD check without
+   any error messages and vignette can be run without any errors
+   [2018-04-14 Fri]
+
+CHANGES IN VERSION 1.7.0
+------------------------
+ o implement calculation for parameter m = 0 in NDP [2017-11-14 Tue]
+
 CHANGES IN VERSION 1.5.0
 ------------------------
  o no changes, check if package passes R CMD build and R CMD check without
@@ -7,7 +17,6 @@ CHANGES IN VERSION 1.5.0
 
 CHANGES IN VERSION 1.1.6
 ------------------------
- o implement calculation for parameter m = 0 in NDP [2017-05-14 Sun]
  o correct bug fix for msp binning when there is only one entry for 
    msp entry [2017-06-05 Mon]
  o improve function binning when there is only one fragment [2017-06-05 Mon]
