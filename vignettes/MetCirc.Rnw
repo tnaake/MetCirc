@@ -75,13 +75,16 @@
 \onehalfspacing
 
 \usepackage{authblk} 
-\author[]{Thomas Naake and Emmanuel Gaquerel}
+\author[]{Thomas Naake$^1$ and Emmanuel Gaquerel$^2$}
 
 
 
 \affil{
-    Plant Defense Metabolism \\
-    Centre for Organismal Studies
+    $^1$ Max Planck Institute of Molecular Plant Physiology \\ 
+    14476 Potsdam-Golm, Germany \\
+    $^2$ Plant Defense Metabolism \\
+    Centre for Organismal Studies \\
+    69120 Heidelberg, Germany
 }
 
 \title{MetCirc: Navigating mass spectral similarity in high-resolution 
@@ -144,7 +147,7 @@ on interactive and non-interactive graphical tools using the
 \Rpackage{MetCirc} is currently under active development. If you 
 discover any bugs, typos or develop ideas of improving 
 \Rpackage{MetCirc} feel free to raise an issue via 
-\href{https://github.com/PlantDefenseMetabolism/MetCirc}{GitHub} or 
+\href{https://github.com/tnaake/MetCirc}{GitHub} or 
 send a mail to the developers. 
 
 <<knitr, include=FALSE, cache=FALSE>>=
