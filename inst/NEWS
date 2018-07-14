@@ -1,3 +1,6 @@
+CHANGES IN VERSION 1.9.2
+------------------------
+ o use BiocManager instead of BiocLite for installation [2018-07-14 Sat]
 CHANGES IN VERSION 1.9.1
 ------------------------
  o change affiliation in vignette [2018-05-24 Thu]
