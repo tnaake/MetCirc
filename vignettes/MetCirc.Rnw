@@ -154,8 +154,9 @@ library("knitr")
 \section{Prepare the environment}
 To install \Rpackage{MetCirc} enter the following to the \R~console
 <<eval=FALSE>>=
-source("https://bioconductor.org/biocLite.R")
-biocLite("MetCirc")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("MetCirc")
 @
 
 Before starting, load the \Rpackage{MetCirc} package. This will also
