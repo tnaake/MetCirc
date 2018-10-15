@@ -1,3 +1,10 @@
+CHANGES IN VERSION 1.11.0
+------------------------
+ o remove Makefile from vignettes/ [2018-10-15 Mon]
+ o check if package passes R CMD build and R CMD check without
+   any error messages and vignette can be run without any errors
+   [2018-10-15 Mon]
+
 CHANGES IN VERSION 1.9.1
 ------------------------
  o no changes, check if package passes R CMD build and R CMD check without
