@@ -1,116 +1,100 @@
-CHANGES IN VERSION 1.9.2
-------------------------
- o use BiocManager instead of BiocLite for installation [2018-07-14 Sat]
-CHANGES IN VERSION 1.9.1
-------------------------
- o change affiliation in vignette [2018-05-24 Thu]
+Changes in version 1.11.1 (2018-10-22)
++ adjust NEWS file to new format according to ?news: 
+  o entries are grouped according to version, with version header 
+    “Changes in version” at the beginning of a line, followed by a version 
+    number, optionally followed by an ISO 8601 format date, possibly 
+    parenthesized
+  o entries may be grouped according to category, with a category header 
+    (different from a version header) starting at the beginning of a line
+  o entries are written as itemize-type lists, using one of o, *, - or + as 
+    item tag. Entries must be indented, and ideally use a common indentation 
+    for the item texts
 
-CHANGES IN VERSION 1.9.0
-------------------------
- o no changes, check if package passes R CMD build and R CMD check without
-   any error messages and vignette can be run without any errors
-   [2018-04-14 Fri]
+Changes in version 1.11.0 (2018-10-15)
++ remove Makefile from directory vignettes/
++ check if package passes R CMD build and R CMD check without
+  any error messages and vignette can be run without any errors
 
-CHANGES IN VERSION 1.7.0
-------------------------
- o implement calculation for parameter m = 0 in NDP [2017-11-14 Tue]
-
-CHANGES IN VERSION 1.5.0
-------------------------
- o no changes, check if package passes R CMD build and R CMD check without
-   any error messages and vignette can be run without any errors
-   [2017-10-20 Fri]
-
-
-CHANGES IN VERSION 1.1.6
-------------------------
- o correct bug fix for msp binning when there is only one entry for 
-   msp entry [2017-06-05 Mon]
- o improve function binning when there is only one fragment [2017-06-05 Mon]
-
-CHANGES IN VERSION 1.1.5
-------------------------
- o extend unit tests for shinyApp, plottingFunctions and convert2MSP [2017-04-03 Mon]
-
-CHANGES IN VERSION 1.1.4
-------------------------
- o change MSP class, create slots mz, rt, names, classes, information and 
-   adduct [2017-01-28 Sat]
- o add tabPanels in shinyCircos (Main, Appearance) [2017-01-28 Sat]
- o rearrange position of legend, implement option to show/not show l
-   egend [2017-01-28 Sat]
- o rescale plot when changing window size, allow for further scaling/descaling
-   of the plot [2017-01-28 Sat]
- o adjust convertMSP2MSP to new class MSP, create unit tests [2017-01-29 Sun]
- o include msp2msp matrix, a test data set for convertMSP2MSP [2017-01-29 Sun]
- o set methods for names, classes, adduct and information [2017-01-29 Sun]
- o change the interactive shinyCircos such that the user can update the annotation 
-   data of an MSP object (name, class, information and adduct ion information) 
-   [2017-01-29 Sun]
+Changes in version 1.9.1 (2018-04-16)
++ no changes, check if package passes R CMD build and R CMD check without
+  any error messages and vignette can be run without any errors
    
-CHANGES IN VERSION 1.1.3
-------------------------
- o use new email adress [2016-12-05 Mon]
- o use option to calculate MSP-object from msp-file directly [2016-12-05 Mon]
+Changes in version 1.7.0 (2017-11-14)
++ implement calculation for parameter m = 0 in NDP 
 
-CHANGES IN VERSION 1.1.2
-------------------------
- o use absolute masses when calculating similarities in 
-   createSimilarityMatrix (bug fix) [2016-11-17 Thu]
- o add option links in highlight, i.e. should links be plotted
-   or not? [2016-11-17 Thu]
+Changes in version 1.5.0 (2017-10-20)
++ no changes, check if package passes R CMD build and R CMD check without
+  any error messages and vignette can be run without any errors
 
-CHANGES IN VERSION 1.1.1
-------------------------
- o change slider input as such that one is able to select a lower 
-   and lower bound instead of only a lower bound [2016-11-04 Fri]
+Changes in version 1.1.6 (2017-06-05)
++ correct bug fix for msp binning when there is only one entry for msp entry 
++ improve function binning when there is only one fragment 
 
-CHANGES IN VERSION 0.99.6
--------------------------
- o improve allocation of clicked features in shinyCircos [2016-10-10 Mon]
- o change line width and colour in plotCircos [2016-10-10 Mon]
+Changes in version 1.1.5 (2017-04-03)
++ extend unit tests for shinyApp, plottingFunctions and convert2MSP 
 
-CHANGES IN VERSION 0.99.5
--------------------------
- o add arguments colour and transparency for functions plotCircos and highlight
-   [2016-09-15 Thu]
+Changes in version 1.1.4 (2017-01-28)
++ change MSP class, create slots mz, rt, names, classes, information and adduct
++ add tabPanels in shinyCircos (Main, Appearance) 
++ rearrange position of legend, implement option to show/not show legend
++ rescale plot when changing window size, allow for further scaling/descaling 
+  of the plot
++ adjust convertMSP2MSP to new class MSP, create unit tests 
++ include msp2msp matrix, a test data set for convertMSP2MSP
++ set methods for names, classes, adduct and information
++ change the interactive shinyCircos such that the user can update the annotation 
+  data of an MSP object (name, class, information and adduct ion information) 
+   
+Changes in version 1.1.3 (2016-12-05)
++ use new email adress 
++ use option to calculate MSP-object from msp-file directly 
 
-CHANGES IN VERSION 0.99.4
--------------------------
- o add arguments splitIndMZ and splitIndRT in function convert2MSP and
-   fix bug (colnames classes instead of class) in convert2MSP [2016-08-17 Wed]
- o update vignette, unit tests and manuals [2016-08-17 Wed]
+Changes in version 1.1.2 (2016-11-17)
++ use absolute masses when calculating similarities in 
+  createSimilarityMatrix (bug fix) 
++ add option links in highlight, i.e. should links be plotted or not? 
 
-CHANGES IN VERSION 0.99.3
--------------------------
- o remove verbatim Textouput(help) in shinyApp [2016-08-01 Mon]
- o change function createSimilarityMatrix in order that it does not
-   change ordering of row names [2016-08-01 Mon]
- o update unit tests and manuals [2016-08-01 Mon]
+Changes in version 1.1.1 (2016-11-04)
++ change slider input as such that one is able to select a lower 
+  and lower bound instead of only a lower bound 
 
-CHANGES IN VERSION 0.99.2
--------------------------
- o do not reorder again in createOrderedSimMat function [2016-07-26 Tue]
- o change allocatePrecursor2mz function such, that it is compatible with 
-   all sd01 and sd02 objects [2016-07-26 Tue]
+Changes in version 0.99.6 (2016-10-10)
++ improve allocation of clicked features in shinyCircos 
++ change line width and colour in plotCircos 
 
-CHANGES IN VERSION 0.99.1
--------------------------
- o rewrite functions that they do not require the argument dfNameGroup (data.frame
-    containing group and unique identifier) any longer [2016-06-14 Tue]
- o the function binning uses now the function cut to create bins
-   binning has two methods implemented to calculate from these bins [2016-06-10 Fri]
-   median and mean m/z values from the fragment m/z values [2016-06-10 Fri]
- o documentation about data sets is extended [2016-06-10 Fri]
- o include 'Suggests: BiocGenerics' in the DESCRIPTION file [2016-06-10 Fri]
+Changes in version 0.99.5 (2016-09-15)
++ add arguments colour and transparency for functions plotCircos and highlight
+   
 
+Changes in version 0.99.4 (2016-08-17)
++ add arguments splitIndMZ and splitIndRT in function convert2MSP and
+  fix bug (colnames classes instead of class) in convert2MSP 
++ update vignette, unit tests and manuals [2016-08-17 Wed]
 
-CHANGES IN VERSION 0.99.0
--------------------------
- o submit package to Bioconductor file tracker [2016-05-14 Sat] 
+Changes in version 0.99.3 (2016-08-01)
++ remove verbatim Textouput(help) in shinyApp 
++ change function createSimilarityMatrix in order that it does not
+  change ordering of row names 
++ update unit tests and manuals 
 
-CHANGES IN VERSION 0.98.0
--------------------------
- o add information of hovered objects in shinyCircos [2016-04-16 Tue]
- o allow for subsetting of MSP objects [2016-04-12 Tue]
- o add unit tests for exported functions [2016-04-12 Tue]
+Changes in version 0.99.2 (2016-07-26)
++ do not reorder again in createOrderedSimMat function 
++ change allocatePrecursor2mz function such, that it is compatible with 
+  all sd01 and sd02 objects 
+
+Changes in version 0.99.1 (2016-06-14)
++ rewrite functions that they do not require the argument dfNameGroup (data.frame
+  containing group and unique identifier) any longer 
++ the function binning uses now the function cut to create bins
+  binning has two methods implemented to calculate from these bins 
+  median and mean m/z values from the fragment m/z values
++ documentation about data sets is extended
++ include 'Suggests: BiocGenerics' in the DESCRIPTION file
+
+Changes in version 0.99.0 (2016-05-14)
++ submit package to Bioconductor file tracker 
+
+Changes in version 0.98.0 (2016-04-16)
++ add information of hovered objects in shinyCircos 
++ allow for subsetting of MSP objects (2016-04-12)
++ add unit tests for exported functions (2016-04-12)
