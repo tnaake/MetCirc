@@ -2,8 +2,8 @@ Package: MetCirc
 Type: Package
 Title: Navigating mass spectral similarity in high-resolution MS/MS 
     metabolomics data
-Version: 1.11.2
-Date: 2018-10-15
+Version: 1.11.1
+Date: 2018-10-22
 Authors@R: c(person(given = "Thomas", family = "Naake",
     email = "thomasnaake@googlemail.com",
     role = c("aut","cre")),
@@ -14,15 +14,15 @@ Author: Thomas Naake <thomasnaake@googlemail.com> and Emmanuel Gaquerel
 Maintainer: Thomas Naake <thomasnaake@googlemail.com>
 VignetteBuilder: knitr
 Depends:
-    R (>= 3.3),
+    R (>= 3.5),
     amap (>= 0.8),
     circlize (>= 0.3.9),
-    graphics (>= 3.3),
-    grDevices (>= 3.3),
-    methods (>= 3.3),
+    graphics (>= 3.5),
+    grDevices (>= 3.5),
+    methods (>= 3.5),
     scales (>= 0.3.0),
     shiny (>= 1.0.0),
-    stats (>= 3.3)
+    stats (>= 3.5)
 Suggests:
     BiocGenerics,
     knitr (>= 1.11)    
