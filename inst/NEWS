@@ -1,4 +1,4 @@
-Changes in version 1.11.1 (2018-10-22)
+Changes in version 1.11.3 (2018-10-22)
 + adjust NEWS file to new format according to ?news: 
   o entries are grouped according to version, with version header 
     “Changes in version” at the beginning of a line, followed by a version 
@@ -10,7 +10,7 @@ Changes in version 1.11.1 (2018-10-22)
     item tag. Entries must be indented, and ideally use a common indentation 
     for the item texts
 
-Changes in version 1.11.0 (2018-10-15)
+Changes in version 1.11.2 (2018-10-15)
 + remove Makefile from directory vignettes/
 + check if package passes R CMD build and R CMD check without
   any error messages and vignette can be run without any errors
