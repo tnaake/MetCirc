@@ -1,7 +1,11 @@
+Changes in version 1.13.1 (2019-04-04)
++ check if package passes R CMD build and R CMD check without
+  any error messages and vignette can be run without any errors
+
 Changes in version 1.11.1 (2018-10-22)
 + adjust NEWS file to new format according to ?news: 
   o entries are grouped according to version, with version header 
-    “Changes in version” at the beginning of a line, followed by a version 
+    'Changes in version' at the beginning of a line, followed by a version 
     number, optionally followed by an ISO 8601 format date, possibly 
     parenthesized
   o entries may be grouped according to category, with a category header 
@@ -15,7 +19,7 @@ Changes in version 1.11.0 (2018-10-15)
 + check if package passes R CMD build and R CMD check without
   any error messages and vignette can be run without any errors
 
-Changes in version 1.9.1 (2018-04-16)
+Changes in version 1.9.0 (2018-04-16)
 + no changes, check if package passes R CMD build and R CMD check without
   any error messages and vignette can be run without any errors
    

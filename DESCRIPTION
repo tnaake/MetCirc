@@ -2,8 +2,8 @@ Package: MetCirc
 Type: Package
 Title: Navigating mass spectral similarity in high-resolution MS/MS 
     metabolomics data
-Version: 1.11.1
-Date: 2018-10-22
+Version: 1.13.1
+Date: 2019-04-04
 Authors@R: c(person(given = "Thomas", family = "Naake",
     email = "thomasnaake@googlemail.com",
     role = c("aut","cre")),
@@ -26,7 +26,7 @@ Depends:
 Suggests:
     BiocGenerics,
     knitr (>= 1.11)    
-biocViews: Metabolomics, MassSpectrometry, Visualization
+biocViews: ImmunoOncology, Metabolomics, MassSpectrometry, Visualization
 Description: MetCirc comprises a workflow to interactively explore 
   high-resolution MS/MS metabolomics data: create an MSP object, a 
   format for MS/MS library data, bin m/z values of precursors, calculate 
