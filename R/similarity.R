@@ -1,6 +1,19 @@
 #' @import MSnbase
 #' @import S4Vectors
 
+
+#' @name compare_Spectra
+#' @title Create similarity matrix from MSnbase::Spectra object
+#' @description compare_Spectra creates a similarity matrix of all 
+#' Spectrum objects in \code{object}
+#' @usage compare_Spectra(object, fun, ...)
+#' @param object \code{Spectra}
+#' @param fun function or character, see ?MSnbase::compareSpectra for further
+#' information
+#' @param ... arguments passed to compareSpectra
+#' @details Function inspired by compareSpectra.OnDiskMSnExp. Possibly 
+#' transfer to MSnbase.
+#' @author Thomas Naake (inspired by compareSpectra.OnDiskMSnExp)
 #' @export
 compare_Spectra <- function(object, fun, ...) {
     
