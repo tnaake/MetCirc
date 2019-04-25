@@ -4,7 +4,7 @@
 \alias{highlight}
 \title{Add links and highlight sectors}
 \usage{
-highlight(groupname, ind, LinkMatrix, colour = NULL, transparency = 0.4, links = TRUE)
+highlight(groupname, ind, LinkDf, colour=NULL, transparency=0.4, links=TRUE)
 }
 \arguments{
 \item{groupname}{\code{character} vector containing "group" and "name" to 
@@ -14,15 +14,15 @@ last element}
 
 \item{ind}{\code{numeric}, indices which will be highlighted}
 
-\item{LinkMatrix}{\code{matrix}, in each row there is information about 
-features to be connected}
-
 \item{colour}{\code{NULL} or \code{character}, colour defines the colours which 
 are used for plotting, if \code{NULL} default colours are used}
 
 \item{transparency}{\code{numeric}, defines the transparency of the colours}
 
 \item{links}{\code{logical}, should links of unselected features be plotted}
+
+\item{LinkDf}{\code{data.frame}, in each row there is information about 
+features to be connected}
 }
 \value{
 The function will update an existing plot by highlighting a 
@@ -38,31 +38,31 @@ Internal use for \code{shinyCircos} or outside of \code{shinyCircos}
 }
 \examples{
  ## load binnedMSP
- data("binnedMSP", package = "MetCirc")
+ data("binnedMSP", package="MetCirc")
  ## use only a selection 
  binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
  similarityMat <- createSimilarityMatrix(binnedMSP)
  ## order similarityMat according to retentionTime and update rownames
- simM <- createOrderedSimMat(similarityMat, order = "retentionTime")
+ simM <- orderSimilarityMatrix(similarityMat, order="retentionTime")
  ## create link matrix
- linkMat <- createLinkMatrix(similarityMatrix = simM, 
-     threshold_low = 0.95, threshold_high = 1)
+ linkDf <- createLinkDf(similarityMatrix=simM, 
+     threshold_low=0.95, threshold_high=1)
  ## cut link matrix (here: only display links between groups)
- linkMat_cut <- cutLinkMatrix(linkMat, type = "inter")
+ linkDf_cut <- cutLinkDf(linkDf, type="inter")
  ## set circlize parameters
- circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0), 
-         track.margin = c(0.0, 0))
+ circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
+         track.margin=c(0.0, 0))
  groupname <- rownames(simM)
  ## here: set selectedFeatures arbitrarily
  indSelected <- c(2,23,42,62)
  selectedFeatures <- groupname[indSelected]
  ## actual plotting
- plotCircos(groupname, linkMat_cut, initialize = TRUE, 
-     featureNames = TRUE, cexFeatureNames = 0.2, groupSector = TRUE, 
-     groupName = FALSE, links = FALSE, highlight = TRUE)
+ plotCircos(groupname, linkDf_cut, initialize=TRUE, 
+     featureNames=TRUE, cexFeatureNames=0.2, groupSector=TRUE, 
+     groupName=FALSE, links=FALSE, highlight=TRUE)
  ## highlight
- highlight(groupname = groupname, ind = indSelected, LinkMatrix = 
-         linkMat_cut, colour = NULL, transparency = 0.4, links = TRUE)
+ highlight(groupname=groupname, ind=indSelected, LinkDf=linkDf_cut, 
+     colour=NULL, transparency=0.4, links=TRUE)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

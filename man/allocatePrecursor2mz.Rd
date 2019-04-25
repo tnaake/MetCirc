@@ -66,11 +66,11 @@ that it might be problematic to compare \code{sd01\_outputXCMS} and
 especially when data were acquired under different conditions.
 }
 \examples{
-data("sd01_outputXCMS", package = "MetCirc")
-data("sd02_deconvoluted", package = "MetCirc") 
-data("convertExampleDF", package = "MetCirc")
-allocatePrecursor2mz(sd01 = sd01_outputXCMS, sd02 = sd02_deconvoluted, 
-     kNN = 10, mzCheck = 1, rtCheck = 30, mzVsRTbalance = 10000, splitPattern = " _ ", splitInd = 2)
+data("sd01_outputXCMS", package="MetCirc")
+data("sd02_deconvoluted", package="MetCirc") 
+data("convertExampleDF", package="MetCirc")
+allocatePrecursor2mz(sd01=sd01_outputXCMS, sd02=sd02_deconvoluted, kNN=10, 
+    mzCheck=1, rtCheck=30, mzVsRTbalance=10000, splitPattern=" _ ", splitInd=2)
 }
 \references{
 Li et al. (2015): Navigating natural variation in 

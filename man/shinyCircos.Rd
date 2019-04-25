@@ -11,9 +11,9 @@ shinyCircos(similarityMatrix, msp = NULL, ...)
 pair-wise similarity coefficients which give information about the similarity 
 between MS/MS features}
 
-\item{msp}{\code{MSP}, an S4 object of class \code{MSP}, the 
-\code{MSP}-object will be used to display information about the selected 
-feature}
+\item{spectra}{an S4 object of class \code{Spectra}, the 
+\code{Spectra} object will be used to display information about the selected 
+feature and will store information of annotation}
 
 \item{...}{further arguments passed to \code{shinyCircos}, e.g. 
 \code{cexFeatureNames} to pass to \code{plotCircos} to set font size in 
@@ -21,9 +21,8 @@ feature}
 }
 \value{
 \code{shinyCircos} returns a \code{character} vector with the 
-(permanently) selected precursors or an object with the entries \code{msp}
-and \code{selectedFeatures} if a \code{MSP}-object was passed to 
-\code{shinyCircos}
+permanently selected precursors and an object with the \code{Spectra}
+object containing the annotation.
 }
 \description{
 Visualise the similarity of MS/MS features in a reactive 
@@ -31,12 +30,22 @@ Visualise the similarity of MS/MS features in a reactive
  \code{shinyCircos}.
 }
 \details{
-The function is based on the \code{shiny} and \code{circlize} package. 
+The function is based on the \code{shiny} and \code{circlize} 
+package. 
 The user can choose interactively thresholds, type of links (between or 
 within groups), display information about MS/MS features, permanently select 
-MS/MS features and export selected precursors. When running 
-\code{shinyCircos} with the object of class \code{MSP}, annotation data of 
-selected MS/MS features will be displayed.
+MS/MS features and export selected precursors. The \code{Spectra} object
+stores annotation information about the MS/MS features. Names of features 
+within the \code{similarityMatrix} have to be found as entries 
+in \code{Spectra}. \code{names(Spectra)} are used as identifiers and 
+\code{colnames}/\code{rownames} from \code{similarityMatrix} are cleaved 
+by the group identifier, separated by "_"). Annotation information is taken
+from \code{spectra} from the columns "names", "information", "classes" and
+"adduct" in the slot elementMetadata of \code{spectra}. After exiting 
+the application, the annotation will be written to the respective columns
+in the slot elementMetadata. If one or several of these columns is 
+already present in elementMetadata, the column(s) will be used as the 
+source of annotation information.
 }
 \examples{
 data("idMSMStoMSP", package = "MetCirc")

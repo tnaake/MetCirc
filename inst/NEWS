@@ -1,3 +1,12 @@
+Changes in version 1.15.0 (2019-04-23)
++ implement the MSnbase Spectra/Spectrum2 as the container for MS2 
+  spectra, change all functions that they accept Spectra objects
++ write function convertMsp2Spectra that converts MSP files to 
+  Spectra files
++ change data files: change convertMSP2MSP.RData to convertMsp2Spectra, 
+  create spectra.RData, update similarityMat.RData
++ remove data files: binnedMSP.RData, idMSMStoMSP.RData
+
 Changes in version 1.13.1 (2019-04-04)
 + check if package passes R CMD build and R CMD check without
   any error messages and vignette can be run without any errors

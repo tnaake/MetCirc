@@ -30,18 +30,18 @@ Calculates the nearest feature in polar coordinates given
 }
 \examples{
 ## load binnedMSP
-data("binnedMSP", package = "MetCirc")
+data("binnedMSP", package="MetCirc")
 ## use only a selection 
 binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
 simM <- createSimilarityMatrix(binnedMSP)
 groupname <- rownames(simM)
-plotCircos(groupname, NULL, initialize = TRUE, featureNames = FALSE, 
-     groupName = FALSE, groupSector = FALSE, links = FALSE, highlight = FALSE)
+plotCircos(groupname, NULL, initialize=TRUE, featureNames=FALSE, 
+     groupName=FALSE, groupSector=FALSE, links=FALSE, highlight=FALSE)
 x <- 1
 y <- 0
 degreeFeatures <- lapply(groupname, 
  function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
-minFragCart2Polar(x, y, degreeOfFeatures = degreeFeatures)
+minFragCart2Polar(x, y, degreeOfFeatures=degreeFeatures)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

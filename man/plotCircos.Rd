@@ -4,11 +4,11 @@
 \alias{plotCircos}
 \title{Circular plot to visualise similarity}
 \usage{
-plotCircos(groupname, linkMat, initialize = c(TRUE, FALSE), 
-     featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
-     groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
-     links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
-     transparency = 0.2)
+plotCircos(groupname, linkDf, initialize=c(TRUE, FALSE), 
+     featureNames=c(TRUE, FALSE), cexFeatureNames=0.3, 
+     groupSector=c(TRUE, FALSE), groupName=c(TRUE, FALSE), 
+     links=c(TRUE, FALSE), highlight=c(TRUE, FALSE), colour=NULL,
+     transparency=0.2)
 }
 \arguments{
 \item{groupname}{\code{character} vector containing "group" and "name" to 
@@ -16,8 +16,8 @@ display, that is a unique identifier of the features, "group" and "name" have
 to be separated 
 by \code{"_"} where "group" is the first and "name" is the last element}
 
-\item{linkMat}{\code{data.frame} containing linked features in each row, has 
-five columns (group1, name1, group2, name2, NDP)}
+\item{linkDf}{\code{data.frame} containing linked features in each row, has 
+five columns (group1, spectrum1, group2, spectrum2, similarity)}
 
 \item{initialize}{\code{logical}, should plot be initialized?}
 
@@ -53,26 +53,26 @@ Internal use for \code{shinyCircos} or used outside of
 }
 \examples{
 ## load binnedMSP
-data("binnedMSP", package = "MetCirc")
+data("binnedMSP", package="MetCirc")
 ## use only a selection 
 binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
 similarityMat <- createSimilarityMatrix(binnedMSP) 
 ## order similarityMat according to retentionTime
-simM <- createOrderedSimMat(similarityMat, order = "retentionTime")
-## create link matrix
-linkMat <- createLinkMatrix(similarityMatrix = simM, 
+simM <- orderSimilarityMatrix(similarityMat, order="retentionTime")
+## create link data.frame
+linkDf <- createLinkDf(similarityMatrix=simM, 
      threshold_low=0.8, threshold_high=1)
-## cut link matrix (here: only display links between groups)
-linkMat_cut <- cutLinkMatrix(linkMat, type = "inter")
+## cut link data.frame (here: only display links between groups)
+linkDf_cut <- cutLinkDf(linkDf, type="inter")
 ## set circlize paramters
-circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0), 
-         track.margin = c(0.0, 0))
+circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
+         track.margin=c(0.0, 0))
 groupname <- rownames(simM)
 ## actual plotting
-plotCircos(groupname, linkMat_cut, initialize = TRUE, 
-    featureNames = TRUE, cexFeatureNames = 0.3, groupSector = TRUE, 
-     groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL, 
-     transparency = 0.2)
+plotCircos(groupname, linkDf_cut, initialize=TRUE, 
+    featureNames=TRUE, cexFeatureNames=0.3, groupSector=TRUE, 
+     groupName=FALSE, links=FALSE, highlight=FALSE, colour=NULL, 
+     transparency=0.2)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

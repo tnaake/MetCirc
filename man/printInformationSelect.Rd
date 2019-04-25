@@ -8,6 +8,12 @@ printInformationSelect(groupname, msp = NULL, ind,
  lMatInd, linkMatrixThreshold, similarityMatrix, roundDigits = 2)
 }
 \arguments{
+\item{similarityMatrix}{\code{matrix} that is used to get information on the 
+degree of similarity, \code{similarityMat} is an ordered version of a 
+similarity matrix, see \code{?createOrderedSimMat}}
+
+\item{roundDigits}{\code{numeric},  how many digits should be displayed?}
+
 \item{groupname}{\code{character} vector with groupname of selected feature,
 vector containing "group" and "name" to display, that is 
 a unique identifier of the features, "group" and "name" have to be separated
@@ -22,12 +28,6 @@ the selected feature}
 
 \item{linkMatrixThreshold}{\code{matrix} that contains information of linked 
 features for given thresholds}
-
-\item{similarityMatrix}{\code{matrix} that is used to get information on the 
-degree of similarity, \code{similarityMat} is an ordered version of a 
-similarity matrix, see \code{?createOrderedSimMat}}
-
-\item{roundDigits}{\code{numeric},  how many digits should be displayed?}
 }
 \value{
 \code{character} that is in HTML format
@@ -51,7 +51,7 @@ groupnameMZ <- rownames(simMat)
 linkMat_thr <- createLinkMatrix(simMat, 0.8, 1) 
 ind <- 2
 indMZ <- which(groupname[ind] == truncateName(groupnameMZ, NULL, group = TRUE))
-linkMatInds <- getLinkMatrixIndices(groupnameMZ[indMZ], linkMat_thr)
+linkMatInds <- getLinkDfIndices(groupnameMZ[indMZ], linkMat_thr)
 MetCirc:::printInformationSelect(groupname = groupname, 
  msp = NULL, ind = ind, lMatInd = linkMatInds, 
  linkMatrixThreshold = linkMat_thr, 
