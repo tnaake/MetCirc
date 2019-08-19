@@ -6,9 +6,10 @@
 \title{Example data for \code{MetCirc}: \code{similarityMat}}
 \format{\code{matrix}}
 \source{
-data("binnedMSP", package = "MetCirc")
-similarityMat <- createSimilarityMatrix(binnedMSP)
-save(similarityMat, file = "similarityMat.RData", compress = "xz")
+data("tissue", package="MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue, 
+    fun=normalizeddotproduct, binSize=0.01) 
+save(similarityMat, file="similarityMat.RData", compress="xz")
 }
 \usage{
 similarityMat
