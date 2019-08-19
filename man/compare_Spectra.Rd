@@ -22,6 +22,10 @@ Spectrum objects in \code{object}
 Function inspired by compareSpectra.OnDiskMSnExp. Possibly 
 transfer to MSnbase.
 }
+\examples{
+data("spectra", package="MetCirc")
+compare_Spectra(spectra_tissue[1:10], fun="dotproduct")
+}
 \author{
 Thomas Naake (inspired by compareSpectra.OnDiskMSnExp)
 }

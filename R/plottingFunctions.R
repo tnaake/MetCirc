@@ -167,7 +167,7 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
 #' @title Add links and highlight sectors
 #' @description A function to add links and highlight sectors to an initialised
 #'      and plotted \code{circlize} plot with one track.
-#' @usage highlight(groupname, ind, LinkDf, colour=NULL, transparency=0.4, links=TRUE)
+#' @usage highlight(groupname, ind, linkDf, colour=NULL, transparency=0.4, links=TRUE)
 #' @param groupname \code{character} vector containing "group" and "name" to 
 #' display, that is a unique identifier of the features, "group" and "name" have 
 #' to be separated by \code{"_"} where "group" is the first and "name" is the 
@@ -451,6 +451,7 @@ cart2Polar <- function(x, y) {
     return(list(r=r, theta=theta))
 }
 
+#' @import ggplot2
 #' @name plotSpectra
 #' @title Plot pair-wise spectra
 #' @description 

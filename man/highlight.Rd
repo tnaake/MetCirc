@@ -4,7 +4,7 @@
 \alias{highlight}
 \title{Add links and highlight sectors}
 \usage{
-highlight(groupname, ind, LinkDf, colour=NULL, transparency=0.4, links=TRUE)
+highlight(groupname, ind, linkDf, colour=NULL, transparency=0.4, links=TRUE)
 }
 \arguments{
 \item{groupname}{\code{character} vector containing "group" and "name" to 

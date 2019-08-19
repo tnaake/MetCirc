@@ -4,7 +4,7 @@
 \alias{shinyCircos}
 \title{Interactive visualisation of similarity and navigation of MS/MS features}
 \usage{
-shinyCircos(similarityMatrix, msp = NULL, ...)
+shinyCircos(similarityMatrix, spectra, condition, ...)
 }
 \arguments{
 \item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} contains 
@@ -14,6 +14,9 @@ between MS/MS features}
 \item{spectra}{an S4 object of class \code{Spectra}, the 
 \code{Spectra} object will be used to display information about the selected 
 feature and will store information of annotation}
+
+\item{condition}{\code{character} vector, specifies which condtions/samples
+are displayed}
 
 \item{...}{further arguments passed to \code{shinyCircos}, e.g. 
 \code{cexFeatureNames} to pass to \code{plotCircos} to set font size in 

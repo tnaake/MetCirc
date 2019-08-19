@@ -4,11 +4,16 @@
 \alias{createLinkDf}
 \title{Create a data frame which contains features to link (indices)}
 \usage{
-createLinkMatrix(similarityMatrix, threshold_low, threshold_high)
+createLinkDf(similarityMatrix, spectra, condition, lower, upper)
 }
 \arguments{
 \item{similarityMatrix}{\code{matrix}, a similarity matrix that contains the 
 similarity measure between all precursors in the data set}
+
+\item{spectra}{Spectra object containing spectra of similarityMatrix}
+
+\item{condition}{\code{character}, vector containing the 
+conditions/samples for which a linkDf is created}
 
 \item{lower}{\code{numeric}, threshold value for similarity values, 
 below this value linked features will not be included}
@@ -24,7 +29,7 @@ information on linked features
 Create a data frame which contains features to link (indices)
 }
 \details{
-\code{threshold_low} and \code{threshold_high} are numerical values 
+\code{lower} and \code{upper} are numerical values 
 and truncate similar spectra. The function createLinkDf is a wrapper 
 for the functions createLink0Df and thresholdLinkDf.
 }

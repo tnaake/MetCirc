@@ -6,6 +6,7 @@ Changes in version 1.15.0 (2019-04-23)
 + change data files: change convertMSP2MSP.RData to convertMsp2Spectra, 
   create spectra.RData, update similarityMat.RData
 + remove data files: binnedMSP.RData, idMSMStoMSP.RData
++ change GPL-2 to GPL-3 license
 
 Changes in version 1.13.1 (2019-04-04)
 + check if package passes R CMD build and R CMD check without

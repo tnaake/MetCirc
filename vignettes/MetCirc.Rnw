@@ -506,9 +506,12 @@ be returned which are allocated here to \Robject{selectedFeatures}.
 By way of example, we would like to analyse the tissue data set focusing on 
 the tissues "SPL", "LIM", "ANT" and "STY".
 
+93.067 95.085 ....
+93.068 95.084 ....
+
 To start the shiny app, run
 <<eval=FALSE>>=
-selectedFeatures <- shinyCircos(similarityMat, spectra=spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
+selectedFeatures <- shinyCircos(similarityMat, spectra=spectra_tissue, condition=c("LIM", "ANT", "STY"))
 @
 to the console. This will load information stored in the \Robject{Spectra} object
 \Robject{spl} to the \Robject{shinyCircos} interface. Information (metabolite names and

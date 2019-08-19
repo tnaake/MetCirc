@@ -7,7 +7,8 @@
 convertMsp2Spectra(msp)
 }
 \arguments{
-\item{\code{Spectra}}{object, as defined in MSnbase}
+\item{\code{msp}}{object, \code{data.frame} that mimicks the .msp file 
+format, see Details for further information}
 }
 \value{
 \code{convertMsp2Spectra} returns an object of class \code{Spectra}.
@@ -16,7 +17,7 @@ convertMsp2Spectra(msp)
 Convert msp data frame into object of class \code{Spectra}
 }
 \details{
-msp is a data frame of a .MSP file, a typical data file for 
+msp is a data frame of a .msp file, a typical data file for 
 MS/MS libraries. The data frame has two columns and contains in the first
 column the entries "NAME:", 
 "PRECURSORMZ:" (or "EXACTMASS:"), "RETENTIONTIME:", Num Peaks:"  and information on fragments and 

@@ -1,7 +1,5 @@
 #' @import MSnbase
 #' @import S4Vectors
-
-
 #' @name compare_Spectra
 #' @title Create similarity matrix from MSnbase::Spectra object
 #' @description compare_Spectra creates a similarity matrix of all 
@@ -14,12 +12,15 @@
 #' @details Function inspired by compareSpectra.OnDiskMSnExp. Possibly 
 #' transfer to MSnbase.
 #' @author Thomas Naake (inspired by compareSpectra.OnDiskMSnExp)
+#' @examples 
+#' data("spectra", package="MetCirc")
+#' compare_Spectra(spectra_tissue[1:10], fun="dotproduct")
 #' @export
 compare_Spectra <- function(object, fun, ...) {
     
     nm <- names(object)
     cb <- combn(nm, 2)
-    cb <- apply(cb, 2, function(x) compareSpectra(object[[x[1]]], object[[x[[2]]]], fun=fun, ...)) ## "dotproduct
+    cb <- apply(cb, 2, function(x) compareSpectra(object[[x[1]]], object[[x[[2]]]], fun=fun, ...)) ## "dotproduct"
     
     m <- matrix(NA, length(object), length(object),
                 dimnames=list(nm, nm))
@@ -149,11 +150,14 @@ neutralloss <- function(x, y, m=0.5, n=2, ...) {
 #' m/z, retention time and clustering
 #' @description Internal function for shiny application. May also be used 
 #' outside of shiny to reconstruct figures.
-#' @usage orderSimilarityMatrix(similarityMatrix, order = c("retentionTime", "mz", "clustering"))
+#' @usage orderSimilarityMatrix(similarityMatrix, spectra, 
+#'     type=c("retentionTime", "mz", "clustering"), group=FALSE)
 #' @param similarityMatrix \code{matrix}, \code{similarityMatrix} contains 
 #' pair-wise similarity coefficients which give information about the similarity 
 #' between precursors
-#' @param order \code{character}, one of "retentionTime", "mz" or "clustering"
+#' @param spectra \code{Spectra} object containing spectra that are compared
+#' in \code{similarityMatrix}
+#' @param type \code{character}, one of "retentionTime", "mz" or "clustering"
 #' @param group \code{logical}, if TRUE group separated by "_" will be cleaved
 #' from rownames/colnames of similarityMatrix and matched against names of 
 #' spectra, if FALSE rownames/colnames of similarityMatrix are taken as are 

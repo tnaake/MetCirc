@@ -6,13 +6,15 @@
 #' @description Visualise the similarity of MS/MS features in a reactive 
 #'  context. See \code{Details} the vignette for further descriptions on how to use 
 #'  \code{shinyCircos}.
-#' @usage shinyCircos(similarityMatrix, msp = NULL, ...)
+#' @usage shinyCircos(similarityMatrix, spectra, condition, ...)
 #' @param similarityMatrix \code{matrix}, \code{similarityMatrix} contains 
 #' pair-wise similarity coefficients which give information about the similarity 
 #' between MS/MS features
 #' @param spectra an S4 object of class \code{Spectra}, the 
 #'  \code{Spectra} object will be used to display information about the selected 
 #'  feature and will store information of annotation
+#' @param condition \code{character} vector, specifies which condtions/samples
+#' are displayed
 #' @param ... further arguments passed to \code{shinyCircos}, e.g. 
 #' \code{cexFeatureNames} to pass to \code{plotCircos} to set font size in 
 #' \code{plotCircos} of feature names
@@ -654,8 +656,8 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @name printInformationSelect
 #' @title Display information on connected features of selected features
 #' @description Displays information on connected features of selected features.
-#' @usage printInformationSelect(groupname, msp = NULL, ind, 
-#'  lMatInd, linkMatrixThreshold, similarityMatrix, roundDigits = 2)
+#' @usage printInformationSelect(select=groupn[ind], spectra=NULL,
+#'     linkDfInd, linkDf, similarityMatrix, roundDigits=2) 
 #' @param groupname \code{character} vector with groupname of selected feature,
 #' vector containing "group" and "name" to display, that is 
 #' a unique identifier of the features, "group" and "name" have to be separated
@@ -693,7 +695,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @return
 printInformationSelect <- function(select=groupn[ind], spectra=NULL, 
-                linkDfInd, linkDf, similarityMatrix, roundDigits = 2) {
+                linkDfInd, linkDf, similarityMatrix, roundDigits=2) {
 
     ## connected features: find
     connect <- as.character(unique(unlist(linkDf[linkDfInd, c("spectrum1", "spectrum2")])))

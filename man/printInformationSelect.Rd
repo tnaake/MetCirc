@@ -4,8 +4,8 @@
 \alias{printInformationSelect}
 \title{Display information on connected features of selected features}
 \usage{
-printInformationSelect(groupname, msp = NULL, ind, 
- lMatInd, linkMatrixThreshold, similarityMatrix, roundDigits = 2)
+printInformationSelect(select=groupn[ind], spectra=NULL,
+    linkDfInd, linkDf, similarityMatrix, roundDigits=2)
 }
 \arguments{
 \item{similarityMatrix}{\code{matrix} that is used to get information on the 

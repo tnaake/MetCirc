@@ -5,19 +5,23 @@
 \title{Order columns and rows of a similarity matrix according to 
 m/z, retention time and clustering}
 \usage{
-orderSimilarityMatrix(similarityMatrix, order = c("retentionTime", "mz", "clustering"))
+orderSimilarityMatrix(similarityMatrix, spectra, 
+    type=c("retentionTime", "mz", "clustering"), group=FALSE)
 }
 \arguments{
 \item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} contains 
 pair-wise similarity coefficients which give information about the similarity 
 between precursors}
 
+\item{spectra}{\code{Spectra} object containing spectra that are compared
+in \code{similarityMatrix}}
+
+\item{type}{\code{character}, one of "retentionTime", "mz" or "clustering"}
+
 \item{group}{\code{logical}, if TRUE group separated by "_" will be cleaved
 from rownames/colnames of similarityMatrix and matched against names of 
 spectra, if FALSE rownames/colnames of similarityMatrix are taken as are 
 and matched against names of spectra}
-
-\item{order}{\code{character}, one of "retentionTime", "mz" or "clustering"}
 }
 \value{
 \code{orderSimilarityMat}rix returns a similarity matrix 
