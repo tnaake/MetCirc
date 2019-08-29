@@ -1,6 +1,7 @@
 #' @import shiny
 #' @import circlize
 #' @import scales
+#' @import ggplot2
 #' @name plotCircos
 #' @title Circular plot to visualise similarity
 #' @description Circular plot to visualise similarity
@@ -451,11 +452,11 @@ cart2Polar <- function(x, y) {
     return(list(r=r, theta=theta))
 }
 
-#' @import ggplot2
+
 #' @name plotSpectra
 #' @title Plot pair-wise spectra
 #' @description 
-#' @usage 
+#' @usage plotSpectra(spectra, subject, query)
 #' @param spectra Spectra object
 #' @param subject character, name of spectra that is aligned against, character
 #' with preceding sample name
@@ -488,7 +489,7 @@ plotSpectra <- function(spectra, subject, query) {
     
     df <- rbind(df_que, df_sub)
     
-    ggplot(df) + 
+    ggplot2::ggplot(df) + 
         geom_segment(aes(x=mz, xend=mz+0.001, y=int, yend=0, col=is), stat="identity") +
         xlab("m/z") + 
         scale_y_continuous("intensity (%)", breaks=c(-100, -50, 0, 50, 100), labels=c("100", "50", "0", "50", "100")) +

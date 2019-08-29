@@ -2,13 +2,13 @@ Package: MetCirc
 Type: Package
 Title: Navigating mass spectral similarity in high-resolution MS/MS 
     metabolomics data
-Version: 1.15.1
-Date: 2019-04-04
+Version: 1.15.2
+Date: 2019-08-09
 Authors@R: c(person(given = "Thomas", family = "Naake",
     email = "thomasnaake@googlemail.com",
     role = c("aut","cre")),
   person(given = "Emmanuel", family = "Gaquerel",
-    email = "emmanuel.gaquerel@cos.uni-heidelberg.de", role = "aut"))
+    email = "emmanuel.gaquerel@ibmp-cnrs.unistra.fr", role = "aut"))
 Author: Thomas Naake <thomasnaake@googlemail.com> and Emmanuel Gaquerel
     <emmanuel.gaquerel@ibmp-cnrs.unistra.fr>
 Maintainer: Thomas Naake <thomasnaake@googlemail.com>
@@ -17,6 +17,7 @@ Depends:
     R (>= 3.5),
     amap (>= 0.8),
     circlize (>= 0.3.9),
+    ggplot2 (>= 3.2.1),
     graphics (>= 3.5),
     grDevices (>= 3.5),
     methods (>= 3.5),
@@ -38,5 +39,5 @@ Description: MetCirc comprises a workflow to interactively explore
   visualise similarities in a circular layout. Within the interactive framework
   the user can annotate MS/MS features based on their similarity to 
   (known) related MS/MS features. 
-License: GPL-3
+License: GPL (>= 3)
 RoxygenNote: 6.1.1
