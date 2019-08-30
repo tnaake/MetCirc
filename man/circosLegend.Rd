@@ -33,11 +33,9 @@ Internal use in \code{shinyCircos} or outside of \code{shinyCircos}
  to reproduce figures.
 }
 \examples{
- ## load binnedMSP
- data("binnedMSP", package="MetCirc")
- ## use only a selection 
- binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
- similarityMat <- createSimilarityMatrix(binnedMSP)  
+data("spectra", package="MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue[1:10], 
+    fun=normalizeddotproduct, binSize=0.01)
  groupname <- rownames(similarityMat)
  ## plot legend
  circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)

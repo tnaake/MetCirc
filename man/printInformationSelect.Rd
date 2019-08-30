@@ -8,35 +8,30 @@ printInformationSelect(select=groupn[ind], spectra=NULL,
     linkDfInd, linkDf, similarityMatrix, roundDigits=2)
 }
 \arguments{
-\item{similarityMatrix}{\code{matrix} that is used to get information on the 
-degree of similarity, \code{similarityMat} is an ordered version of a 
-similarity matrix, see \code{?createOrderedSimMat}}
+\item{select}{`character`}
 
-\item{roundDigits}{\code{numeric},  how many digits should be displayed?}
+\item{spectra}{`Spectra` object containing spectra that are compared
+in `similarityMatrix`}
 
-\item{groupname}{\code{character} vector with groupname of selected feature,
-vector containing "group" and "name" to display, that is 
-a unique identifier of the features, "group" and "name" have to be separated
-by \code{"_"} where "group" is the first and "name" is the last element}
+\item{linkDfInd}{`numeric` indices of selected features}
 
-\item{msp}{\code{MSP}, an S4 object of class \code{MSP} for information about 
-the selected feature}
-
-\item{ind}{\code{numeric}}
-
-\item{lMatInd}{\code{numeric} indices of selected features}
-
-\item{linkMatrixThreshold}{\code{matrix} that contains information of linked 
+\item{linkDf}{`data.frame` that contains information of linked 
 features for given thresholds}
+
+\item{similarityMatrix}{`matrix` that is used to get information on the 
+degree of similarity, `similarityMat` is an ordered version of a 
+similarity matrix, see `?createOrderedSimMat`}
+
+\item{roundDigits}{`numeric`,  how many digits should be displayed?}
 }
 \value{
-\code{character} that is in HTML format
+`character` that is in HTML format
 }
 \description{
 Displays information on connected features of selected features.
 }
 \details{
-\code{printInformationSelect} is for internal use.
+`printInformationSelect` is for internal use.
 }
 \examples{
 data("idMSMStoMSP", package = "MetCirc")

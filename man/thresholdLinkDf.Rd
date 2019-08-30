@@ -4,17 +4,17 @@
 \alias{thresholdLinkDf}
 \title{Threshold a data frame containing information on links}
 \usage{
-thresholdLinkDf(link0df, lower, upper)
+thresholdLinkDf(link0df, lower=0.75, upper=1)
 }
 \arguments{
-\item{lower}{\code{numeric}, threshold value for similarity values, below 
-this value linked features will not be returned}
-
-\item{upper}{\code{numeric}, threshold value for similarity values, above 
-this value linked features will not be returned}
-
-\item{linkDf}{\code{data.frame}, a link data frame that gives per each row 
+\item{link0df}{`data.frame`, a link data frame that gives per each row 
 information on linked features}
+
+\item{lower}{`numeric`, threshold value for similarity values, below 
+this value linked features will not be returned}
+
+\item{upper}{`numeric`, threshold value for similarity values, above 
+this value linked features will not be returned}
 }
 \value{
 \code{thresholdLinkDf} returns a data frame that gives per each row 
@@ -24,7 +24,7 @@ information on linked features which are linked within certain thresholds
 Threshold a link data frame
 }
 \details{
-\code{lower} and \code{upper} are numerical values 
+`lower` and `upper` are numerical values 
 and truncates mass spectra based on their similarity values.
 }
 \examples{

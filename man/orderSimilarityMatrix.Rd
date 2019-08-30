@@ -24,7 +24,7 @@ spectra, if FALSE rownames/colnames of similarityMatrix are taken as are
 and matched against names of spectra}
 }
 \value{
-\code{orderSimilarityMat}rix returns a similarity matrix 
+`matrix`, `orderSimilarityMatrix` returns a similarity matrix 
 with ordered rownames according to the \code{character} vector given to order
 }
 \description{

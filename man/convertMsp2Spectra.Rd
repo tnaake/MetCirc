@@ -4,10 +4,10 @@
 \alias{convertMsp2Spectra}
 \title{Convert MSP data frame into object of class \code{Spectra}}
 \usage{
-convertMsp2Spectra(msp)
+convertMsp2Spectra(msp=msp2spectra)
 }
 \arguments{
-\item{\code{msp}}{object, \code{data.frame} that mimicks the .msp file 
+\item{msp}{\code{data.frame} that mimicks the .msp file 
 format, see Details for further information}
 }
 \value{

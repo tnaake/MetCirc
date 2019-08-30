@@ -7,10 +7,10 @@
 cutLinkDf(linkDf, type=c("all", "inter", "intra"))
 }
 \arguments{
-\item{linkDf}{\code{data.frame}, that gives per each row 
+\item{linkDf}{`data.frame`, that gives per each row 
 information on linked features}
 
-\item{type}{\code{character}, one of "all", "inter" or "intra"}
+\item{type}{`character`, one of "all", "inter" or "intra"}
 }
 \value{
 cutLinkDf returns a data.frame that gives per each row 

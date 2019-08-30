@@ -7,9 +7,9 @@
 spectraCond(spectra, condition)
 }
 \arguments{
-\item{spectra}{\code{Spectra} object of \code{MSnbase} package}
+\item{spectra}{`Spectra` object of `MSnbase` package}
 
-\item{conditon}{\code{character}, vector with conditions found as columns 
+\item{condition}{`character`, vector with conditions found as columns 
 in the elementMetadata slot}
 }
 \value{
@@ -18,9 +18,9 @@ names of the MS/MS entries in spectra that are present in the conditon
 (tissues, stress conditions, time points, etc.)
 }
 \description{
-spectraCond returns the names of \code{spectra} that are 
+`spectraCond` returns the names of `spectra` that are 
 present in condition, corresponding to the slot 
-\code{elementMetadata@listData}.
+`elementMetadata@listData`.
 }
 \details{
 Helper function in createLink0Df and shinyCircos.

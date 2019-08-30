@@ -14,15 +14,15 @@ last element}
 
 \item{ind}{\code{numeric}, indices which will be highlighted}
 
+\item{linkDf}{\code{data.frame}, in each row there is information about 
+features to be connected}
+
 \item{colour}{\code{NULL} or \code{character}, colour defines the colours which 
 are used for plotting, if \code{NULL} default colours are used}
 
 \item{transparency}{\code{numeric}, defines the transparency of the colours}
 
 \item{links}{\code{logical}, should links of unselected features be plotted}
-
-\item{LinkDf}{\code{data.frame}, in each row there is information about 
-features to be connected}
 }
 \value{
 The function will update an existing plot by highlighting a 
@@ -37,16 +37,15 @@ Internal use for \code{shinyCircos} or outside of \code{shinyCircos}
  to reproduce the figure.
 }
 \examples{
- ## load binnedMSP
- data("binnedMSP", package="MetCirc")
- ## use only a selection 
- binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
- similarityMat <- createSimilarityMatrix(binnedMSP)
+data("spectra", package="MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue[1:10], 
+    fun=normalizeddotproduct, binSize=0.01)
  ## order similarityMat according to retentionTime and update rownames
- simM <- orderSimilarityMatrix(similarityMat, order="retentionTime")
+ simM <- orderSimilarityMatrix(similarityMat, spectra=spectra_tissue[1:10], 
+             type="retentionTime")
  ## create link matrix
- linkDf <- createLinkDf(similarityMatrix=simM, 
-     threshold_low=0.95, threshold_high=1)
+ linkDf <- createLinkDf(similarityMatrix=simM, spectra=spectra_tissue,
+     condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1)
  ## cut link matrix (here: only display links between groups)
  linkDf_cut <- cutLinkDf(linkDf, type="inter")
  ## set circlize parameters

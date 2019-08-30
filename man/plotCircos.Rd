@@ -52,16 +52,15 @@ Internal use for \code{shinyCircos} or used outside of
  \code{shinyCircos} to reproduce figure
 }
 \examples{
-## load binnedMSP
-data("binnedMSP", package="MetCirc")
-## use only a selection 
-binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
-similarityMat <- createSimilarityMatrix(binnedMSP) 
+data("spectra", package="MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue[1:10], 
+    fun=normalizeddotproduct, binSize=0.01)
 ## order similarityMat according to retentionTime
-simM <- orderSimilarityMatrix(similarityMat, order="retentionTime")
+simM <- orderSimilarityMatrix(similarityMat, spectra=spectra_tissue[1:10], 
+            type="retentionTime", )
 ## create link data.frame
-linkDf <- createLinkDf(similarityMatrix=simM, 
-     threshold_low=0.8, threshold_high=1)
+linkDf <- createLinkDf(similarityMatrix=simM, spectra=spectra_tissue,
+     condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1) 
 ## cut link data.frame (here: only display links between groups)
 linkDf_cut <- cutLinkDf(linkDf, type="inter")
 ## set circlize paramters

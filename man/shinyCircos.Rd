@@ -7,44 +7,44 @@
 shinyCircos(similarityMatrix, spectra, condition, ...)
 }
 \arguments{
-\item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} contains 
+\item{similarityMatrix}{`matrix`, `similarityMatrix` contains 
 pair-wise similarity coefficients which give information about the similarity 
 between MS/MS features}
 
-\item{spectra}{an S4 object of class \code{Spectra}, the 
-\code{Spectra} object will be used to display information about the selected 
+\item{spectra}{an S4 object of class `Spectra`, the 
+`Spectra` object will be used to display information about the selected 
 feature and will store information of annotation}
 
-\item{condition}{\code{character} vector, specifies which condtions/samples
+\item{condition}{`character` vector, specifies which condtions/samples
 are displayed}
 
-\item{...}{further arguments passed to \code{shinyCircos}, e.g. 
-\code{cexFeatureNames} to pass to \code{plotCircos} to set font size in 
-\code{plotCircos} of feature names}
+\item{...}{further arguments passed to `shinyCircos`, e.g. 
+`cexFeatureNames` to pass to `plotCircos` to set font size in 
+`plotCircos` of feature names}
 }
 \value{
-\code{shinyCircos} returns a \code{character} vector with the 
-permanently selected precursors and an object with the \code{Spectra}
+`character`, `shinyCircos` returns a `character` vector with the 
+permanently selected precursors and an object with the `Spectra`
 object containing the annotation.
 }
 \description{
 Visualise the similarity of MS/MS features in a reactive 
- context. See \code{Details} the vignette for further descriptions on how to use 
- \code{shinyCircos}.
+ context. See `Details` the vignette for further descriptions on how to use 
+ `shinyCircos`.
 }
 \details{
-The function is based on the \code{shiny} and \code{circlize} 
+The function is based on the `shiny` and `circlize` 
 package. 
 The user can choose interactively thresholds, type of links (between or 
 within groups), display information about MS/MS features, permanently select 
-MS/MS features and export selected precursors. The \code{Spectra} object
+MS/MS features and export selected precursors. The `Spectra` object
 stores annotation information about the MS/MS features. Names of features 
-within the \code{similarityMatrix} have to be found as entries 
-in \code{Spectra}. \code{names(Spectra)} are used as identifiers and 
-\code{colnames}/\code{rownames} from \code{similarityMatrix} are cleaved 
+within the `similarityMatrix` have to be found as entries 
+in `Spectra`. `names(Spectra)` are used as identifiers and 
+`colnames`/`rownames` from `similarityMatrix` are cleaved 
 by the group identifier, separated by "_"). Annotation information is taken
-from \code{spectra} from the columns "names", "information", "classes" and
-"adduct" in the slot elementMetadata of \code{spectra}. After exiting 
+from `spectra` from the columns "names", "information", "classes" and
+"adduct" in the slot elementMetadata of `spectra`. After exiting 
 the application, the annotation will be written to the respective columns
 in the slot elementMetadata. If one or several of these columns is 
 already present in elementMetadata, the column(s) will be used as the 

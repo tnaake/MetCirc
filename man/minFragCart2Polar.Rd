@@ -29,12 +29,10 @@ Calculates the nearest feature in polar coordinates given
  the smallest distance from given cartesian coordinates.
 }
 \examples{
-## load binnedMSP
-data("binnedMSP", package="MetCirc")
-## use only a selection 
-binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
-simM <- createSimilarityMatrix(binnedMSP)
-groupname <- rownames(simM)
+#' data("spectra", package="MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue[1:10], 
+    fun=normalizeddotproduct, binSize=0.01)
+groupname <- rownames(similarityMat)
 plotCircos(groupname, NULL, initialize=TRUE, featureNames=FALSE, 
      groupName=FALSE, groupSector=FALSE, links=FALSE, highlight=FALSE)
 x <- 1
