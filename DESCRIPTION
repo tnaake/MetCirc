@@ -17,18 +17,20 @@ Depends:
     R (>= 3.5),
     amap (>= 0.8),
     circlize (>= 0.3.9),
-    ggplot2 (>= 3.2.1),
-    graphics (>= 3.5),
-    grDevices (>= 3.5),
-    methods (>= 3.5),
     scales (>= 0.3.0),
     shiny (>= 1.0.0),
     MSnbase (>= 2.10.1),
-    S4Vectors (>= 0.22.0),
-    stats (>= 3.5)
+Imports:
+    ggplot2 (>= 3.2.1),
+    S4Vectors (>= 0.22.0)    
 Suggests:
     BiocGenerics,
-    knitr (>= 1.11)    
+    graphics (>= 3.5),
+    grDevices (>= 3.5),
+    knitr (>= 1.11),
+    methods (>= 3.5),
+    RUnit (>= 0.4.32),
+    stats (>= 3.5)
 biocViews: ImmunoOncology, Metabolomics, MassSpectrometry, Visualization
 Description: MetCirc comprises a workflow to interactively explore 
   high-resolution MS/MS metabolomics data. MetCirc uses the Spectrum2 and 
