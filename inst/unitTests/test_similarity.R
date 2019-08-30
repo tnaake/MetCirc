@@ -36,18 +36,43 @@ test_neutralloss <- function() {
 
 
 ## START unit test createOrderedSimMat
-simMat_o <- orderSimilarityMatrix(simMat, spl, type="mz", group=FALSE)
+simMat_o_mz <- orderSimilarityMatrix(simMat, spl, type="mz", group=FALSE)
+simMat_o_rt <- orderSimilarityMatrix(simMat, spl, type="retentionTime", group=FALSE)
+simMat_o_cl <- orderSimilarityMatrix(simMat, spl, type="clustering", group=FALSE)
+
+## create a matrix with groups
+simMat_gr <- simMat
+rownames(simMat_gr) <- colnames(simMat_gr) <- paste("A", rownames(simMat), sep="_")
+
 test_createOrderedSimMat <- function() {
     checkException(orderSimilarityMatrix(simMat, spl, type="foo"))
     checkException(orderSimilarityMatrix(simMat, spl, type="mz", group="a"))
     checkException(orderSimilarityMatrix(type="mz"))
     checkException(orderSimilarityMatrix(type="retentionTime"))
     checkException(orderSimilarityMatrix(type="clustering"))
-    checkEquals(colnames(simMat), colnames(simMat_o))
-    checkEquals(rownames(simMat), rownames(simMat_o))
-    checkEquals(colnames(simMat_o), rownames(simMat_o))
-    checkEquals(dim(simMat), dim(simMat_o))
-    checkTrue(is.matrix(simMat_o))
-    checkTrue(is.numeric(simMat_o))
+    checkEquals(colnames(simMat), colnames(simMat_o_mz))
+    checkEquals(rownames(simMat), rownames(simMat_o_mz))
+    checkEquals(colnames(simMat_o_mz), rownames(simMat_o_mz))
+    checkEquals(dim(simMat), dim(simMat_o_mz))
+    checkTrue(is.matrix(simMat_o_mz))
+    checkTrue(is.numeric(simMat_o_mz))
+    checkEquals(colnames(simMat_o_rt), rownames(simMat_o_rt))
+    checkEquals(dim(simMat), dim(simMat_o_rt))
+    checkTrue(is.matrix(simMat_o_rt))
+    checkTrue(is.numeric(simMat_o_rt))
+    checkEquals(colnames(simMat_o_cl), rownames(simMat_o_cl))
+    checkEquals(dim(simMat), dim(simMat_o_cl))
+    checkTrue(is.matrix(simMat_o_cl))
+    checkTrue(is.numeric(simMat_o_cl))
+    checkTRUE(is.matrix(
+        orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)))
+    checkTRUE(is.numeric(
+        orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)))
+    checkEquals(
+        rownames(orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)),
+        c("A_1", "A_2"))
+    checkEquals(
+        colnames(orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)),
+        c("A_1", "A_2"))
 }
 ## END unit test createOrderedSimMat
