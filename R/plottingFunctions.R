@@ -327,36 +327,9 @@ circosLegend <- function(groupname, highlight=TRUE, colour=NULL, cex=1) {
     plot(x=c(0,0.5), y=c(0,0.5), type="n", xlab="", ylab="",
          axes=FALSE, frame.plot=FALSE)
     if (highlight) {
-        ##par(mar=c(0, 0, 0, 0), xaxs="i", yaxs="i")
-        ##par(mar=c(1, 1, 1, 1), xpd=NA)
-        ##par(xpd=NA)
         plot.new()
-        ##legend( "center",legend=levels(group), bty="n", 
-        ##        fill=alpha(colours, 0.3),  border=alpha(colours, 0.3), cex=1)
-        ##y <- 0:1
-        ##x <- 0:1
-        
-        ##plot(0,xaxt='n',yaxt='n',bty='n',pch='',ylab='',xlab='')
-        ##plot.new()
-        ##my.legend <- legend( "center",legend=levels(group), bty="n", 
-        ##       fill=alpha(colours, 0.3),  border=alpha(colours, 0.3), cex=1, plot=F)
-        ##rangeY <- range(y)
-        ##rangeY[1] <- (my.legend$rect$top)
-        ##rangeY[2] <- (my.legend$rect$w)
-        ##rangeX <- range(x)
-        ##rangeX[1] <- (my.legend$rect$left)
-        ##rangeX[2] <- (my.legend$rect$h)
-        
-        ##plot(x=rangeX, y=rangeY, ylim=rangeY, xlim=rangeX, type="n")
         leg <- legend(x=par("usr")[1:2], y= par("usr")[3:4], legend=levels(group), bty="n", 
-                fill=alpha(colours, 0.3),  border=alpha(colours, 0.3))
-        ##legend(x=par("usr")[1:2], y= par("usr")[3:4], ...)
-        ##op <- par(mar=rep(0, 4))
-        #plot(1:10)
-        #par(op)
-        # legend(x=c(0,0.1), legend=levels(group), 
-        #        bty="n",
-        #        fill= alpha(colours, 0.3),  border=alpha(colours, 0.3), cex=cex)
+                fill=alpha(colours, 0.3),  border=alpha(colours, 0.3), cex=1)
     } else { ## if not highlight
         legend(x=par("usr")[1:2], y=par("usr")[3:4], legend=levels(group), bty="n",
                fill= colours, border=colours, cex=cex)

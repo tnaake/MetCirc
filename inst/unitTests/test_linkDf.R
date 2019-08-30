@@ -42,7 +42,7 @@ test_createLink0df <- function() {
     colnames(simMat_mock) <- NULL
     checkException(createLink0df(simMat_mock, spectra_tissue, condition))
     similarityMat <- compare_Spectra(spectra_tissue[1:2], fun=normalizeddotproduct)  
-    checkTrue(is.data.frame(createLink0df(similarityMat, spectra_tissue, condition))
+    checkTrue(is.data.frame(createLink0df(similarityMat, spectra_tissue, condition)))
 }
 ## END unit test link0df
 

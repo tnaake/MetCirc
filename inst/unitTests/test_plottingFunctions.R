@@ -38,10 +38,45 @@ test_plotCircos <- function() {
     checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
         initialize=TRUE, featureNames=FALSE, groupSector=FALSE, groupName=FALSE, 
         links=TRUE, highlight=FALSE, transparency=0.2, colour=c("red", "blue")))
-    checkException(plotCircos(inds_cond, linkMat, cexFeatureNames=0.3,
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
         initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
         links=TRUE, highlight=FALSE, colour=c("red", "blue"), transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=FALSE,
+        initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+        links=TRUE, highlight=FALSE, colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize="a", featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+        links=TRUE, highlight=FALSE, colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize=TRUE, featureNames="a", groupSector=TRUE, groupName=FALSE, 
+        links=TRUE, highlight=FALSE, colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize=TRUE, featureNames=FALSE, groupSector="a", groupName=FALSE, 
+        links=TRUE, highlight=FALSE, colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName="a", 
+        links=TRUE, highlight=FALSE, colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+        links="a", highlight=FALSE, colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+        links=TRUE, highlight="a", colour=NULL, transparency=0.2))
+    checkException(plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+        initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+        links=TRUE, highlight=FALSE, colour=NULL, transparency="a"))
 }
+
+## plot with different arguments are TRUE
+plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+           initialize=FALSE, featureNames=TRUE, groupSector=TRUE, groupName=FALSE, 
+           links=TRUE, highlight=FALSE, colour=NULL, transparency=0.3)
+plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+           initialize=FALSE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+           links=TRUE, highlight=FALSE, colour=c(1,2,3,4), transparency=0.3)
+plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
+           initialize=FALSE, featureNames=TRUE, groupSector=FALSE, groupName=TRUE, 
+           links=TRUE, highlight=FALSE, colour=NULL, transparency=0.3)
 ## END unit test for plotCircos
 
 
@@ -60,6 +95,9 @@ test_highlight <- function() {
     ## names in linkMat do not match names in groupnameO
     checkException(highlight(groupname, 1, linkDf, NULL, 0.4))
 }
+
+## plot which does not fail
+highlight(inds_cond, ind=10, linkDf, links=TRUE)
 ## END unit test for highlight
 
 ## START unit test for circosLegend
@@ -69,6 +107,12 @@ test_circosLegend <- function() {
     checkException(circosLegend(1, highlight=FALSE, colour=NULL))
     checkException(circosLegend(1, highlight=FALSE, colour="red"))
 }
+
+## plot which does not fail
+circosLegend(inds_cond)
+circosLegend(inds_cond, colour=1:4)
+circosLegend(inds_cond, colour=1:4, highlight=TRUE)
+circosLegend(inds_cond, colour=1:4, highlight=FALSE)
 ## END unit test for circosLegend
 
 
@@ -123,10 +167,16 @@ test_cart2Polar <- function() {
 ## END unit test cart2Polar
 
 ## START unit test plotSpectra
+## plot which does not fail
+gg <- plotSpectra(spectra_tissue, subject="SPL_1", query="SPL_2")
+
 test_plotSpectra <- function() {
     checkException(plotSpectra(NULL, "LIM_1", "LIM_1"))
     checkException(plotSpectra(spectra_tissue, NULL, "LIM_1"))
     checkException(plotSpectra(spectra_tissue, "LIM_1", NULL))
     checkException(plotSpectra(spectra_tissue, "LIM_1", "LIM_0"))
+    checkTrue(is(gg), "gg")
 }
+
+
 ## END unit test plotSpectra
