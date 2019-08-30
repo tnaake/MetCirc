@@ -9,6 +9,10 @@ warnings_are_errors: true
 addons: 
   apt: 
     packages: 
+      - libnetcdf-dev
+      - netcdf-bin
+      - libhdf5-dev
+      - libgit2-dev
       - texlive-latex-recommended
       - texlive-fonts-extra
 jobs: 
