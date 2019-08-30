@@ -5,21 +5,59 @@ cache:
   packages: true
 warnings_are_errors: true
 
-r_packages:
-  - covr
-  - knitr
-  - roxygen2
+## cache apt packages
+addons: 
+  apt: 
+    packages: 
+      - texlive-latex-recommended
+      - texlive-fonts-extra
+jobs: 
+  include: 
+    - stage: "Build" 
+      r_packages:
+        - covr
+        - knitr
+        - roxygen2
+      r_github_packages:
+        - jimhester/lintr
+      before_install: 
+        - mkdir -p ~/.R 
+        - echo -e 'MAKEFLAGS = -j2' > ~/.R/Makevars
+        - echo 'options(Ncpus = 2)' > ~/.Rprofile
+        - echo 'options(repos = c(CRAN = "https://cran.rstudio.com"))' > ~/.Rprofile
+        - echo 'utils::chooseCRANmirror(ind = 1)' > ~/.Rprofile
+##- R -e 'source("https://install-github.me/r-lib/remotes")'
+      script: true
+      name: "Build dependencies and cache" 
+    - stage: "Check" 
+      r_build_args: --no-build-vignettes --no-manual
+      r_check_args: --as-cran --no-build-vignettes --no-vignettes --no-manual --no-tests
+      before_script: rm -rf vignettes
+      install: skip
+      name: "examples"
+    - r_build_args: --no-build-vignettes --no-manual
+      r_check_args: --as-cran --no-build-vignettes --no-vignettes --no-manual --no-codoc --no-examples
+      install: skip
+      before_script: rm -rf vignettes
+      name: "tests"
+    - stage: "CodeCov"
+      install: skip
+      script:
+        - travis_wait 20 Rscript -e 'covr::codecov()'
+      name: "codecov"
+      on:
+        branch: master
 
-r_github_packages:
-  - jimhester/lintr
-
-before_install:
-  - R -e 'source("https://install-github.me/r-lib/remotes")'
+## In general the r-travis script automatically dump the logs after failure but
+## because of a bug in travis the output is often truncated. See
+## https://github.com/travis-ci/travis-ci/issues/6018
+after_failure: sleep 10
   
-after_success:
-  - R CMD INSTALL $PKG_TARBALL
-  - Rscript -e 'lintr::lint_package()' 
-  - Rscript -e 'covr::codecov()'
+  
+##after_success:
+##  - R CMD INSTALL $PKG_TARBALL
+##  - Rscript -e 'lintr::lint_package()' 
+##  - Rscript -e 'covr::codecov()'
 
 
 
