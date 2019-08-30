@@ -1,4 +1,4 @@
-#' @name msp2msp
+#' @name msp2spectra
 #' @title Example data for \code{MetCirc}: \code{msp2spectra}
 #' @description \code{convertMsp2Spectra} contains the object \code{msp2spectra} 
 #' that is a data frame in .MSP format, a typical format for MS/MS library 

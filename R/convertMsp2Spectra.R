@@ -1,7 +1,7 @@
 #' @name convertMsp2Spectra
 #' @title Convert MSP data frame into object of class \code{Spectra}
 #' @description Convert msp data frame into object of class \code{Spectra}
-#' @usage convertMsp2Spectra(msp=msp2spectra)
+#' @usage convertMsp2Spectra(msp)
 #' @param msp \code{data.frame} that mimicks the .msp file 
 #' format, see Details for further information
 #' @details msp is a data frame of a .msp file, a typical data file for 
