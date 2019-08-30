@@ -24,7 +24,7 @@ ndps <- as.numeric(link0df[,"similarity"])
 
 test_createLink0df <- function() {
     checkEquals(dim(link0df)[2], 5)
-    checkTrue(is.matrix(link0df))
+    checkTrue(is.data.frame(link0df))
     checkTrue(all(
         colnames(link0df) == c("group1", "spectrum1", "group2", "spectrum2", "similarity")))
     checkTrue(

@@ -1,9 +1,9 @@
-data("convertMSP2MSP", package="MetCirc")
-spl <- convertMsp2Spectra(msp2spectra)
+data("convertMsp2Spectra", package="MetCirc")
+spl <- convertMsp2Spectra(msp=msp2spectra)
 ## START unit test convertMSP2MSP
 test_convertMsp2Spectra <- function() {
     checkEquals(length(spl), 22)
-    checkEquals(is(spl), c("Spectra", "SimpleList", "List", "Vector", "list_OR_List", "Annotated"))
+    checkEquals(is(spl), c("Spectra", "SimpleList", "List", "Vector", "list_OR_List", "Annotated", "vector_OR_Vector"))
     checkEquals(dim(spl@elementMetadata), c(22, 1))
     checkTrue(is.character(spl@elementMetadata$names))
     checkEquals(spl@elementType, "Spectrum")
