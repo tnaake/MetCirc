@@ -1,4 +1,3 @@
-
 ## create objects which will be used in unit tests
 data("spectra", package="MetCirc")
 ## use only a selection 
@@ -55,6 +54,11 @@ test_printInformationSelect <- function() {
     checkException(MetCirc:::printInformationSelect( 
         select=inds_cond[ind], spectra=spectra_tissue, linkDfInd=linkDfInds,  
         linkDf=linkDf, similarityMatrix=NULL))
+    checkEquals(MetCirc:::printInformationSelect( 
+        select=inds_cond[ind], spectra=spectra_tissue, linkDfInd=numeric(),  
+        linkDf=linkDf, similarityMatrix=similarityMat),
+        "LIM_18 (1398.71, 1018.98, , , , ) does not connect to any feature ")
 }
 ## END unit test printInformationSelect
+
 

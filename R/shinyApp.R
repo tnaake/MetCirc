@@ -47,9 +47,6 @@
 #' @export
 shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     
-    #cond_inds <- lapply(condition, function(x) which(spectra@elementMetadata@listData[[x]] == 1))
-    inds <- MetCirc:::spectraCond(spectra, condition)
-    
     ## check if names, information, classes or adduct is present in 
     ## @elementMetadata and add respectively, these slots will be querid 
     if (is.null(spectra@elementMetadata$names)) 
@@ -69,6 +66,10 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     prec_mz <- unlist(lapply(spectra@listData, function(x) x@precursorMz))
     
     groupname <- rownames(similarityMatrix)
+    
+    ## get names of spectra per condition
+    inds <- MetCirc:::spectraCond(spectra, condition)
+    
     ## create plots and assign to objects by recordPlot
     ## rt
     simMatRT <- orderSimilarityMatrix(similarityMatrix, spectra=spectra, 
