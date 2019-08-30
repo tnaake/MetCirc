@@ -50,15 +50,6 @@ in the slot elementMetadata. If one or several of these columns is
 already present in elementMetadata, the column(s) will be used as the 
 source of annotation information.
 }
-\examples{
-data("idMSMStoMSP", package = "MetCirc")
-## truncate files
-finalMSP <- finalMSP[c(1:20, 29:48, 113:132, 240:259)]
-data("binnedMSP", package = "MetCirc")
-binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
-similarityMat <- createSimilarityMatrix(binnedMSP)
-\dontrun{shinyCircos(similarityMatrix = similarityMat, msp = finalMSP)}
-}
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}
 }

@@ -51,16 +51,17 @@ similarityMat <- compare_Spectra(spectra_tissue[1:10],
  ## set circlize parameters
  circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
          track.margin=c(0.0, 0))
- groupname <- rownames(simM)
- ## here: set selectedFeatures arbitrarily
- indSelected <- c(2,23,42,62)
- selectedFeatures <- groupname[indSelected]
+ groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+                 as.character(linkDf_cut[, "spectrum2"]))
+ groupname <- unique(groupname)
+ ## here: set indSelected arbitrarily
+ indSelected <- c(2,3)
  ## actual plotting
  plotCircos(groupname, linkDf_cut, initialize=TRUE, 
      featureNames=TRUE, cexFeatureNames=0.2, groupSector=TRUE, 
      groupName=FALSE, links=FALSE, highlight=TRUE)
  ## highlight
- highlight(groupname=groupname, ind=indSelected, LinkDf=linkDf_cut, 
+ highlight(groupname=groupname, ind=indSelected, linkDf=linkDf_cut, 
      colour=NULL, transparency=0.4, links=TRUE)
 }
 \author{

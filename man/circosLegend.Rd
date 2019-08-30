@@ -36,9 +36,16 @@ Internal use in \code{shinyCircos} or outside of \code{shinyCircos}
 data("spectra", package="MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue[1:10], 
     fun=normalizeddotproduct, binSize=0.01)
- groupname <- rownames(similarityMat)
- ## plot legend
- circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)
+linkDf <- createLinkDf(similarityMatrix=similarityMat, 
+    spectra=spectra_tissue[1:10], condition=c("SPL", "LIM", "ANT", "STY"), 
+    lower=0.5, upper=1) 
+## cut link data.frame (here: only display links between groups)
+linkDf_cut <- cutLinkDf(linkDf, type="inter")
+groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+            as.character(linkDf_cut[, "spectrum2"]))
+groupname <- unique(groupname)
+## plot legend
+circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

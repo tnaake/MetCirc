@@ -7,7 +7,7 @@
 plotSpectra(spectra, subject, query)
 }
 \arguments{
-\item{spectra}{Spectra object}
+\item{spectra}{`Spectra`` object}
 
 \item{subject}{character, name of spectra that is aligned against, character
 with preceding sample name}
@@ -15,8 +15,18 @@ with preceding sample name}
 \item{query}{character, name of spectra that is aligned to subject, character
 with preceding sample name}
 }
+\value{
+`ggplot2` plot
+}
 \description{
-Plot pair-wise spectra
+``
+}
+\details{
+Internally, all intensities are normalized to 100\%.
+}
+\examples{
+data("spectra", package="MetCirc")
+plotSpectra(spectra_tissue, subject="SPL_1", query="SPL_2")
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}
