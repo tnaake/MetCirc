@@ -39,13 +39,11 @@
 #' object containing the annotation. 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("idMSMStoMSP", package = "MetCirc")
-#' ## truncate files
-#' finalMSP <- finalMSP[c(1:20, 29:48, 113:132, 240:259)]
-#' data("binnedMSP", package = "MetCirc")
-#' binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
-#' similarityMat <- createSimilarityMatrix(binnedMSP)
-#' \dontrun{shinyCircos(similarityMatrix = similarityMat, msp = finalMSP)}
+#' data("spectra", package="MetCirc")
+#' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
+#'     fun=normalizeddotproduct, binSize=0.01)  
+#' \dontrun{shinyCircos(similarityMatrix=similarityMat, spectra=spectra_tissue,
+#'     condition=c("SPL", "LIM", "ANT", "STY))}
 #' @export
 shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     
@@ -656,9 +654,10 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @name printInformationSelect
 #' @title Display information on connected features of selected features
 #' @description Displays information on connected features of selected features.
-#' @usage printInformationSelect(select=groupn[ind], spectra=NULL,
+#' @usage printInformationSelect(select, spectra=NULL,
 #'     linkDfInd, linkDf, similarityMatrix, roundDigits=2) 
-#' @param select `character` 
+#' @param select `character`, obtained from groupname, `character` of 
+#'     selected feature
 #' @param spectra `Spectra` object containing spectra that are compared
 #' in `similarityMatrix`
 #' @param linkDfInd `numeric` indices of selected features
@@ -671,26 +670,25 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @details `printInformationSelect` is for internal use. 
 #' @return `character` that is in HTML format
 #' @examples
-#' data("idMSMStoMSP", package = "MetCirc")
-#' data("binnedMSP", package = "MetCirc")
-#' ## use only a selection
-#' binnedMSP <- binnedMSP[c(1:20, 29:48, 113:132, 240:259),]
-#' similarityMat <- createSimilarityMatrix(binnedMSP)
-#' groupname <- rownames(similarityMat)
-#' ## order similarityMat according to mz
-#' simMat <- createOrderedSimMat(similarityMat, order = "mz") 
-#' groupnameMZ <- rownames(simMat)
-#' linkMat_thr <- createLinkMatrix(simMat, 0.8, 1) 
+#' data("spectra", package="MetCirc")
+#' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
+#'     fun=normalizeddotproduct, binSize=0.01)
+#' linkDf <- createLinkDf(similarityMatrix=similarityMat, 
+#'     spectra=spectra_tissue[1:10], condition=c("SPL", "LIM", "ANT", "STY"), 
+#'     lower=0.5, upper=1) 
+#' ## cut link data.frame (here: only display links between groups)
+#' linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+#'             as.character(linkDf_cut[, "spectrum2"]))
+#' groupname <- unique(groupname)
+#' ## arbitrarily select a feature
 #' ind <- 2
-#' indMZ <- which(groupname[ind] == truncateName(groupnameMZ, NULL, group = TRUE))
-#' linkMatInds <- getLinkDfIndices(groupnameMZ[indMZ], linkMat_thr)
-#' MetCirc:::printInformationSelect(groupname = groupname, 
-#'  msp = NULL, ind = ind, lMatInd = linkMatInds, 
-#'  linkMatrixThreshold = linkMat_thr, 
-#'  similarityMatrix = similarityMat, roundDigits = 2)
+#' linkDfInds <- getLinkDfIndices(groupname[ind], linkDf_cut)
+#' MetCirc:::printInformationSelect(groupname[ind], spectra=spectra_tissue[1:10],
+#'     linkDfInd=linkDfInds, linkDf=linkDf_cut, similarityMatrix=similarityMat)
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @return
-printInformationSelect <- function(select=groupn[ind], spectra=NULL, 
+printInformationSelect <- function(select, spectra=NULL, 
                 linkDfInd, linkDf, similarityMatrix, roundDigits=2) {
 
     ## connected features: find

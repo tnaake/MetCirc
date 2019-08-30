@@ -1,7 +1,7 @@
 #' @import shiny
 #' @import circlize
-#' @import scales
 #' @import ggplot2
+#' @importFrom scales alpha
 #' @name plotCircos
 #' @title Circular plot to visualise similarity
 #' @description Circular plot to visualise similarity
@@ -48,7 +48,9 @@
 #' ## set circlize paramters
 #' circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
 #'          track.margin=c(0.0, 0))
-#' groupname <- rownames(simM)
+#' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+#'                 as.character(linkDf_cut[, "spectrum2"]))
+#' groupname <- unique(groupname)
 #' ## actual plotting
 #' plotCircos(groupname, linkDf_cut, initialize=TRUE, 
 #'     featureNames=TRUE, cexFeatureNames=0.3, groupSector=TRUE, 
@@ -199,16 +201,17 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
 #'  ## set circlize parameters
 #'  circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
 #'          track.margin=c(0.0, 0))
-#'  groupname <- rownames(simM)
-#'  ## here: set selectedFeatures arbitrarily
-#'  indSelected <- c(2,23,42,62)
-#'  selectedFeatures <- groupname[indSelected]
+#'  groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+#'                  as.character(linkDf_cut[, "spectrum2"]))
+#'  groupname <- unique(groupname)
+#'  ## here: set indSelected arbitrarily
+#'  indSelected <- c(2,3)
 #'  ## actual plotting
 #'  plotCircos(groupname, linkDf_cut, initialize=TRUE, 
 #'      featureNames=TRUE, cexFeatureNames=0.2, groupSector=TRUE, 
 #'      groupName=FALSE, links=FALSE, highlight=TRUE)
 #'  ## highlight
-#'  highlight(groupname=groupname, ind=indSelected, LinkDf=linkDf_cut, 
+#'  highlight(groupname=groupname, ind=indSelected, linkDf=linkDf_cut, 
 #'      colour=NULL, transparency=0.4, links=TRUE)
 #' @export
 highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, links=TRUE) {
@@ -293,9 +296,16 @@ highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, lin
 #' data("spectra", package="MetCirc")
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
 #'     fun=normalizeddotproduct, binSize=0.01)
-#'  groupname <- rownames(similarityMat)
-#'  ## plot legend
-#'  circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)
+#' linkDf <- createLinkDf(similarityMatrix=similarityMat, 
+#'     spectra=spectra_tissue[1:10], condition=c("SPL", "LIM", "ANT", "STY"), 
+#'     lower=0.5, upper=1) 
+#' ## cut link data.frame (here: only display links between groups)
+#' linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+#'             as.character(linkDf_cut[, "spectrum2"]))
+#' groupname <- unique(groupname)
+#' ## plot legend
+#' circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)
 #' @export
 circosLegend <- function(groupname, highlight=TRUE, colour=NULL, cex=1) {
     
@@ -399,10 +409,17 @@ getLinkDfIndices <- function(groupnameselected, linkDf) {
 #'  0.8 and 1 will be used to find the feature with smallest distance.
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' #' data("spectra", package="MetCirc")
+#' data("spectra", package="MetCirc")
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
 #'     fun=normalizeddotproduct, binSize=0.01)
-#' groupname <- rownames(similarityMat)
+#' linkDf <- createLinkDf(similarityMatrix=similarityMat, 
+#'     spectra=spectra_tissue[1:10], condition=c("SPL", "LIM", "ANT", "STY"), 
+#'     lower=0.5, upper=1) 
+#' ## cut link data.frame (here: only display links between groups)
+#' linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+#'                 as.character(linkDf_cut[, "spectrum2"]))
+#' groupname <- unique(groupname)
 #' plotCircos(groupname, NULL, initialize=TRUE, featureNames=FALSE, 
 #'      groupName=FALSE, groupSector=FALSE, links=FALSE, highlight=FALSE)
 #' x <- 1
@@ -449,17 +466,19 @@ cart2Polar <- function(x, y) {
 
 #' @name plotSpectra
 #' @title Plot pair-wise spectra
-#' @description 
+#' @description ``
 #' @usage plotSpectra(spectra, subject, query)
-#' @param spectra Spectra object
+#' @param spectra `Spectra`` object
 #' @param subject character, name of spectra that is aligned against, character
 #' with preceding sample name
 #' @param query character, name of spectra that is aligned to subject, character
 #' with preceding sample name
-#' @details 
-#' @return 
+#' @details Internally, all intensities are normalized to 100\%. 
+#' @return `ggplot2` plot
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
+#' data("spectra", package="MetCirc")
+#' plotSpectra(spectra_tissue, subject="SPL_1", query="SPL_2")
 #' @export
 plotSpectra <- function(spectra, subject, query) {
     
@@ -483,7 +502,7 @@ plotSpectra <- function(spectra, subject, query) {
     
     df <- rbind(df_que, df_sub)
     
-    ggplot2::ggplot(df) + 
+    ggplot(df) + 
         geom_segment(aes(x=mz, xend=mz+0.001, y=int, yend=0, col=is), stat="identity") +
         xlab("m/z") + 
         scale_y_continuous("intensity (%)", breaks=c(-100, -50, 0, 50, 100), labels=c("100", "50", "0", "50", "100")) +

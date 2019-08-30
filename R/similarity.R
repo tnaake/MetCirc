@@ -1,5 +1,7 @@
-#' @import MSnbase
-#' @import S4Vectors
+#' @importFrom MSnbase Spectra compareSpectra intensity
+#' @importMethodsFrom MSnbase Spectrum2 Spectra
+#' @importFrom S4Vectors DataFrame
+#' @importFrom utils combn
 #' @name compare_Spectra
 #' @title Create similarity matrix from MSnbase::Spectra object
 #' @description compare_Spectra creates a similarity matrix of all 

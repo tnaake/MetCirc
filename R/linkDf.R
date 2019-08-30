@@ -7,14 +7,14 @@
 #' @param spectra `Spectra` object of `MSnbase` package
 #' @param condition `character`, vector with conditions found as columns 
 #' in the elementMetadata slot 
-#' @details Helper function in createLink0Df and shinyCircos.
-#' @return named list with character vector as entries that contains the 
-#' names of the MS/MS entries in spectra that are present in the conditon
-#' (tissues, stress conditions, time points, etc.)
+#' @details Helper function in `createLink0df` and `shinyCircos`.
+#' @return `list`, named `list` with `character` vector as entries that contains 
+#' the names of the MS/MS entries in `spectra` that are present in the 
+#' `conditon` (tissues, stress conditions, time points, etc.)
 #' @author Thomas Naake \email{thomasnaake@@googlemail.com}
 #' @examples
 #' data("spectra", package="MetCirc")
-#' spectraCond(spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
+#' MetCirc:::spectraCond(spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
 spectraCond <- function(spectra, condition) {
     inds <- lapply(condition, function(x) which(spectra@elementMetadata@listData[[x]] == 1))
     names(inds) <- condition
