@@ -69,13 +69,13 @@ test_plotCircos <- function() {
 
 ## plot with different arguments are TRUE
 plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
-           initialize=FALSE, featureNames=TRUE, groupSector=TRUE, groupName=FALSE, 
+           initialize=TRUE, featureNames=TRUE, groupSector=TRUE, groupName=FALSE,
            links=TRUE, highlight=FALSE, colour=NULL, transparency=0.3)
 plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
-           initialize=FALSE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE, 
+           initialize=TRUE, featureNames=FALSE, groupSector=TRUE, groupName=FALSE,
            links=TRUE, highlight=FALSE, colour=c(1,2,3,4), transparency=0.3)
 plotCircos(inds_cond, linkDf, cexFeatureNames=0.3,
-           initialize=FALSE, featureNames=TRUE, groupSector=FALSE, groupName=TRUE, 
+           initialize=TRUE, featureNames=TRUE, groupSector=FALSE, groupName=TRUE,
            links=TRUE, highlight=FALSE, colour=NULL, transparency=0.3)
 ## END unit test for plotCircos
 
