@@ -56,7 +56,7 @@ test_thresholdLinkDf <- function() {
         dim(thresholdLinkDf(link0df, 0.2, 1))[1] >= 
             dim(thresholdLinkDf(link0df, 0.3, 1))[1])
     checkException(thresholdLinkDf(link0df, 0.9, 0.1))
-    checkException(thresholdLinkDf(link0df, 0.999, 1))
+    checkTrue(nrow(thresholdLinkDf(link0df, 0.999, 1)) == 1)
 }
 ## END unit test thresholdLinkDf
 

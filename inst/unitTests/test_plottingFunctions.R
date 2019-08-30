@@ -175,7 +175,7 @@ test_plotSpectra <- function() {
     checkException(plotSpectra(spectra_tissue, NULL, "LIM_1"))
     checkException(plotSpectra(spectra_tissue, "LIM_1", NULL))
     checkException(plotSpectra(spectra_tissue, "LIM_1", "LIM_0"))
-    checkTrue(is(gg), "gg")
+    checkEquals(is(gg), "gg")
 }
 
 
