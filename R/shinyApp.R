@@ -4,38 +4,38 @@
 #' @name shinyCircos
 #' @title Interactive visualisation of similarity and navigation of MS/MS features
 #' @description Visualise the similarity of MS/MS features in a reactive 
-#'  context. See \code{Details} the vignette for further descriptions on how to use 
-#'  \code{shinyCircos}.
+#'  context. See `Details` the vignette for further descriptions on how to use 
+#'  `shinyCircos`.
 #' @usage shinyCircos(similarityMatrix, spectra, condition, ...)
-#' @param similarityMatrix \code{matrix}, \code{similarityMatrix} contains 
+#' @param similarityMatrix `matrix`, `similarityMatrix` contains 
 #' pair-wise similarity coefficients which give information about the similarity 
 #' between MS/MS features
-#' @param spectra an S4 object of class \code{Spectra}, the 
-#'  \code{Spectra} object will be used to display information about the selected 
+#' @param spectra an S4 object of class `Spectra`, the 
+#'  `Spectra` object will be used to display information about the selected 
 #'  feature and will store information of annotation
-#' @param condition \code{character} vector, specifies which condtions/samples
+#' @param condition `character` vector, specifies which condtions/samples
 #' are displayed
-#' @param ... further arguments passed to \code{shinyCircos}, e.g. 
-#' \code{cexFeatureNames} to pass to \code{plotCircos} to set font size in 
-#' \code{plotCircos} of feature names
-#' @details The function is based on the \code{shiny} and \code{circlize} 
+#' @param ... further arguments passed to `shinyCircos`, e.g. 
+#' `cexFeatureNames` to pass to `plotCircos` to set font size in 
+#' `plotCircos` of feature names
+#' @details The function is based on the `shiny` and `circlize` 
 #' package. 
 #' The user can choose interactively thresholds, type of links (between or 
 #' within groups), display information about MS/MS features, permanently select 
-#' MS/MS features and export selected precursors. The \code{Spectra} object
+#' MS/MS features and export selected precursors. The `Spectra` object
 #' stores annotation information about the MS/MS features. Names of features 
-#' within the \code{similarityMatrix} have to be found as entries 
-#' in \code{Spectra}. \code{names(Spectra)} are used as identifiers and 
-#' \code{colnames}/\code{rownames} from \code{similarityMatrix} are cleaved 
+#' within the `similarityMatrix` have to be found as entries 
+#' in `Spectra`. `names(Spectra)` are used as identifiers and 
+#' `colnames`/`rownames` from `similarityMatrix` are cleaved 
 #' by the group identifier, separated by "_"). Annotation information is taken
-#' from \code{spectra} from the columns "names", "information", "classes" and
-#' "adduct" in the slot elementMetadata of \code{spectra}. After exiting 
+#' from `spectra` from the columns "names", "information", "classes" and
+#' "adduct" in the slot elementMetadata of `spectra`. After exiting 
 #' the application, the annotation will be written to the respective columns
 #' in the slot elementMetadata. If one or several of these columns is 
 #' already present in elementMetadata, the column(s) will be used as the 
 #' source of annotation information. 
-#' @return \code{shinyCircos} returns a \code{character} vector with the 
-#' permanently selected precursors and an object with the \code{Spectra}
+#' @return `character`, `shinyCircos` returns a `character` vector with the 
+#' permanently selected precursors and an object with the `Spectra`
 #' object containing the annotation. 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
@@ -658,22 +658,18 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @description Displays information on connected features of selected features.
 #' @usage printInformationSelect(select=groupn[ind], spectra=NULL,
 #'     linkDfInd, linkDf, similarityMatrix, roundDigits=2) 
-#' @param groupname \code{character} vector with groupname of selected feature,
-#' vector containing "group" and "name" to display, that is 
-#' a unique identifier of the features, "group" and "name" have to be separated
-#' by \code{"_"} where "group" is the first and "name" is the last element
-#' @param msp \code{MSP}, an S4 object of class \code{MSP} for information about 
-#'  the selected feature
-#' @param ind \code{numeric}
-#' @param lMatInd \code{numeric} indices of selected features
-#' @param linkMatrixThreshold \code{matrix} that contains information of linked 
+#' @param select `character` 
+#' @param spectra `Spectra` object containing spectra that are compared
+#' in `similarityMatrix`
+#' @param linkDfInd `numeric` indices of selected features
+#' @param linkDf `data.frame` that contains information of linked 
 #'  features for given thresholds
-#' @param similarityMatrix \code{matrix} that is used to get information on the 
-#' degree of similarity, \code{similarityMat} is an ordered version of a 
-#' similarity matrix, see \code{?createOrderedSimMat}
-#' @param roundDigits \code{numeric},  how many digits should be displayed?
-#' @details \code{printInformationSelect} is for internal use. 
-#' @return \code{character} that is in HTML format
+#' @param similarityMatrix `matrix` that is used to get information on the 
+#' degree of similarity, `similarityMat` is an ordered version of a 
+#' similarity matrix, see `?createOrderedSimMat`
+#' @param roundDigits `numeric`,  how many digits should be displayed?
+#' @details `printInformationSelect` is for internal use. 
+#' @return `character` that is in HTML format
 #' @examples
 #' data("idMSMStoMSP", package = "MetCirc")
 #' data("binnedMSP", package = "MetCirc")

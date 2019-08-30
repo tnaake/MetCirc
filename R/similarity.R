@@ -173,7 +173,7 @@ neutralloss <- function(x, y, m=0.5, n=2, ...) {
 #' between different types of ordering in between groups (sectors) in the 
 #' circos plot. It may be used as well externally, to reproduce plots outside
 #' of the reactive environment (see vignette for a workflow).
-#' @return \code{orderSimilarityMat}rix returns a similarity matrix 
+#' @return `matrix`, `orderSimilarityMatrix` returns a similarity matrix 
 #' with ordered rownames according to the \code{character} vector given to order
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 

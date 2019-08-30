@@ -1,11 +1,11 @@
 #' @name spectraCond
 #' @title Get MS/MS spectra that are present in condition 
-#' @description spectraCond returns the names of \code{spectra} that are 
+#' @description `spectraCond` returns the names of `spectra` that are 
 #' present in condition, corresponding to the slot 
-#' \code{elementMetadata@listData}.
+#' `elementMetadata@listData`.
 #' @usage spectraCond(spectra, condition)
-#' @param spectra \code{Spectra} object of \code{MSnbase} package
-#' @param conditon \code{character}, vector with conditions found as columns 
+#' @param spectra `Spectra` object of `MSnbase` package
+#' @param condition `character`, vector with conditions found as columns 
 #' in the elementMetadata slot 
 #' @details Helper function in createLink0Df and shinyCircos.
 #' @return named list with character vector as entries that contains the 
@@ -28,14 +28,16 @@ spectraCond <- function(spectra, condition) {
 #' @title Create a link matrix 
 #' @description Create a link matrix which links every feature in similarity
 #' matrix with another. 
-#' @usage createLink0df(similarityMatrix)
-#' @param similarityMatrix \code{matrix}, a similarity matrix that contains the 
+#' @usage createLink0df(similarityMatrix, spectra, condition)
+#' @param similarityMatrix `matrix`, a similarity matrix that contains the 
 #' NDP similarity measure between all precursors in the data set
-#' @details createLink0df creates a \code{matrix} from a similarity 
+#' @param spectra `Spectra` object
+#' @param condition `character`, which conditions should be included?
+#' @details createLink0df creates a `matrix` from a similarity 
 #' matrix which includes all connections between features in the 
 #' similarity matrix, but 
 #' exclude links which have a similarity of exactly 0.
-#' @return createLink0df returns a \code{matrix} that gives per each row 
+#' @return createLink0df returns a `matrix` that gives per each row 
 #' information on linked features
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
@@ -89,14 +91,14 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
 #' @name thresholdLinkDf
 #' @title Threshold a data frame containing information on links
 #' @description Threshold a link data frame
-#' @usage thresholdLinkDf(link0df, lower, upper)
-#' @param linkDf \code{data.frame}, a link data frame that gives per each row 
+#' @usage thresholdLinkDf(link0df, lower=0.75, upper=1)
+#' @param link0df `data.frame`, a link data frame that gives per each row 
 #' information on linked features
-#' @param lower \code{numeric}, threshold value for similarity values, below 
+#' @param lower `numeric`, threshold value for similarity values, below 
 #' this value linked features will not be returned
-#' @param upper \code{numeric}, threshold value for similarity values, above 
+#' @param upper `numeric`, threshold value for similarity values, above 
 #' this value linked features will not be returned
-#' @details \code{lower} and \code{upper} are numerical values 
+#' @details `lower` and `upper` are numerical values 
 #' and truncates mass spectra based on their similarity values. 
 #' @return \code{thresholdLinkDf} returns a data frame that gives per each row 
 #' information on linked features which are linked within certain thresholds
@@ -139,19 +141,19 @@ thresholdLinkDf <- function(link0df, lower=0.75, upper=1) {
 #' @title Create a data frame which contains features to link (indices)
 #' @description Create a data frame which contains features to link (indices)
 #' @usage createLinkDf(similarityMatrix, spectra, condition, lower, upper) 
-#' @param similarityMatrix \code{matrix}, a similarity matrix that contains the 
+#' @param similarityMatrix `matrix`, a similarity matrix that contains the 
 #' similarity measure between all precursors in the data set
 #' @param spectra Spectra object containing spectra of similarityMatrix
-#' @param condition \code{character}, vector containing the 
+#' @param condition `character`, vector containing the 
 #' conditions/samples for which a linkDf is created
-#' @param lower \code{numeric}, threshold value for similarity values, 
+#' @param lower `numeric`, threshold value for similarity values, 
 #' below this value linked features will not be included
-#' @param upper \code{numeric}, threshold value for similarity values, 
+#' @param upper `numeric`, threshold value for similarity values, 
 #' above this value linked features will not be included
-#' @details \code{lower} and \code{upper} are numerical values 
+#' @details `lower` and `upper` are numerical values 
 #' and truncate similar spectra. The function createLinkDf is a wrapper 
-#' for the functions createLink0Df and thresholdLinkDf.
-#' @return \code{createLinkDf} returns a data frame that gives per each row 
+#' for the functions `createLink0df` and `thresholdLinkDf`.
+#' @return `createLinkDf` returns a data frame that gives per each row 
 #' information on linked features
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
@@ -175,9 +177,9 @@ createLinkDf <- function(similarityMatrix, spectra, condition, lower, upper) {
 #' @title Create a cut data frame with information on links
 #' @description Create a cut link data frame
 #' @usage cutLinkDf(linkDf, type=c("all", "inter", "intra"))
-#' @param linkDf \code{data.frame}, that gives per each row 
+#' @param linkDf `data.frame`, that gives per each row 
 #' information on linked features
-#' @param type \code{character}, one of "all", "inter" or "intra"
+#' @param type `character`, one of "all", "inter" or "intra"
 #' @details This function is used to truncate features from linkDf. If 
 #' type="all", linkDf will not be changed; if type="inter" the returned
 #' linkDf will only contain entries of links which are between groups and 
