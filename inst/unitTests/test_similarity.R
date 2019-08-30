@@ -64,9 +64,9 @@ test_createOrderedSimMat <- function() {
     checkEquals(dim(simMat), dim(simMat_o_cl))
     checkTrue(is.matrix(simMat_o_cl))
     checkTrue(is.numeric(simMat_o_cl))
-    checkTRUE(is.matrix(
+    checkTrue(is.matrix(
         orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)))
-    checkTRUE(is.numeric(
+    checkTrue(is.numeric(
         orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)))
     checkEquals(
         rownames(orderSimilarityMatrix(simMat_gr, spl, type="mz", group=TRUE)),

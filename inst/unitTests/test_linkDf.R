@@ -32,6 +32,17 @@ test_createLink0df <- function() {
     checkTrue(
         all(unique(c(as.character(link0df$name1), as.character(link0df$name2))) %in% unique(inds_cond)))
     checkTrue(all(0 < ndps & ndps <= 1))
+    simMat_mock <- similarityMat
+    rownames(simMat_mock)[1] <- "a"
+    checkException(createLink0df(simMat_mock, spectra_tissue, condition))
+    simMat_mock <- similarityMat
+    rownames(simMat_mock) <- NULL
+    checkException(createLink0df(simMat_mock, spectra_tissue, condition))
+    simMat_mock <- similarityMat
+    colnames(simMat_mock) <- NULL
+    checkException(createLink0df(simMat_mock, spectra_tissue, condition))
+    similarityMat <- compare_Spectra(spectra_tissue[1:2], fun=normalizeddotproduct)  
+    checkTrue(is.data.frame(createLink0df(similarityMat, spectra_tissue, condition))
 }
 ## END unit test link0df
 
@@ -44,6 +55,8 @@ test_thresholdLinkDf <- function() {
     checkTrue(
         dim(thresholdLinkDf(link0df, 0.2, 1))[1] >= 
             dim(thresholdLinkDf(link0df, 0.3, 1))[1])
+    checkException(thresholdLinkDf(link0df, 0.9, 0.1))
+    checkException(thresholdLinkDf(link0df, 0.999, 1))
 }
 ## END unit test thresholdLinkDf
 

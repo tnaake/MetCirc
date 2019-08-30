@@ -125,14 +125,7 @@ thresholdLinkDf <- function(link0df, lower=0.75, upper=1) {
     indThr <- which(sim >= lower & sim <= upper)
     
     ## cut linkDf
-    if (length(indThr) <= 1) {
-        thrDf <- matrix(NA, ncol=ncol(link0df), nrow=length(indThr))
-        thrDf[1:nrow(thrDf),1:ncol(thrDf)] <- link0df[indThr,]
-    } else {
-        thrDf <- link0df[indThr,]
-    }
-    
-    colnames(thrDf) <- colnames(link0df)  
+    thrDf <- link0df[indThr,]
     
     return(thrDf)
 }
