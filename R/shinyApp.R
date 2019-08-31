@@ -67,28 +67,15 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     
     groupname <- rownames(similarityMatrix)
     
-    ## get names of spectra per condition
-    inds <- MetCirc:::spectraCond(spectra, condition)
+    
     
     ## create plots and assign to objects by recordPlot
     ## rt
-    simMatRT <- orderSimilarityMatrix(similarityMatrix, spectra=spectra, 
-        type="retentionTime", group=FALSE)
-    link0dfRT <- createLink0df(simMatRT, spectra=spectra, condition=condition)
-    groupnameRT <- rownames(simMatRT)
-    rt_match <- lapply(inds, function(x) {rt_match <- match(groupnameRT, x)
-    rt_match <- rt_match[!is.na(rt_match)]; x[rt_match]})
-    rt_match <- lapply(seq_along(rt_match), function(x) {
-        if (length(rt_match[[x]]) > 0) {
-            paste(condition[x], rt_match[[x]], sep="_")    
-        } else character()
-    })
-    rt_match <- unique(unlist(rt_match))
+    RT <- typeMatch_link0(similarityMatrix=similarityMatrix, spectra=spectra, 
+                          type="retentionTime", condition=condition)
+    link0dfRT <- RT[["link0df"]]
+    rt_match <- RT[["type_match"]]
     
-    plotCircos(rt_match, NULL, initialize=TRUE, featureNames = TRUE, 
-               groupSector = TRUE, groupName = FALSE, links = FALSE, 
-               highlight = FALSE, ...)
-    PlotFilledRT <- recordPlot()
     ## get group and name from rt_match
     ## rt_match is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
@@ -96,33 +83,21 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     groupRT <- unlist(groupRT)
     nameRT <- lapply(strsplit(rt_match, split = "_"), function (x) x[length(x)])
     nameRT <- unlist(nameRT)
-    ## get degree of features
-    degreeFeaturesRT <- lapply(rt_match, 
-        function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
-    plot.new()
     
-    plotCircos(rt_match, NULL, initialize=TRUE, featureNames = TRUE, 
-               groupSector = TRUE, groupName = FALSE, links = FALSE, 
-               highlight = TRUE, ...)
-    PlotHighlightRT <- recordPlot()
-    plot.new()
+    ## plot filled and get degree features
+    fillRT <- recordPlotFill_degreeFeatures(rt_match, ...)
+    degreeFeaturesRT <- fillRT[["degreeFeatures"]]
+    fillRT <- fillRT[["plotFill"]]
     
+    ## plot highlight
+    highlightRT <- recordPlotHighlight(rt_match, ...)
+
     ## mz
-    simMatMZ <- orderSimilarityMatrix(similarityMatrix, spectra=spectra, 
-        type="mz", group=FALSE)
-    link0dfMZ <- createLink0df(simMatMZ, spectra=spectra, condition=condition)
-    groupnameMZ <- rownames(simMatMZ)
-    mz_match <- lapply(inds, function(x) {mz_match <- match(groupnameMZ, x)
-    mz_match <- mz_match[!is.na(mz_match)]; x[mz_match]})
-    mz_match <- lapply(seq_along(mz_match), function(x) {
-        if (length(mz_match[[x]]) > 0) {
-            paste(condition[x], mz_match[[x]], sep="_")    
-        } else character()
-    })
-    mz_match <- unique(unlist(mz_match))
-    plotCircos(mz_match, NULL, initialize=TRUE, featureNames=TRUE, 
-               groupSector=TRUE, groupName=FALSE, links=FALSE, highlight=FALSE, ...)
-    PlotFilledMZ <- recordPlot()
+    MZ <- typeMatch_link0(similarityMatrix=similarityMatrix, spectra=spectra, 
+                          type="mz", condition=condition)
+    link0dfMZ <- MZ[["link0df"]]
+    mz_match <- MZ[["type_match"]]
+    
     ## get group and name from mz_match
     ## mz_match is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
@@ -130,33 +105,21 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     groupMZ <- unlist(groupMZ)
     nameMZ <- lapply(strsplit(mz_match, split = "_"), function (x) x[length(x)])
     nameMZ <- unlist(nameMZ)
-    ## get degree of features
-    degreeFeaturesMZ <- lapply(mz_match, 
-        function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
     
-    plot.new()
-    plotCircos(mz_match, NULL, initialize=TRUE, featureNames = TRUE, 
-               groupSector = TRUE, groupName = FALSE, links = FALSE, 
-               highlight = TRUE, ...)
-    PlotHighlightMZ <- recordPlot()
-    plot.new()
+    ## plot filled and get degree features
+    fillMZ <- recordPlotFill_degreeFeatures(mz_match, ...)
+    degreeFeaturesMZ <- fillMZ[["degreeFeatures"]]
+    fillMZ <- fillMZ[["plotFill"]]
+    
+    ## plot highlight
+    highlightMZ <- recordPlotHighlight(mz_match, ...)
     
     ## clustering
-    simMatClust <- orderSimilarityMatrix(similarityMatrix, spectra=spectra, 
-        type="clust", group=FALSE)
-    link0dfClust <- createLink0df(simMatClust, spectra=spectra, condition=condition)
-    groupnameClust <- rownames(simMatClust)
-    clust_match <- lapply(inds, function(x) {clust_match <- match(groupnameClust, x)
-    clust_match <- clust_match[!is.na(clust_match)]; x[clust_match]})
-    clust_match <- lapply(seq_along(clust_match), function(x) {
-        if (length(clust_match[[x]]) > 0) {
-            paste(condition[x], clust_match[[x]], sep="_")    
-        } else character()
-    })
-    clust_match <- unique(unlist(clust_match))
-    plotCircos(clust_match, NULL, initialize=TRUE, featureNames=TRUE, 
-               groupSector=TRUE, groupName=FALSE, links=FALSE, highlight=FALSE, ...)
-    PlotFilledClust <- recordPlot()
+    Clust <- typeMatch_link0(similarityMatrix=similarityMatrix, spectra=spectra, 
+                          type="clustering", condition=condition)
+    link0dfClust <- Clust[["link0df"]]
+    clust_match <- Clust[["type_match"]]
+    
     ## get group and name from clust_match
     ## clust_match is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
@@ -164,25 +127,33 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     groupClust <- unlist(groupClust)
     nameClust <- lapply(strsplit(clust_match, split = "_"), function (x) x[length(x)])
     nameClust <- unlist(nameClust)
-    ## get degree of features
-    degreeFeaturesClust <- lapply(clust_match,
-                                  function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
-    plot.new()
     
-    plotCircos(clust_match, NULL, initialize=TRUE, featureNames=TRUE, 
-               groupSector=TRUE, groupName=FALSE, links=FALSE, highlight=TRUE, ...)
-    PlotHighlightClust <- recordPlot()
-    plot.new()
+    ## plot filled and get degree features
+    fillClust <- recordPlotFill_degreeFeatures(clust_match, ...)
+    degreeFeaturesClust <- fillClust[["degreeFeatures"]]
+    fillClust <- fillClust[["plotFill"]]
+    
+    ## plot highlight
+    highlightClust <- recordPlotHighlight(clust_match, ...)
+   
+    ## create list with all plots
+    plot_l <- list(highlightMz=highlightMZ, 
+        fillMz=fillMZ,
+        highlightRT=highlightRT, 
+        fillRT=fillRT,
+        highlightClust=highlightClust, 
+        fillClust=fillClust)
+    
     
     ui <- fluidPage( 
         tags$head(tags$script('
-                              $(document).on("shiny:connected", function(e) {
-                              Shiny.onInputChange("innerWidth", window.innerWidth);
-                              });
-                              $(window).resize(function(e) {
-                              Shiny.onInputChange("innerWidth", window.innerWidth);
-                              });
-                              '
+                $(document).on("shiny:connected", function(e) {
+                Shiny.onInputChange("innerWidth", window.innerWidth);
+                });
+                $(window).resize(function(e) {
+                Shiny.onInputChange("innerWidth", window.innerWidth);
+                });
+                '
         )),
         column(4, 
             fluidRow(
@@ -285,9 +256,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         })
         
         ## eventReactive for annotation ind 
-        indAnn <- eventReactive(input$annotate, {
-            ind()
-        })
+        indAnn <- eventReactive(input$annotate, {ind()})
         
         ## eventReactive for input$name (records "character" for annotation)
         annotateNames <- eventReactive(input$annotate, {
@@ -508,75 +477,17 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
             circos.trackPlotRegion(factor(GN(), levels=GN()), ylim=c(0,1))  
         })
         
-        ## assign to output$circos
+        ## assign to output$circos: actual plotting
         output$circos <- renderPlot({
+            indDblClickMZ$ind
             initializePlot()
-            if (onCircle$is) {
-                if (input$order == "mz") {
-                    replayPlot(PlotHighlightMZ)
-                    highlight(mz_match, c(indClick$ind, indDblClickMZ$ind), 
-                              LinkDf_threshold())  
-                }
-                
-                if (input$order == "retentionTime") {
-                    replayPlot(PlotHighlightRT)
-                    highlight(rt_match, c(indClick$ind, indDblClickRT$ind), 
-                              LinkDf_threshold())    
-                }
-                
-                if (input$order == "clustering") {
-                    replayPlot(PlotHighlightClust)
-                    highlight(clust_match, c(indClick$ind, 
-                                    indDblClickCluster$ind), LinkDf_threshold())  
-                }
-            } else { ## if not onCircle$is
-                if (length(indDblClickMZ$ind) > 0) {
-                    if (input$order == "mz") {
-                        replayPlot(PlotHighlightMZ)
-                        highlight(mz_match, 
-                                c(indDblClickMZ$ind), LinkDf_threshold()) 
-                    }
-                    
-                    if (input$order == "retentionTime") {
-                        replayPlot(PlotHighlightRT)
-                        highlight(rt_match, 
-                                c(indDblClickRT$ind), LinkDf_threshold()) 
-                    }
-                    
-                    if (input$order == "clustering") {
-                        replayPlot(PlotHighlightClust)
-                        highlight(clust_match, 
-                                c(indDblClickCluster$ind), LinkDf_threshold())  
-                    }
-                    
-                } else {
-                    if (input$order == "mz") {
-                        replayPlot(PlotFilledMZ)
-                        plotCircos(mz_match, LinkDf_threshold(), 
-                                   initialize=FALSE, featureNames=FALSE, 
-                                   groupSector=FALSE, groupName=FALSE, 
-                                   links=TRUE, highlight=FALSE)
-                    }
-                    
-                    
-                    if (input$order == "retentionTime") {
-                        replayPlot(PlotFilledRT)
-                        plotCircos(rt_match, LinkDf_threshold(), 
-                                   initialize=FALSE, featureNames = FALSE, 
-                                   groupSector = FALSE, groupName = FALSE, 
-                                   links = TRUE, highlight = FALSE)
-                    }
-                    
-                    if (input$order == "clustering") {
-                        replayPlot(PlotFilledClust)
-                        plotCircos(clust_match, LinkDf_threshold(), 
-                                   initialize=FALSE, featureNames=FALSE,
-                                   groupSector=FALSE, groupName=FALSE, 
-                                   links=TRUE, highlight=FALSE)
-                    }
-                }
-            }
+            replayPlot1(orderMatch=input$order, onCircle=onCircle$is, plot_l=plot_l,
+                            indDblClickMz=indDblClickMZ$ind) 
+            replayPlot2(orderMatch=input$order, onCircle=onCircle$is, 
+                        linkDf=LinkDf_threshold(), mz_match=mz_match, rt_match=rt_match, clust_match=clust_match,
+                        indClick=indClick$ind, indDblClickMz=indDblClickMZ$ind, indDblClickRT=indDblClickRT$ind, indDblClickCluster=indDblClickCluster$ind) 
         })
+
         
         output$sized_plot <- renderUI({
             plotOutput("circos",
@@ -650,6 +561,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     runApp(app)
 }
 
+shinyCircos(similarityMat, spectra_tissue, c("ANT", "STY"))
 
 
 #' @name printInformationSelect
@@ -752,5 +664,113 @@ printInformationSelect <- function(select, spectra=NULL,
             select_spectra@elementMetadata$adduct, ") connects to ", 
             " <br/>", connChar))
     }
+}
+
+
+#' @name replayPlotShiny
+#' @title Wrapper for replayPlot and highlight
+#' @description 
+#' @usage
+#' @param plot_l `list` with plots
+#' @param
+#' @details 
+#' @return 
+#' @examples 
+#' @author
+replayPlot1 <- function(orderMatch="mz", onCircle=FALSE, plot_l, indDblClickMz) {
+
+    if (!onCircle & length(indDblClickMz) == 0) {
+        
+        ## get plot based on orderMatch 
+        if (orderMatch == "mz")  p <- plot_l[["fillMz"]]
+        if (orderMatch == "retentionTime") p <- plot_l[["fillRT"]]
+        if (orderMatch == "clustering") p <- plot_l[["fillClust"]]
+        
+        ## plot
+        replayPlot(p)
+    } else {
+         
+        ## get plot based on orderMatch
+        if (orderMatch == "mz")  p <- plot_l[["highlightMz"]]
+        if (orderMatch == "retentionTime") p <- plot_l[["highlightRT"]]
+        if (orderMatch == "clustering") p <- plot_l[["highlightClust"]]
+        
+        ## plot
+        replayPlot(p) 
+    }
+}
+
+#' @name
+replayPlot2 <- function(orderMatch="mz", onCircle=FALSE, linkDf, 
+                        mz_match, rt_match, clust_match, indClick, indDblClickMz, indDblClickRT, indDblClickCluster) {
+    
+    ## get type_match based on orderMatch
+    if (orderMatch == "mz") {type_match <- mz_match; indDblClick <- indDblClickMz}
+    if (orderMatch == "retentionTime") {type_match <- rt_match; indDblClick <- indDblClickRT}
+    if (orderMatch == "clustering") {type_match <- clust_match; indDblClick <- indDblClickCluster}
+    
+    if (!onCircle & length(indDblClickMz) == 0) {
+        ## plot
+        return(plotCircos(type_match, linkDf, initialize=FALSE, featureNames=FALSE, 
+                   groupSector=FALSE, groupName=FALSE, links=TRUE, highlight=FALSE))
+
+    } else {
+        ## get inds 
+        inds <- if (onCircle) c(indClick, indDblClick) else indDblClick
+        
+        ## plot
+        
+        return(highlight(type_match, inds, linkDf))
+    }
+}
+
+
+#' 
+recordPlotFill_degreeFeatures <- function(type_match, ...) {
+    plotCircos(type_match, NULL, initialize=TRUE, featureNames=TRUE, 
+               groupSector=TRUE, groupName=FALSE, links=FALSE, highlight=FALSE, ...)
+    fill <- recordPlot()
+    ## get degree of features
+    degree <- lapply(type_match, function(x) {
+        mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")])
+    })
+    plot.new()
+    return(list(plotFill=fill, degreeFeatures=degree))
+    
+}
+
+#' @name
+#' 
+recordPlotHighlight <- function(type_match, ...) {
+    ## use plotCircos
+    plotCircos(type_match, NULL, initialize=TRUE, featureNames = TRUE,
+               groupSector = TRUE, groupName = FALSE, links = FALSE,
+               highlight = TRUE, ...) 
+    highlight <- recordPlot() 
+    ##recordPlot()
+    plot.new()
+    return(highlight)
+}
+
+
+
+#' @name 
+typeMatch_link0 <- function(similarityMatrix, spectra, type, condition) {
+    simMat <- orderSimilarityMatrix(similarityMatrix, spectra=spectra, 
+                                    type=type, group=FALSE)
+    ## get names of spectra per condition
+    inds <- MetCirc:::spectraCond(spectra, condition)
+    
+    link0df <- createLink0df(simMat, spectra=spectra, condition=condition)
+    groupname <- rownames(simMat)
+    type_match <- lapply(inds, function(x) {type_match <- match(groupname, x)
+    type_match <- type_match[!is.na(type_match)]; x[type_match]})
+    type_match <- lapply(seq_along(type_match), function(x) {
+        if (length(type_match[[x]]) > 0) {
+            paste(condition[x], type_match[[x]], sep="_")    
+        } else character()
+    })
+    type_match <- unique(unlist(type_match))
+    return(list(link0df=link0df, type_match=type_match))
 }
 
