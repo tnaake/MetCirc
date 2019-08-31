@@ -319,37 +319,37 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
             }
         })
         
-        ## create reactive expression for LinkDF which is cut according to 
+        ## create reactive expression for linkDf which is cut according to 
         ## set radioButton (input$choiceLinks)
-        LinkDf_cut <- reactive(
+        linkDf_cut <- reactive(
             cutLinkDf(link0df(), type=input$choiceLinks))
         
         ## threshold linkDf_cut
-        LinkDf_threshold <- reactive(
-            thresholdLinkDf(LinkDf_cut(), 
+        linkDf_threshold <- reactive(
+            thresholdLinkDf(linkDf_cut(), 
                             input$threshold[1], input$threshold[2]))
         
-        ## reactiveValues for click Coordinates
-        CoordinatesNewClick <- reactiveValues(X = 0, Y = 0)
-        CoordinatesOldClick <- reactiveValues(X = 0, Y = 0)
+        ## reactiveValues for click coordinates
+        coordsNewClick <- reactiveValues(X = 0, Y = 0)
+        coordsOldClick <- reactiveValues(X = 0, Y = 0)
         
         observe({
             if (!is.null(input$circosClick$x)) {
-                CoordinatesNewClick$X <- input$circosClick$x
-                CoordinatesNewClick$Y <- input$circosClick$y
-                CoordinatesOldClick$X <- CoordinatesNewClick$X
-                CoordinatesOldClick$Y <- CoordinatesNewClick$Y
+                coordsNewClick$X <- input$circosClick$x
+                coordsNewClick$Y <- input$circosClick$y
+                coordsOldClick$X <- coordsNewClick$X
+                coordsOldClick$Y <- coordsNewClick$Y
             } else {
-                CoordinatesNewClick$X <- CoordinatesOldClick$X
-                CoordinatesNewClick$Y <- CoordinatesOldClick$Y
+                coordsNewClick$X <- coordsOldClick$X
+                coordsNewClick$Y <- coordsOldClick$Y
             }
         })
         
         ## is mouse over the track 1?
         onCircle <- reactiveValues(is = NULL)
         observe({
-            if (!is.null(CoordinatesNewClick$X)) {
-                .dist <- sqrt(CoordinatesOldClick$X^2 + CoordinatesOldClick$Y^2)
+            if (!is.null(coordsNewClick$X)) {
+                .dist <- sqrt(coordsOldClick$X^2 + coordsOldClick$Y^2)
                 if (.dist >= 0.8 & .dist <= 1) {
                     onCircle$is <- TRUE 
                 } else {
@@ -369,18 +369,18 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         
         
         ## double click: which is the current sector?
-        CoordinatesNewDblClick <- reactiveValues(X = 0, Y = 0)
-        CoordinatesOldDblClick <- reactiveValues(X = 0, Y = 0)
+        coordsNewDblClick <- reactiveValues(X = 0, Y = 0)
+        coordsOldDblClick <- reactiveValues(X = 0, Y = 0)
         
         observe({
             if (!is.null(input$circosDblClick$x)) {
-                CoordinatesNewDblClick$X <- input$circosDblClick$x
-                CoordinatesNewDblClick$Y <- input$circosDblClick$y
-                CoordinatesOldDblClick$X <- CoordinatesNewDblClick$X
-                CoordinatesOldDblClick$Y <- CoordinatesNewDblClick$Y
+                coordsNewDblClick$X <- input$circosDblClick$x
+                coordsNewDblClick$Y <- input$circosDblClick$y
+                coordsOldDblClick$X <- coordsNewDblClick$X
+                coordsOldDblClick$Y <- coordsNewDblClick$Y
             } else {
-                CoordinatesNewDblClick$X <- CoordinatesOldDblClick$X
-                CoordinatesNewDblClick$Y <- CoordinatesOldDblClick$Y
+                coordsNewDblClick$X <- coordsOldDblClick$X
+                coordsNewDblClick$Y <- coordsOldDblClick$Y
             }
         })
         
@@ -484,7 +484,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
             replayPlot1(orderMatch=input$order, onCircle=onCircle$is, plot_l=plot_l,
                             indDblClickMz=indDblClickMZ$ind) 
             replayPlot2(orderMatch=input$order, onCircle=onCircle$is, 
-                        linkDf=LinkDf_threshold(), mz_match=mz_match, rt_match=rt_match, clust_match=clust_match,
+                        linkDf=linkDf_threshold(), mz_match=mz_match, rt_match=rt_match, clust_match=clust_match,
                         indClick=indClick$ind, indDblClickMz=indDblClickMZ$ind, indDblClickRT=indDblClickRT$ind, indDblClickCluster=indDblClickCluster$ind) 
         })
 
@@ -504,17 +504,17 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         
         ## show when Clicking the feature which connects to it
         linkDfIndsClick <- reactive({
-            getLinkDfIndices(GN()[indClick$ind], LinkDf_threshold())
+            getLinkDfIndices(GN()[indClick$ind], linkDf_threshold())
         })
         
         output$clickConnectedFeature <- renderUI({ 
             if (!is.null(onCircle$is)) {
                 if (onCircle$is)
                     HTML(printInformationSelect(select=GN()[indClick$ind], 
-                                                spectra=spe$spectra, linkDfInd=linkDfIndsClick(), 
-                                                linkDf=LinkDf_threshold(), 
-                                                similarityMatrix=similarityMatrix, 
-                                                roundDigits=input$precision))  
+                            spectra=spe$spectra, linkDfInd=linkDfIndsClick(), 
+                            linkDf=linkDf_threshold(), 
+                            similarityMatrix=similarityMatrix, 
+                            roundDigits=input$precision))  
             }
         })
         
