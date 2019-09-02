@@ -4,19 +4,19 @@
 \alias{replayPlotOrder}
 \title{Wrapper for `replayPlot`}
 \usage{
-replayPlotOrder(orderMatch="mz", onCircle=FALSE, plot_l, indClick)
+replayPlotOrder(orderMatch="mz", onCircle=FALSE, plot_l, ind)
 }
 \arguments{
 \item{orderMatch}{`character`, either `"mz"`, `"retentionTime"` or 
 `"clustering"`}
 
 \item{onCircle}{`logical`, are coordinates on circle. If FALSE and
-no features are selected (`length(indClick) == 0`), then filled plots are 
+no features are selected (`length(ind) == 0`), then filled plots are 
 replayed, otherwise highlighted plots are replayed.}
 
 \item{plot_l}{`list` with plots}
 
-\item{indClick}{`numeric`, indices of clicked features}
+\item{ind}{`numeric`, indices of clicked features}
 }
 \value{
 `replayedplot`
@@ -36,7 +36,7 @@ plotCircos(type_match, NULL, initialize=TRUE, featureNames = TRUE,
 p <- recordPlot()
 plot.new()
 plot_l <- list(highlightMz=p)
-MetCirc:::replayPlotOrder(orderMatch="mz", onCircle=TRUE, plot_l=plot_l, indClick=NULL)
+MetCirc:::replayPlotOrder(orderMatch="mz", onCircle=TRUE, plot_l=plot_l, ind=NULL)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

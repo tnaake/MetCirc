@@ -5,14 +5,14 @@
 \title{Plot plotCircos or highlight}
 \usage{
 replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf, mz_match,
-  rt_match, clust_match, indClick, indMz, indRT, indCluster)
+  rt_match, clust_match, ind, indMz, indRT, indCluster)
 }
 \arguments{
 \item{orderMatch}{orderMatch `character`, either `"mz"`, `"retentionTime"` or 
 `"clustering"`}
 
 \item{onCircle}{`logical`, are coordinates on circle. If FALSE and
-no features are selected (`length(indClick) == 0`), then filled plots are 
+no features are selected (`length(ind) == 0`), then filled plots are 
 replayed, otherwise highlighted plots are replayed.}
 
 \item{linkDf}{`data.frame` that contains information of linked 
@@ -24,7 +24,7 @@ features for given thresholds}
 
 \item{clust_match}{`character`, ordered vector according to clustering}
 
-\item{indClick}{`numeric`, indices of clicked features}
+\item{ind}{`numeric`, indices of clicked features}
 
 \item{indMz}{`numeric`, indices of clicked features for `"mz"` ordering}
 
@@ -60,12 +60,12 @@ rt_match <- rt_match[["type_match"]]
 clust_match <- MetCirc:::typeMatch_link0(similarityMatrix=similarityMat, spectra=spectra_tissue, 
     type="clustering", condition=c("SPL", "LIM", "ANT", "STY"))
 clust_match <- clust_match[["type_match"]]
-circos.initialize(factor(mz_match, levels = mz_match),
+circos.initialize(mz_match,##, levels = mz_match),
     xlim=matrix(rep(c(0,1), length(mz_match)), ncol=2, byrow=TRUE))
-circos.trackPlotRegion(factor(mz_match, levels=mz_match), ylim=c(0,1))  
+#circos.trackPlotRegion(factor(mz_match, levels=mz_match), ylim=c(0,1))  
 MetCirc:::replayPlotAdd(orderMatch="mz", onCircle=FALSE, linkDf=linkDf, 
     mz_match=mz_match, rt_match=rt_match, clust_match=clust_match, 
-    indClick=1, indMz=NULL, indRT=NULL, indCluster=NULL)
+    ind=1, indMz=NULL, indRT=NULL, indCluster=NULL)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}
