@@ -762,7 +762,7 @@ replayPlotAdd <- function(orderMatch="mz", onCircle=FALSE, linkDf,
     if (orderMatch == "retentionTime") {type_match <- rt_match; ind <- indRT}
     if (orderMatch == "clustering") {type_match <- clust_match; ind <- indCluster}
     
-    if (!onCircle & length(indMz) == 0) {
+    if (!onCircle & length(ind) == 0) {
         ## plot
         return(plotCircos(type_match, linkDf, initialize=FALSE, featureNames=FALSE, 
                    groupSector=FALSE, groupName=FALSE, links=TRUE, highlight=FALSE))
@@ -787,7 +787,7 @@ replayPlotAdd <- function(orderMatch="mz", onCircle=FALSE, linkDf,
 #' @param ... further arguments passed to `plotCircos`
 #' @details Helper function for `shinyCircos`.
 #' @return `list` of length 2, entry `plotFill` is of `recordedplot` and 
-#' entry `degreeFeatures` that is a `list` of vectors of `numeric(2)` 
+#' entry `degreeFeatures` that is a `list` of vectors of `numeric(1)` 
 #' @examples 
 #' type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
 #' MetCirc:::recordPlotFill_degreeFeatures(type_match)
