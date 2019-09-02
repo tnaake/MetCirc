@@ -13,7 +13,7 @@ recordPlotFill_degreeFeatures(type_match, ...)
 }
 \value{
 `list` of length 2, entry `plotFill` is of `recordedplot` and 
-entry `degreeFeatures` that is a `list` of vectors of `numeric(2)`
+entry `degreeFeatures` that is a `list` of vectors of `numeric(1)`
 }
 \description{
 `recordPlotFill_degreeFeatures` records a plot of filled 
