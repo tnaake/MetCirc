@@ -1,3 +1,7 @@
+Changes in version 1.15.2 (2019-09-09) 
++ add codecov
++ add Travis-CI for continuous integration
+
 Changes in version 1.15.1 (2019-08-29)
 + add ggplot2 in dependencies
 + change GPL-2 to GPL-3 license

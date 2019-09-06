@@ -3,7 +3,7 @@ Type: Package
 Title: Navigating mass spectral similarity in high-resolution MS/MS 
     metabolomics data
 Version: 1.15.2
-Date: 2019-08-09
+Date: 2019-09-06
 Authors@R: c(person(given = "Thomas", family = "Naake",
     email = "thomasnaake@googlemail.com",
     role = c("aut","cre")),
@@ -34,7 +34,7 @@ Suggests:
 biocViews: ImmunoOncology, Metabolomics, MassSpectrometry, Visualization
 Description: MetCirc comprises a workflow to interactively explore 
   high-resolution MS/MS metabolomics data. MetCirc uses the Spectrum2 and 
-  Spectra infrastructure defined in the package MSnbase that store 
+  Spectra infrastructure defined in the package MSnbase that stores 
   MS/MS spectra. MetCirc offers functionality to calculate 
   similarity between precursors based on the normalised dot product, neutral
   losses or user-defined functions and 
