@@ -13,8 +13,8 @@
 #' `conditon` (tissues, stress conditions, time points, etc.)
 #' @author Thomas Naake \email{thomasnaake@@googlemail.com}
 #' @examples
-#' data("spectra", package="MetCirc")
-#' MetCirc:::spectraCond(spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
+#' data("spectra", package = "MetCirc")
+#' MetCirc:::spectraCond(spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 spectraCond <- function(spectra, condition) {
     inds <- lapply(condition, function(x) which(spectra@elementMetadata@listData[[x]] == 1))
     names(inds) <- condition
@@ -41,12 +41,12 @@ spectraCond <- function(spectra, condition) {
 #' information on linked features
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' data("similarityMat", package="MetCirc")
-#' link0df <- createLink0df(similarityMatrix=similarityMat, 
-#'     spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
+#' data("spectra", package = "MetCirc")
+#' data("similarityMat", package = "MetCirc")
+#' link0df <- createLink0df(similarityMatrix = similarityMat, 
+#'     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 #' @export
-createLink0df <- function(similarityMatrix, spectra, condition) { 
+createLink0df <- function(similarityMatrix, spectra, condition) {
     
     if (!all(colnames(similarityMatrix) == rownames(similarityMatrix))) {
         stop("colnames(similarityMatrix) != rownames(similarityMatrix)")
@@ -54,16 +54,16 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
     
     ## set diag to matrix (all similarities similar to 0 will be removed in 
     ## a later step)
-    diag(similarityMatrix) <- 0 
+    diag(similarityMatrix) <- 0
     
     ## truncate spectra that it has the same spectra as in similarityMatrix
     spectra <- spectra[names(spectra) %in% colnames(similarityMatrix),]
     
     inds <- MetCirc:::spectraCond(spectra, condition)
-    inds_cond <- lapply(seq_along(inds), 
+    inds_cond <- lapply(seq_along(inds),
         function(x) {
             if (length(inds[[x]]) > 0) {
-                paste(condition[x], inds[[x]], sep="_")
+                paste(condition[x], inds[[x]], sep = "_")
             } else character()
     })
     inds_uniq <- unique(unlist(inds_cond))
@@ -72,18 +72,20 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
     
     ## get similarity values for all combinations
     sim <- lapply(1:ncol(inds_uniq_combn), function(x) {
-        row_sim <- strsplit(inds_uniq_combn[1, x], split="_")[[1]][2]
-        col_sim <- strsplit(inds_uniq_combn[2, x], split="_")[[1]][2]
+        row_sim <- strsplit(inds_uniq_combn[1, x], split = "_")[[1]][2]
+        col_sim <- strsplit(inds_uniq_combn[2, x], split = "_")[[1]][2]
         similarityMatrix[row_sim, col_sim]
     })
     sim <- unlist(sim)
     
     ## cbind spectrum1, spectrum2, similarity and remove rows where sim == 0
-    mat0 <- data.frame(group1=unlist(lapply(strsplit(inds_uniq_combn[1,], split="_"), "[", 1)),
-        spectrum1=inds_uniq_combn[1, ], 
-        group2=unlist(lapply(strsplit(inds_uniq_combn[2,], split="_"), "[", 1)), 
-        spectrum2=inds_uniq_combn[2, ], 
-        similarity=as.numeric(sim))
+    mat0 <- data.frame(group1 = unlist(lapply(
+            strsplit(inds_uniq_combn[1,], split = "_"), "[", 1)),
+        spectrum1 = inds_uniq_combn[1, ],
+        group2 = unlist(lapply(
+            strsplit(inds_uniq_combn[2,], split = "_"), "[", 1)), 
+        spectrum2 = inds_uniq_combn[2, ],
+        similarity = as.numeric(sim))
     mat0 <- mat0[!mat0[, "similarity"] == 0,]
     return(mat0)
 }
@@ -91,7 +93,7 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
 #' @name thresholdLinkDf
 #' @title Threshold a data frame containing information on links
 #' @description Threshold a link data frame
-#' @usage thresholdLinkDf(link0df, lower=0.75, upper=1)
+#' @usage thresholdLinkDf(link0df, lower = 0.75, upper = 1)
 #' @param link0df `data.frame`, a link data frame that gives per each row 
 #' information on linked features
 #' @param lower `numeric`, threshold value for similarity values, below 
@@ -104,13 +106,13 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
 #' information on linked features which are linked within certain thresholds
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' data("similarityMat", package="MetCirc")
-#' link0df <- createLink0df(similarityMatrix=similarityMat, 
-#'     spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
-#' thresholdLinkDf(link0df=link0df, lower=0.5, upper=1)
+#' data("spectra", package = "MetCirc")
+#' data("similarityMat", package = "MetCirc")
+#' link0df <- createLink0df(similarityMatrix = similarityMat, 
+#'     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+#' thresholdLinkDf(link0df = link0df, lower = 0.5, upper = 1)
 #' @export
-thresholdLinkDf <- function(link0df, lower=0.75, upper=1) {
+thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
     
     if (!all(colnames(link0df) == c("group1", "spectrum1",  "group2", "spectrum2",  "similarity")))
         stop("linkDF does not have right colnames")
@@ -150,55 +152,56 @@ thresholdLinkDf <- function(link0df, lower=0.75, upper=1) {
 #' information on linked features
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' data("similarityMat", package="MetCirc")
-#' link0df <- createLink0df(similarityMatrix=similarityMat, 
-#'     spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
-#' createLinkDf(similarityMatrix=similarityMat, spectra=spectra_tissue,
-#'     condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1)
+#' data("spectra", package = "MetCirc")
+#' data("similarityMat", package = "MetCirc")
+#' link0df <- createLink0df(similarityMatrix = similarityMat, 
+#'     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+#' createLinkDf(similarityMatrix = similarityMat, spectra = spectra_tissue,
+#'     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 #' @export
 createLinkDf <- function(similarityMatrix, spectra, condition, lower, upper) {
     ## first create a link0Matrix
-    link0df <- createLink0df(similarityMatrix=similarityMatrix, 
-        spectra=spectra, condition=condition)
+    link0df <- createLink0df(similarityMatrix = similarityMatrix, 
+        spectra = spectra, condition = condition)
     ## than threshold link0Matrix
-    thrLinkDf <- thresholdLinkDf(link0df=link0df, lower=lower, upper=upper)
+    thrLinkDf <- thresholdLinkDf(link0df = link0df, lower = lower, upper = upper)
      return(thrLinkDf)
 }
 
 #' @name cutLinkDf
 #' @title Create a cut data frame with information on links
 #' @description Create a cut link data frame
-#' @usage cutLinkDf(linkDf, type=c("all", "inter", "intra"))
+#' @usage cutLinkDf(linkDf, type = c("all", "inter", "intra"))
 #' @param linkDf `data.frame`, that gives per each row 
 #' information on linked features
 #' @param type `character`, one of "all", "inter" or "intra"
 #' @details This function is used to truncate features from linkDf. If 
-#' type="all", linkDf will not be changed; if type="inter" the returned
+#' type = "all", linkDf will not be changed; if type = "inter" the returned
 #' linkDf will only contain entries of links which are between groups and 
-#' not inside groups; contrary to that, if type="intra" the returned linkDf 
+#' not inside groups; contrary to that, if type = "intra" the returned linkDf 
 #' will only contain entries of links which are inside groups and not between 
 #' groups.
 #' @return cutLinkDf returns a data.frame that gives per each row 
 #' information on linked features
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' data("similarityMat", package="MetCirc")
-#' linkDf <- createLinkDf(similarityMatrix=similarityMat, spectra=spectra_tissue, 
-#'     condition=c("SPL", "LIM", "ANT", "STY"), lower=0.75, upper=1)
-#' cutLinkDf(linkDf=linkDf, type="all")
+#' data("spectra", package = "MetCirc")
+#' data("similarityMat", package = "MetCirc")
+#' linkDf <- createLinkDf(similarityMatrix = similarityMat, 
+#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"), 
+#'     lower = 0.75, upper = 1)
+#' cutLinkDf(linkDf = linkDf, type = "all")
 #' @export
-cutLinkDf <- function(linkDf, type=c("all", "inter", "intra")) {
+cutLinkDf <- function(linkDf, type = c("all", "inter", "intra")) {
     
     ## match arguments of types
     type <- match.arg(type)
     
-    if (type == "all") 
+    if (type == "all")
         linkDf <- linkDf
     if (type == "inter")
         linkDf <- linkDf[which(linkDf[,"group1"] != linkDf[,"group2"]), ]
-    if (type == "intra") 
+    if (type == "intra")
         linkDf <- linkDf[which(linkDf[,"group1"] == linkDf[,"group2"]), ]
     return(linkDf)
 }

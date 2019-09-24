@@ -6,7 +6,7 @@
 m/z, retention time and clustering}
 \usage{
 orderSimilarityMatrix(similarityMatrix, spectra, 
-    type=c("retentionTime", "mz", "clustering"), group=FALSE)
+    type = c("retentionTime", "mz", "clustering"), group = FALSE)
 }
 \arguments{
 \item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} contains 
@@ -45,12 +45,12 @@ circos plot. It may be used as well externally, to reproduce plots outside
 of the reactive environment (see vignette for a workflow).
 }
 \examples{
-data("spectra", package="MetCirc")
+data("spectra", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun=normalizeddotproduct, binSize=0.01)
+    fun = normalizeddotproduct, binSize = 0.01)
 ## order according to retention time 
-orderSimilarityMatrix(similarityMatrix=similarityMat, 
-    spectra_tissue, type="retentionTime", group=FALSE)
+orderSimilarityMatrix(similarityMatrix = similarityMat, 
+    spectra_tissue, type = "retentionTime", group = FALSE)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -34,12 +34,12 @@ and truncate similar spectra. The function createLinkDf is a wrapper
 for the functions `createLink0df` and `thresholdLinkDf`.
 }
 \examples{
-data("spectra", package="MetCirc")
-data("similarityMat", package="MetCirc")
-link0df <- createLink0df(similarityMatrix=similarityMat, 
-    spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
-createLinkDf(similarityMatrix=similarityMat, spectra=spectra_tissue,
-    condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1)
+data("spectra", package = "MetCirc")
+data("similarityMat", package = "MetCirc")
+link0df <- createLink0df(similarityMatrix = similarityMat, 
+    spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+createLinkDf(similarityMatrix = similarityMat, spectra = spectra_tissue,
+    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

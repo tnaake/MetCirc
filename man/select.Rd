@@ -30,7 +30,7 @@ Helper function for `shinyCircos`, `replayPlotOrder` and
 mz <- 1
 rt <- 2
 clust <- 3
-MetCirc:::select(condition="mz", mz=mz, rt=rt, clust=clust)
+MetCirc:::select(condition = "mz", mz = mz, rt = rt, clust = clust)
 }
 \author{
 Thomas Naake \email{thomasnaake@googlemail.com}

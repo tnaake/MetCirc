@@ -4,7 +4,7 @@
 \alias{replayPlotOrder}
 \title{Wrapper for `replayPlot`}
 \usage{
-replayPlotOrder(orderMatch="mz", onCircle=FALSE, plot_l, ind)
+replayPlotOrder(orderMatch = "mz", onCircle = FALSE, plot_l, ind)
 }
 \arguments{
 \item{orderMatch}{`character`, either `"mz"`, `"retentionTime"` or 
@@ -30,13 +30,14 @@ Helper function for `shinyCircos`.
 }
 \examples{
 type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
-plotCircos(type_match, NULL, initialize=TRUE, featureNames = TRUE,
+plotCircos(type_match, NULL, initialize = TRUE, featureNames = TRUE,
     groupSector = TRUE, groupName = FALSE, links = FALSE,
-    highlight = TRUE) 
+    highlight = TRUE)
 p <- recordPlot()
 plot.new()
-plot_l <- list(highlightMz=p)
-MetCirc:::replayPlotOrder(orderMatch="mz", onCircle=TRUE, plot_l=plot_l, ind=NULL)
+plot_l <- list(highlightMz = p)
+MetCirc:::replayPlotOrder(orderMatch = "mz", onCircle = TRUE,
+    plot_l = plot_l, ind = NULL)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

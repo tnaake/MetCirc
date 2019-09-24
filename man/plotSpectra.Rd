@@ -25,8 +25,8 @@ with preceding sample name}
 Internally, all intensities are normalized to 100\%.
 }
 \examples{
-data("spectra", package="MetCirc")
-plotSpectra(spectra_tissue, subject="SPL_1", query="SPL_2")
+data("spectra", package = "MetCirc")
+plotSpectra(spectra_tissue, subject = "SPL_1", query = "SPL_2")
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

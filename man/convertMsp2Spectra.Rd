@@ -25,8 +25,8 @@ peak areas/intensities and will
 extract the respective information in the second column.
 }
 \examples{
-data("convertMsp2Spectra", package="MetCirc")
-convertMsp2Spectra(msp=msp2spectra)
+data("convertMsp2Spectra", package = "MetCirc")
+convertMsp2Spectra(msp = msp2spectra)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

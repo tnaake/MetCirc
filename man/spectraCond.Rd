@@ -26,8 +26,8 @@ present in condition, corresponding to the slot
 Helper function in `createLink0df` and `shinyCircos`.
 }
 \examples{
-data("spectra", package="MetCirc")
-MetCirc:::spectraCond(spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
+data("spectra", package = "MetCirc")
+MetCirc:::spectraCond(spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 }
 \author{
 Thomas Naake \email{thomasnaake@googlemail.com}

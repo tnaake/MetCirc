@@ -4,11 +4,11 @@
 \alias{plotCircos}
 \title{Circular plot to visualise similarity}
 \usage{
-plotCircos(groupname, linkDf, initialize=c(TRUE, FALSE), 
-     featureNames=c(TRUE, FALSE), cexFeatureNames=0.3, 
-     groupSector=c(TRUE, FALSE), groupName=c(TRUE, FALSE), 
-     links=c(TRUE, FALSE), highlight=c(TRUE, FALSE), colour=NULL,
-     transparency=0.2)
+plotCircos(groupname, linkDf, initialize = c(TRUE, FALSE), 
+     featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
+     groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
+     links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
+     transparency = 0.2)
 }
 \arguments{
 \item{groupname}{\code{character} vector containing "group" and "name" to 
@@ -52,28 +52,28 @@ Internal use for \code{shinyCircos} or used outside of
  \code{shinyCircos} to reproduce figure
 }
 \examples{
-data("spectra", package="MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun=normalizeddotproduct, binSize=0.01)
+data("spectra", package = "MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue[1:10],
+    fun = normalizeddotproduct, binSize = 0.01)
 ## order similarityMat according to retentionTime
-simM <- orderSimilarityMatrix(similarityMat, spectra=spectra_tissue[1:10], 
-            type="retentionTime", )
+simM <- orderSimilarityMatrix(similarityMat, spectra = spectra_tissue[1:10],
+            type = "retentionTime", )
 ## create link data.frame
-linkDf <- createLinkDf(similarityMatrix=simM, spectra=spectra_tissue,
-     condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1) 
+linkDf <- createLinkDf(similarityMatrix = simM, spectra = spectra_tissue,
+     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 ## cut link data.frame (here: only display links between groups)
-linkDf_cut <- cutLinkDf(linkDf, type="inter")
+linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 ## set circlize paramters
-circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
-         track.margin=c(0.0, 0))
-groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
+         track.margin = c(0.0, 0))
+groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
                 as.character(linkDf_cut[, "spectrum2"]))
 groupname <- unique(groupname)
 ## actual plotting
-plotCircos(groupname, linkDf_cut, initialize=TRUE, 
-    featureNames=TRUE, cexFeatureNames=0.3, groupSector=TRUE, 
-     groupName=FALSE, links=FALSE, highlight=FALSE, colour=NULL, 
-     transparency=0.2)
+plotCircos(groupname, linkDf_cut, initialize = TRUE,
+    featureNames = TRUE, cexFeatureNames = 0.3, groupSector = TRUE,
+     groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL,
+     transparency = 0.2)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

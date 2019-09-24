@@ -4,7 +4,7 @@
 \alias{normalizeddotproduct}
 \title{Calculate the normalized dot product}
 \usage{
-normalizeddotproduct(x, y, m=0.5, n=2, ...)
+normalizeddotproduct(x, y, m = 0.5, n = 2, ...)
 }
 \arguments{
 \item{x}{\code{Spectrum2} object from \code{MSnbase} containing
@@ -42,10 +42,10 @@ Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values
 are divided by the maximum intensity value.
 }
 \examples{
-data("spectra", package="MetCirc")
+data("spectra", package = "MetCirc")
 x <- spectra_tissue[[1]]
 y <- spectra_tissue[[2]]
-normalizeddotproduct(x, y, m=0.5, n=2, binSize=0.01) 
+normalizeddotproduct(x, y, m = 0.5, n = 2, binSize = 0.01)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

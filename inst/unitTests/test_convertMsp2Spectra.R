@@ -1,5 +1,5 @@
-data("convertMsp2Spectra", package="MetCirc")
-spl <- convertMsp2Spectra(msp=msp2spectra)
+data("convertMsp2Spectra", package = "MetCirc")
+spl <- convertMsp2Spectra(msp = msp2spectra)
 ## START unit test convertMSP2MSP
 test_convertMsp2Spectra <- function() {
     checkEquals(length(spl), 22)

@@ -13,8 +13,8 @@
 #' @return \code{convertMsp2Spectra} returns an object of class \code{Spectra}. 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("convertMsp2Spectra", package="MetCirc")
-#' convertMsp2Spectra(msp=msp2spectra)
+#' data("convertMsp2Spectra", package = "MetCirc")
+#' convertMsp2Spectra(msp = msp2spectra)
 #' @export
 convertMsp2Spectra <- function(msp) {
     
@@ -49,7 +49,7 @@ convertMsp2Spectra <- function(msp) {
     RT <- if(length(rtInd) == numEntries) {
         as.numeric(as.character(msp[rtInd, 2]))
     } else {
-        rep(NaN, numEntries)   
+        rep(NaN, numEntries)
     }
        
     spN_l <- vector("list", numEntries)
@@ -71,10 +71,10 @@ convertMsp2Spectra <- function(msp) {
         ## calculate percentages
         ##intensity <- intensity / max(intensity) * 100
         
-        spN_l[[i]] <- new("Spectrum2", rt=RT[i], precursorMz=MZ[i], 
-                         mz=fragment, intensity=intensity)
+        spN_l[[i]] <- new("Spectrum2", rt = RT[i], precursorMz = MZ[i],
+                         mz = fragment, intensity = intensity)
     }
     
-    spl <- Spectra(spN_l, elementMetadata=DataFrame(names=NAMES)) 
+    spl <- Spectra(spN_l, elementMetadata = DataFrame(names = NAMES))
     return(spl)
 }

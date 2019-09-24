@@ -4,7 +4,7 @@
 \alias{neutralloss}
 \title{Calculate similarity based on neutral losses}
 \usage{
-neutralloss(x, y, m=0.5, n=2, ...)
+neutralloss(x, y, m = 0.5, n = 2, ...)
 }
 \arguments{
 \item{x}{\code{Spectrum2} object from \code{MSnbase} containing
@@ -46,7 +46,7 @@ are divided by the maximum intensity value.
 data("spectra", package = "MetCirc")
 x <- spectra_tissue[[1]]
 y <- spectra_tissue[[2]]
-neutralloss(x, y, m=0.5, n=2, binSize=0.01) 
+neutralloss(x, y, m = 0.5, n = 2, binSize = 0.01) 
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

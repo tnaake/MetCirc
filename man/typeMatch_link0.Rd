@@ -27,12 +27,13 @@ entry `type_match` that is a `character` vector
 Helper function for `shinyCircos`.
 }
 \examples{
-data("spectra", package="MetCirc")
+data("spectra", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun=normalizeddotproduct, binSize=0.01)
+    fun = normalizeddotproduct, binSize = 0.01)
 ## order according to retention time 
-MetCirc:::typeMatch_link0(similarityMatrix=similarityMat, spectra=spectra_tissue, 
-    type="mz", condition=c("SPL", "LIM", "ANT", "STY"))
+MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
+    spectra = spectra_tissue, type = "mz", 
+    condition = c("SPL", "LIM", "ANT", "STY"))
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

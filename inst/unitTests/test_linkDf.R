@@ -1,18 +1,18 @@
 ## START unit test createLink0Matrix
 ## create objects which will be used in unit tests
-data("spectra", package="MetCirc")
-## use only a selection 
+data("spectra", package = "MetCirc")
+## use only a selection
 condition <- c("SPL", "LIM", "ANT", "STY")
 spectra_tissue <- spectra_tissue[c(1:20, 29:48, 113:132, 240:259),]
-similarityMat <- compare_Spectra(spectra_tissue, fun=normalizeddotproduct)  
+similarityMat <- compare_Spectra(spectra_tissue, fun = normalizeddotproduct)
 groupname <- rownames(similarityMat)
-inds <- MetCirc:::spectraCond(spectra_tissue, condition=condition)
+inds <- MetCirc:::spectraCond(spectra_tissue, condition = condition)
 inds_match <- lapply(inds, function(x) {inds_match <- match(groupname, x)
 inds_match <- inds_match[!is.na(inds_match)]; x[inds_match]})
-inds_cond <- lapply(seq_along(inds_match), 
+inds_cond <- lapply(seq_along(inds_match),
     function(x) {
         if (length(inds_match[[x]]) > 0) {
-            paste(condition[x], inds_match[[x]], sep="_")
+            paste(condition[x], inds_match[[x]], sep = "_")
         } else character()
 })
 inds_cond <- unique(unlist(inds_cond))
@@ -41,7 +41,7 @@ test_createLink0df <- function() {
     simMat_mock <- similarityMat
     colnames(simMat_mock) <- NULL
     checkException(createLink0df(simMat_mock, spectra_tissue, condition))
-    similarityMat <- compare_Spectra(spectra_tissue[1:2], fun=normalizeddotproduct)  
+    similarityMat <- compare_Spectra(spectra_tissue[1:2], fun = normalizeddotproduct)
     checkTrue(is.data.frame(createLink0df(similarityMat, spectra_tissue, condition)))
 }
 ## END unit test link0df
@@ -70,8 +70,8 @@ test_createLinkDf <- function() {
 ## END unit test createLinkDf
 
 ## START unit test cutLinkMatrix
-cutLDFInter <- cutLinkDf(tLinkDf1, type="inter")
-cutLDFIntra <- cutLinkDf(tLinkDf1, type="intra")
+cutLDFInter <- cutLinkDf(tLinkDf1, type = "inter")
+cutLDFIntra <- cutLinkDf(tLinkDf1, type = "intra")
 
 test_cutLinkDf <- function() {
     checkTrue(

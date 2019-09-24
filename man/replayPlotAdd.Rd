@@ -8,8 +8,8 @@ replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf, mz_match,
   rt_match, clust_match, ind, indMz, indRT, indCluster)
 }
 \arguments{
-\item{orderMatch}{orderMatch `character`, either `"mz"`, `"retentionTime"` or 
-`"clustering"`}
+\item{orderMatch}{orderMatch `character`, either `"mz"`, `"retentionTime"` 
+or `"clustering"`}
 
 \item{onCircle}{`logical`, are coordinates on circle. If FALSE and
 no features are selected (`length(ind) == 0`), then filled plots are 
@@ -46,26 +46,29 @@ plots `plotCircos` or `highlight`.
 Helper function for `shinyCircos`.
 }
 \examples{
-data("spectra", package="MetCirc")
+data("spectra", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun=normalizeddotproduct, binSize=0.01)
+    fun = normalizeddotproduct, binSize = 0.01)
 ## order according to retention time 
-mz_match <- MetCirc:::typeMatch_link0(similarityMatrix=similarityMat, spectra=spectra_tissue, 
-    type="mz", condition=c("SPL", "LIM", "ANT", "STY"))
+mz_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
+    spectra = spectra_tissue, type = "mz", 
+    condition = c("SPL", "LIM", "ANT", "STY"))
 linkDf <- mz_match[["link0df"]]
 mz_match <- mz_match[["type_match"]]
-rt_match <- MetCirc:::typeMatch_link0(similarityMatrix=similarityMat, spectra=spectra_tissue, 
-    type="retentionTime", condition=c("SPL", "LIM", "ANT", "STY"))
+rt_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
+    spectra = spectra_tissue, type = "retentionTime", 
+    condition = c("SPL", "LIM", "ANT", "STY"))
 rt_match <- rt_match[["type_match"]]
-clust_match <- MetCirc:::typeMatch_link0(similarityMatrix=similarityMat, spectra=spectra_tissue, 
-    type="clustering", condition=c("SPL", "LIM", "ANT", "STY"))
+clust_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
+    spectra = spectra_tissue, type = "clustering", 
+    condition = c("SPL", "LIM", "ANT", "STY"))
 clust_match <- clust_match[["type_match"]]
-circos.initialize(mz_match,##, levels = mz_match),
-    xlim=matrix(rep(c(0,1), length(mz_match)), ncol=2, byrow=TRUE))
-#circos.trackPlotRegion(factor(mz_match, levels=mz_match), ylim=c(0,1))  
-MetCirc:::replayPlotAdd(orderMatch="mz", onCircle=FALSE, linkDf=linkDf, 
-    mz_match=mz_match, rt_match=rt_match, clust_match=clust_match, 
-    ind=1, indMz=NULL, indRT=NULL, indCluster=NULL)
+circos.initialize(mz_match,##, levels  =  mz_match),
+    xlim = matrix(rep(c(0,1), length(mz_match)), ncol = 2, byrow = TRUE))
+#circos.trackPlotRegion(factor(mz_match, levels = mz_match), ylim = c(0,1))  
+MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf = linkDf, 
+    mz_match = mz_match, rt_match = rt_match, clust_match = clust_match, 
+    ind = 1, indMz = NULL, indRT = NULL, indCluster = NULL)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

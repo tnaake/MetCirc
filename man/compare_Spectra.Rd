@@ -19,12 +19,12 @@ compare_Spectra creates a similarity matrix of all
 Spectrum objects in \code{object}
 }
 \details{
-Function inspired by compareSpectra.OnDiskMSnExp. Possibly 
+Function inspired by compareSpectra.OnDiskMSnExp. Possibly
 transfer to MSnbase.
 }
 \examples{
-data("spectra", package="MetCirc")
-compare_Spectra(spectra_tissue[1:10], fun="dotproduct")
+data("spectra", package = "MetCirc")
+compare_Spectra(spectra_tissue[1:10], fun = "dotproduct")
 }
 \author{
 Thomas Naake (inspired by compareSpectra.OnDiskMSnExp)

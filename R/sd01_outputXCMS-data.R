@@ -9,4 +9,4 @@
 #' @format \code{data.frame}
 #' @source Li et al. (2015)
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
-NULL 
+NULL

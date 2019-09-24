@@ -4,7 +4,7 @@
 \alias{thresholdLinkDf}
 \title{Threshold a data frame containing information on links}
 \usage{
-thresholdLinkDf(link0df, lower=0.75, upper=1)
+thresholdLinkDf(link0df, lower = 0.75, upper = 1)
 }
 \arguments{
 \item{link0df}{`data.frame`, a link data frame that gives per each row 
@@ -28,11 +28,11 @@ Threshold a link data frame
 and truncates mass spectra based on their similarity values.
 }
 \examples{
-data("spectra", package="MetCirc")
-data("similarityMat", package="MetCirc")
-link0df <- createLink0df(similarityMatrix=similarityMat, 
-    spectra_tissue, condition=c("SPL", "LIM", "ANT", "STY"))
-thresholdLinkDf(link0df=link0df, lower=0.5, upper=1)
+data("spectra", package = "MetCirc")
+data("similarityMat", package = "MetCirc")
+link0df <- createLink0df(similarityMatrix = similarityMat, 
+    spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+thresholdLinkDf(link0df = link0df, lower = 0.5, upper = 1)
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -11,21 +11,22 @@
 #' @param fun function or character, see ?MSnbase::compareSpectra for further
 #' information
 #' @param ... arguments passed to compareSpectra
-#' @details Function inspired by compareSpectra.OnDiskMSnExp. Possibly 
+#' @details Function inspired by compareSpectra.OnDiskMSnExp. Possibly
 #' transfer to MSnbase.
 #' @author Thomas Naake (inspired by compareSpectra.OnDiskMSnExp)
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' compare_Spectra(spectra_tissue[1:10], fun="dotproduct")
+#' data("spectra", package = "MetCirc")
+#' compare_Spectra(spectra_tissue[1:10], fun = "dotproduct")
 #' @export
 compare_Spectra <- function(object, fun, ...) {
     
     nm <- names(object)
     cb <- combn(nm, 2)
-    cb <- apply(cb, 2, function(x) compareSpectra(object[[x[1]]], object[[x[[2]]]], fun=fun, ...)) ## "dotproduct"
+    cb <- apply(cb, 2, function(x) compareSpectra(object[[x[1]]],
+                    object[[x[[2]]]], fun = fun, ...)) ## "dotproduct"
     
     m <- matrix(NA, length(object), length(object),
-                dimnames=list(nm, nm))
+                dimnames = list(nm, nm))
     ## fill lower triangle of the matrix
     m[lower.tri(m)] <- cb
     ## copy to upper triangle
@@ -42,7 +43,7 @@ compare_Spectra <- function(object, fun, ...) {
 #' @name normalizeddotproduct
 #' @title Calculate the normalized dot product
 #' @description Calculate the normalized dot product (NDP)
-#' @usage normalizeddotproduct(x, y, m=0.5, n=2, ...)
+#' @usage normalizeddotproduct(x, y, m = 0.5, n = 2, ...)
 #' @param x \code{Spectrum2} object from \code{MSnbase} containing
 #' intensity and m/z values, first MS/MS spectrum
 #' @param y \code{Spectrum2} object from \code{MSnbase} containing 
@@ -63,21 +64,21 @@ compare_Spectra <- function(object, fun, ...) {
 #' the function \code{MSnbase:::bin_Spectra}, e.g. to set the width of bins
 #' (binSize). 
 #' Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values 
-#' are divided by the maximum intensity value. 
+#' are divided by the maximum intensity value.
 #' @return normalizeddotproduct returns a numeric similarity coefficient between 0 and 1
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
+#' data("spectra", package = "MetCirc")
 #' x <- spectra_tissue[[1]]
 #' y <- spectra_tissue[[2]]
-#' normalizeddotproduct(x, y, m=0.5, n=2, binSize=0.01) 
+#' normalizeddotproduct(x, y, m = 0.5, n = 2, binSize = 0.01)
 #' @export
-normalizeddotproduct <- function(x, y, m=0.5, n=2, ...) {
+normalizeddotproduct <- function(x, y, m = 0.5, n = 2, ...) {
     ## normalize to % intensity
     x@intensity <- x@intensity / max(x@intensity)*100
     y@intensity <- y@intensity / max(y@intensity)*100
     
-    binnedSpectra <- MSnbase:::bin_Spectra(x, y, ...)   
+    binnedSpectra <- MSnbase:::bin_Spectra(x, y, ...)
     inten <- lapply(binnedSpectra, intensity)
     mz <- lapply(binnedSpectra, mz)
     
@@ -92,7 +93,7 @@ normalizeddotproduct <- function(x, y, m=0.5, n=2, ...) {
 #' @name neutralloss
 #' @title Calculate similarity based on neutral losses 
 #' @description Calculate similarity based on neutral losses (NLS)
-#' @usage neutralloss(x, y, m=0.5, n=2, ...)
+#' @usage neutralloss(x, y, m = 0.5, n = 2, ...)
 #' @param x \code{Spectrum2} object from \code{MSnbase} containing
 #' intensity and m/z values, first MS/MS spectrum
 #' @param y \code{Spectrum2} object from \code{MSnbase} containing 
@@ -114,16 +115,16 @@ normalizeddotproduct <- function(x, y, m=0.5, n=2, ...) {
 #' the function \code{MSnbase:::bin_Spectra}, e.g. to set the width of bins
 #' (binSize). 
 #' Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values 
-#' are divided by the maximum intensity value. 
+#' are divided by the maximum intensity value.
 #' @return neutralloss returns a numeric similarity coefficient between 0 and 1
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
 #' data("spectra", package = "MetCirc")
 #' x <- spectra_tissue[[1]]
 #' y <- spectra_tissue[[2]]
-#' neutralloss(x, y, m=0.5, n=2, binSize=0.01) 
+#' neutralloss(x, y, m = 0.5, n = 2, binSize = 0.01) 
 #' @export
-neutralloss <- function(x, y, m=0.5, n=2, ...) {
+neutralloss <- function(x, y, m = 0.5, n = 2, ...) {
     
     ## normalize to % intensity
     x@intensity <- x@intensity / max(x@intensity)*100
@@ -133,7 +134,7 @@ neutralloss <- function(x, y, m=0.5, n=2, ...) {
     x@mz <- abs(x@mz - x@precursorMz)
     y@mz <- abs(y@mz - y@precursorMz)
     
-    binnedSpectra <- MSnbase:::bin_Spectra(x, y, ...)  
+    binnedSpectra <- MSnbase:::bin_Spectra(x, y, ...)
     mz <- lapply(binnedSpectra, mz)
     inten <- lapply(binnedSpectra, intensity)
     
@@ -153,7 +154,7 @@ neutralloss <- function(x, y, m=0.5, n=2, ...) {
 #' @description Internal function for shiny application. May also be used 
 #' outside of shiny to reconstruct figures.
 #' @usage orderSimilarityMatrix(similarityMatrix, spectra, 
-#'     type=c("retentionTime", "mz", "clustering"), group=FALSE)
+#'     type = c("retentionTime", "mz", "clustering"), group = FALSE)
 #' @param similarityMatrix \code{matrix}, \code{similarityMatrix} contains 
 #' pair-wise similarity coefficients which give information about the similarity 
 #' between precursors
@@ -178,16 +179,16 @@ neutralloss <- function(x, y, m=0.5, n=2, ...) {
 #' @return `matrix`, `orderSimilarityMatrix` returns a similarity matrix 
 #' with ordered rownames according to the \code{character} vector given to order
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
-#' @examples 
-#' data("spectra", package="MetCirc")
+#' @examples
+#' data("spectra", package = "MetCirc")
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun=normalizeddotproduct, binSize=0.01)
+#'     fun = normalizeddotproduct, binSize = 0.01)
 #' ## order according to retention time 
-#' orderSimilarityMatrix(similarityMatrix=similarityMat, 
-#'     spectra_tissue, type="retentionTime", group=FALSE)
+#' orderSimilarityMatrix(similarityMatrix = similarityMat, 
+#'     spectra_tissue, type = "retentionTime", group = FALSE)
 #' @export
 orderSimilarityMatrix <- function(similarityMatrix, spectra, 
-        type=c("retentionTime","mz", "clustering"), group=FALSE) {
+        type = c("retentionTime","mz", "clustering"), group = FALSE) {
     
     if (!(group %in% c(TRUE, FALSE))) stop("group has to be TRUE or FALSE")
     
@@ -198,9 +199,9 @@ orderSimilarityMatrix <- function(similarityMatrix, spectra,
     
     ## if a group is preciding the rownames of similarityMatrix
     if (group) {
-        groupname <- strsplit(groupname, split="_")    
+        groupname <- strsplit(groupname, split = "_")
         groupname <- lapply(groupname, "[", -1)
-        groupname <- lapply(groupname, function(x) paste(x, collapse="_"))
+        groupname <- lapply(groupname, function(x) paste(x, collapse = "_"))
         groupname <- unlist(groupname)
     }
     
@@ -223,7 +224,7 @@ orderSimilarityMatrix <- function(similarityMatrix, spectra,
     
     ## clustering
     if (type == "clustering") {
-        hClust <- amap::hcluster(similarityMatrix, method="spearman")
+        hClust <- amap::hcluster(similarityMatrix, method = "spearman")
         orderNew <- hClust$order
     }
     

@@ -2,7 +2,7 @@
 % Please edit documentation in R/shinyApp.R
 \name{recordPlotHighlight}
 \alias{recordPlotHighlight}
-\title{Return a `recordedplot` of `plotCircos` plot with `highlight=TRUE`}
+\title{Return a `recordedplot` of `plotCircos` plot with `highlight = TRUE`}
 \usage{
 recordPlotHighlight(type_match, ...)
 }
@@ -16,7 +16,7 @@ recordPlotHighlight(type_match, ...)
 }
 \description{
 `recordPlotHighlight` returns a `recordedplot` object of 
-`plotCircos` with `highlight=TRUE`
+`plotCircos` with `highlight = TRUE`
 }
 \details{
 Helper function for `shinyCircos`.

@@ -1,16 +1,16 @@
 #' @name similarityMat
 #' @title Example data for \code{MetCirc}: \code{similarityMat}
 #' @description \code{similarityMat} is a \code{matrix} containing the pair-wise
-#' similarity scores derived from the \code{idMSMStissueproject} data set. 
+#' similarity scores derived from the \code{idMSMStissueproject} data set.
 #' See the vignette for a workflow to reproduce the object \code{similarityMat}.
 #' @docType data
 #' @usage similarityMat
 #' @return \code{matrix}
 #' @format \code{matrix}
 #' @source 
-#' data("tissue", package="MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue, 
-#'     fun=normalizeddotproduct, binSize=0.01) 
-#' save(similarityMat, file="similarityMat.RData", compress="xz")
-#' @author Thomas Naake, \email{thomasnaake@@googlemail.com} 
+#' data("tissue", package = "MetCirc")
+#' similarityMat <- compare_Spectra(spectra_tissue,
+#'     fun = normalizeddotproduct, binSize = 0.01)
+#' save(similarityMat, file = "similarityMat.RData", compress = "xz")
+#' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 NULL  

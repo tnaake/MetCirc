@@ -5,11 +5,11 @@
 #' @name plotCircos
 #' @title Circular plot to visualise similarity
 #' @description Circular plot to visualise similarity
-#' @usage plotCircos(groupname, linkDf, initialize=c(TRUE, FALSE), 
-#'      featureNames=c(TRUE, FALSE), cexFeatureNames=0.3, 
-#'      groupSector=c(TRUE, FALSE), groupName=c(TRUE, FALSE), 
-#'      links=c(TRUE, FALSE), highlight=c(TRUE, FALSE), colour=NULL,
-#'      transparency=0.2)
+#' @usage plotCircos(groupname, linkDf, initialize = c(TRUE, FALSE), 
+#'      featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
+#'      groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
+#'      links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
+#'      transparency = 0.2)
 #' @param groupname \code{character} vector containing "group" and "name" to 
 #' display, that is a unique identifier of the features, "group" and "name" have 
 #' to be separated 
@@ -31,45 +31,46 @@
 #' @details Internal use for \code{shinyCircos} or used outside of 
 #'  \code{shinyCircos} to reproduce figure
 #' @return The function will initialize a circlize plot and/or will plot 
-#'  features of a circlize plot. 
+#'  features of a circlize plot.
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun=normalizeddotproduct, binSize=0.01)
+#' data("spectra", package = "MetCirc")
+#' similarityMat <- compare_Spectra(spectra_tissue[1:10],
+#'     fun = normalizeddotproduct, binSize = 0.01)
 #' ## order similarityMat according to retentionTime
-#' simM <- orderSimilarityMatrix(similarityMat, spectra=spectra_tissue[1:10], 
-#'             type="retentionTime", )
+#' simM <- orderSimilarityMatrix(similarityMat, spectra = spectra_tissue[1:10],
+#'             type = "retentionTime", )
 #' ## create link data.frame
-#' linkDf <- createLinkDf(similarityMatrix=simM, spectra=spectra_tissue,
-#'      condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1) 
+#' linkDf <- createLinkDf(similarityMatrix = simM, spectra = spectra_tissue,
+#'      condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 #' ## cut link data.frame (here: only display links between groups)
-#' linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#' linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 #' ## set circlize paramters
-#' circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
-#'          track.margin=c(0.0, 0))
-#' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+#' circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
+#'          track.margin = c(0.0, 0))
+#' groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
 #'                 as.character(linkDf_cut[, "spectrum2"]))
 #' groupname <- unique(groupname)
 #' ## actual plotting
-#' plotCircos(groupname, linkDf_cut, initialize=TRUE, 
-#'     featureNames=TRUE, cexFeatureNames=0.3, groupSector=TRUE, 
-#'      groupName=FALSE, links=FALSE, highlight=FALSE, colour=NULL, 
-#'      transparency=0.2)
+#' plotCircos(groupname, linkDf_cut, initialize = TRUE,
+#'     featureNames = TRUE, cexFeatureNames = 0.3, groupSector = TRUE,
+#'      groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL,
+#'      transparency = 0.2)
 #' @export
-plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE), 
-    featureNames=c(TRUE, FALSE), cexFeatureNames=0.3, 
-    groupSector=c(TRUE, FALSE), groupName=c(TRUE, FALSE), links=c(TRUE, FALSE), 
-    highlight=c(TRUE, FALSE), colour=NULL, transparency=0.2) {
+plotCircos <- function(groupname, linkDf, initialize = c(TRUE, FALSE), 
+    featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
+    groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
+    links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL, 
+    transparency = 0.2) {
 
-    #cexFeaturenames <- length(groupname) 
+    #cexFeaturenames <- length(groupname)
     
     ## get group and name from groupname argument
     ## groupname is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
-    group <- lapply(strsplit(groupname, split="_"), "[", 1)
+    group <- lapply(strsplit(groupname, split = "_"), "[", 1)
     group <- unlist(group)
-    name <- lapply(strsplit(groupname, split="_"), function (x) x[length(x)])
+    name <- lapply(strsplit(groupname, split = "_"), function (x) x[length(x)])
     name <- unlist(name)
     
     
@@ -90,20 +91,20 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
     
     
     if (initialize) {
-        circos.initialize(factor(groupname, levels=groupname),
-                xlim=matrix(rep(c(0,1), groupname_l), ncol=2, byrow=TRUE) )
-        circos.trackPlotRegion(factor(groupname, levels=groupname), ylim=c(0,1))
+        circos.initialize(factor(groupname, levels = groupname),
+            xlim = matrix(rep(c(0,1), groupname_l), ncol = 2, byrow = TRUE) )
+        circos.trackPlotRegion(factor(groupname, levels = groupname), ylim = c(0,1))
     }
     
     ## display feature names
     if (featureNames) {
-        ##groupnameFeatName <- paste(group, name, sep="_")
+        ##groupnameFeatName <- paste(group, name, sep = "_")
         ##truncatedName <- truncateName(groupname)
         for (i in 1:groupname_l) {
-            circos.text(x=0.5, y=0.5, labels=groupname[i], ## truncatedName[i]
-                        sector.index=groupname[i], 
-                        facing="clockwise", cex=as.numeric(cexFeatureNames), 
-                        niceFacing=TRUE)
+            circos.text(x = 0.5, y = 0.5, labels = groupname[i], 
+                sector.index = groupname[i], 
+                facing = "clockwise", cex = as.numeric(cexFeatureNames),
+                niceFacing = TRUE)
         }
     }
     
@@ -122,9 +123,10 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
     ## group sector
     if (groupSector) {
 
-        transparency <- if (highlight) transparency - 0.1 else transparency 
+        transparency <- if (highlight) transparency - 0.1 else transparency
         if (is.null(colour)) {
-            colour <- alpha(palette()[as.numeric(as.factor(uniqueGroup))+1], transparency)
+            colour <- alpha(palette()[as.numeric(as.factor(uniqueGroup))+1],
+                            transparency)
         } else {
             colour <- alpha(colour, transparency)
         }
@@ -133,7 +135,8 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
             ind <- which(uniqueGroup[i] == group)
             minInd <- min(ind)
             maxInd <- max(ind)
-            circlize::highlight.sector(groupname[minInd:maxInd], col=colour[i])
+            circlize::highlight.sector(groupname[minInd:maxInd],
+                            col = colour[i])
         }
     }
     
@@ -143,9 +146,9 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
             ind <- which(uniqueGroup[i] == group)
             minInd <- min(ind)
             maxInd <- max(ind)
-            circlize::circos.text(x=0.5, y=1.5, labels=uniqueGroup[i], 
-                     sector.index=groupname[c(minInd:maxInd)[floor(length(minInd:maxInd) / 2)]],
-                     facing="downward")    
+            circlize::circos.text(x = 0.5, y = 1.5, labels = uniqueGroup[i],
+                     sector.index = groupname[c(minInd:maxInd)[floor(length(minInd:maxInd) / 2)]],
+                     facing = "downward")
         }
     }
     
@@ -157,9 +160,9 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
             for (i in 1:dim(linkDf)[1]) {
                 circos.link(linkDf[i,]$"spectrum1", 0.5,
                     linkDf[i,]$"spectrum2", 0.5,
-                    lwd=if (highlight) 0.3 else max(0.5, linkDf[i,][["similarity"]]),
+                    lwd = if (highlight) 0.3 else max(0.5, linkDf[i,][["similarity"]]),
                     ## transparency
-                    col=rep(alpha("black", 0.05))) ##colourLink[i])
+                    col = rep(alpha("black", 0.05))) ##colourLink[i])
             }
         }
     }
@@ -169,7 +172,8 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
 #' @title Add links and highlight sectors
 #' @description A function to add links and highlight sectors to an initialised
 #'      and plotted \code{circlize} plot with one track.
-#' @usage highlight(groupname, ind, linkDf, colour=NULL, transparency=0.4, links=TRUE)
+#' @usage 
+#' highlight(groupname, ind, linkDf, colour = NULL, transparency = 0.4, links = TRUE)
 #' @param groupname \code{character} vector containing "group" and "name" to 
 #' display, that is a unique identifier of the features, "group" and "name" have 
 #' to be separated by \code{"_"} where "group" is the first and "name" is the 
@@ -187,41 +191,42 @@ plotCircos <- function(groupname, linkDf, initialize=c(TRUE, FALSE),
 #'  specified sector and connected links.
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
+#' data("spectra", package = "MetCirc")
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun=normalizeddotproduct, binSize=0.01)
+#'     fun = normalizeddotproduct, binSize = 0.01)
 #'  ## order similarityMat according to retentionTime and update rownames
-#'  simM <- orderSimilarityMatrix(similarityMat, spectra=spectra_tissue[1:10], 
-#'              type="retentionTime")
+#'  simM <- orderSimilarityMatrix(similarityMat, spectra = spectra_tissue[1:10], 
+#'              type = "retentionTime")
 #'  ## create link matrix
-#'  linkDf <- createLinkDf(similarityMatrix=simM, spectra=spectra_tissue,
-#'      condition=c("SPL", "LIM", "ANT", "STY"), lower=0.5, upper=1)
+#'  linkDf <- createLinkDf(similarityMatrix = simM, spectra = spectra_tissue,
+#'      condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 #'  ## cut link matrix (here: only display links between groups)
-#'  linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#'  linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 #'  ## set circlize parameters
-#'  circos.par(gap.degree=0, cell.padding=c(0.0, 0, 0.0, 0), 
-#'          track.margin=c(0.0, 0))
+#'  circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0), 
+#'          track.margin = c(0.0, 0))
 #'  groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
 #'                  as.character(linkDf_cut[, "spectrum2"]))
 #'  groupname <- unique(groupname)
 #'  ## here: set indSelected arbitrarily
 #'  indSelected <- c(2,3)
 #'  ## actual plotting
-#'  plotCircos(groupname, linkDf_cut, initialize=TRUE, 
-#'      featureNames=TRUE, cexFeatureNames=0.2, groupSector=TRUE, 
-#'      groupName=FALSE, links=FALSE, highlight=TRUE)
+#'  plotCircos(groupname, linkDf_cut, initialize = TRUE, 
+#'      featureNames = TRUE, cexFeatureNames = 0.2, groupSector = TRUE, 
+#'      groupName = FALSE, links = FALSE, highlight = TRUE)
 #'  ## highlight
-#'  highlight(groupname=groupname, ind=indSelected, linkDf=linkDf_cut, 
-#'      colour=NULL, transparency=0.4, links=TRUE)
+#'  highlight(groupname = groupname, ind = indSelected, linkDf = linkDf_cut, 
+#'      colour = NULL, transparency = 0.4, links = TRUE)
 #' @export
-highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, links=TRUE) {
+highlight <- function(groupname, ind, linkDf, colour = NULL, transparency = 0.4, 
+                    links = TRUE) {
     
     ## get group and name from groupname argument
     ## groupname is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
-    group <- lapply(strsplit(groupname, split="_"), "[", 1)
+    group <- lapply(strsplit(groupname, split = "_"), "[", 1)
     group <- unlist(group)
-    name <- lapply(strsplit(groupname, split="_"), function (x) x[length(x)])
+    name <- lapply(strsplit(groupname, split = "_"), function (x) x[length(x)])
     name <- unlist(name)
     
     ##if (length(colour))
@@ -237,19 +242,18 @@ highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, lin
     linkDfSpec2 <- linkDf[,"spectrum2"]
     
     if (is.null(colour)) {
-        colours <- alpha(palette()[as.numeric(as.factor(group))[ind]+1], transparency)   
+        colours <- alpha(palette()[as.numeric(as.factor(group))[ind]+1], transparency)
     } else {
         colours <- alpha(colour[as.numeric(as.factor(group))[ind]], transparency)
     }
     
     for (h in 1:length(ind)) {
-        highlight.sector(sector.index=factor(groupnameselected[h], levels=groupnameselected[h]), ## was as.character()
-            ##col=alpha(palette()[as.numeric(as.factor(group)[ind])[h] + 1], 0.4))
-            col=colours[h])
+        highlight.sector(sector.index = factor(groupnameselected[h],
+            levels = groupnameselected[h]), col = colours[h])
     }
     
-    ## get indices in linkDf of selected features 
-    if (nrow(linkDf) != 0) {
+    ## get indices in linkDf of selected features
+    if (nrow(linkDf) !=  0) {
         linkDfInd <- getLinkDfIndices(groupnameselected, linkDf)
     } else {linkDfInd <- NULL}
 
@@ -257,8 +261,8 @@ highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, lin
     if (links) {
         if (nrow(linkDf) != 0) {
             for (i in 1:dim(linkDf)[1]) {
-                circos.link(linkDfSpec1[i], 0.5, linkDfSpec2[i], 0.5, lwd=0.3,  
-                    col=alpha("black", 0.1))
+                circos.link(linkDfSpec1[i], 0.5, linkDfSpec2[i], 0.5, lwd = 0.3,
+                    col = alpha("black", 0.1))
             }
         }
     }
@@ -267,8 +271,8 @@ highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, lin
     ## plot highlighted links
     if (!is.null(linkDfInd)) {
         for (j in linkDfInd) {
-            circos.link(linkDfSpec1[j], 0.5, linkDfSpec2[j], 0.5, lwd=1,
-                col="black")
+            circos.link(linkDfSpec1[j], 0.5, linkDfSpec2[j], 0.5, lwd = 1,
+                col = "black")
         }
     }
 }
@@ -277,7 +281,7 @@ highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, lin
 #' @title Plot a legend for circos plot
 #' @description \code{circosLegend} plots a legend for circos plot using 
 #' group names.
-#' @usage circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)
+#' @usage circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 #' @param groupname \code{character} vector containing "group" and "name" to 
 #' display, that is  a unique identifier of the features, "group" and "name" have 
 #' to be separated by \code{"_"} where "group" is the first and "name" is the 
@@ -293,26 +297,26 @@ highlight <- function(groupname, ind, linkDf, colour=NULL, transparency=0.4, lin
 #'      with labels. 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
+#' data("spectra", package = "MetCirc")
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun=normalizeddotproduct, binSize=0.01)
-#' linkDf <- createLinkDf(similarityMatrix=similarityMat, 
-#'     spectra=spectra_tissue[1:10], condition=c("SPL", "LIM", "ANT", "STY"), 
-#'     lower=0.5, upper=1) 
+#'     fun = normalizeddotproduct, binSize = 0.01)
+#' linkDf <- createLinkDf(similarityMatrix = similarityMat, 
+#'     spectra = spectra_tissue[1:10], 
+#'     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1) 
 #' ## cut link data.frame (here: only display links between groups)
-#' linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#' linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 #' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
 #'             as.character(linkDf_cut[, "spectrum2"]))
 #' groupname <- unique(groupname)
 #' ## plot legend
-#' circosLegend(groupname, highlight=TRUE, colour=NULL, cex=1)
+#' circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 #' @export
-circosLegend <- function(groupname, highlight=TRUE, colour=NULL, cex=1) {
+circosLegend <- function(groupname, highlight = TRUE, colour = NULL, cex = 1) {
     
     ## get group and name from groupname argument
     ## groupname is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
-    group <- lapply(strsplit(groupname, split="_"), "[", 1)
+    group <- lapply(strsplit(groupname, split = "_"), "[", 1)
     group <- unlist(group)
     group <- as.factor(group)
     
@@ -324,15 +328,16 @@ circosLegend <- function(groupname, highlight=TRUE, colour=NULL, cex=1) {
         colours <- colour[uniqNumGroup + 1]
     }
     
-    plot(x=c(0,0.5), y=c(0,0.5), type="n", xlab="", ylab="",
-         axes=FALSE, frame.plot=FALSE)
+    plot(x = c(0,0.5), y = c(0,0.5), type = "n", xlab = "", ylab = "",
+         axes = FALSE, frame.plot = FALSE)
     if (highlight) {
         plot.new()
-        leg <- legend(x=par("usr")[1:2], y= par("usr")[3:4], legend=levels(group), bty="n", 
-                fill=alpha(colours, 0.3),  border=alpha(colours, 0.3), cex=1)
+        leg <- legend(x = par("usr")[1:2], y =  par("usr")[3:4],
+                legend = levels(group), bty = "n", fill = alpha(colours, 0.3),
+                border = alpha(colours, 0.3), cex = 1)
     } else { ## if not highlight
-        legend(x=par("usr")[1:2], y=par("usr")[3:4], legend=levels(group), bty="n",
-               fill= colours, border=colours, cex=cex)
+        legend(x = par("usr")[1:2], y = par("usr")[3:4], legend = levels(group),
+                bty = "n", fill = colours, border = colours, cex = cex)
     }
 }
 
@@ -354,11 +359,11 @@ circosLegend <- function(groupname, highlight=TRUE, colour=NULL, cex=1) {
 #' @export
 getLinkDfIndices <- function(groupnameselected, linkDf) {
     
-    linkDfInd <- lapply(as.character(groupnameselected), 
-                            function(x) which(linkDf == x, arr.ind=TRUE))
+    linkDfInd <- lapply(as.character(groupnameselected),
+                            function(x) which(linkDf == x, arr.ind = TRUE))
     ## select only first column
-    linkDfInd <- lapply(linkDfInd, function(x) x[,1])  
-    linkDfInd <- unlist(linkDfInd) 
+    linkDfInd <- lapply(linkDfInd, function(x) x[,1])
+    linkDfInd <- unlist(linkDfInd)
     
     linkDfInd <- as.numeric(linkDfInd)
     
@@ -382,29 +387,29 @@ getLinkDfIndices <- function(groupnameselected, linkDf) {
 #'  0.8 and 1 will be used to find the feature with smallest distance.
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
+#' data("spectra", package = "MetCirc")
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun=normalizeddotproduct, binSize=0.01)
-#' linkDf <- createLinkDf(similarityMatrix=similarityMat, 
-#'     spectra=spectra_tissue[1:10], condition=c("SPL", "LIM", "ANT", "STY"), 
-#'     lower=0.5, upper=1) 
+#'     fun = normalizeddotproduct, binSize = 0.01)
+#' linkDf <- createLinkDf(similarityMatrix = similarityMat, 
+#'     spectra = spectra_tissue[1:10], condition = c("SPL", "LIM", "ANT", "STY"), 
+#'     lower = 0.5, upper = 1) 
 #' ## cut link data.frame (here: only display links between groups)
-#' linkDf_cut <- cutLinkDf(linkDf, type="inter")
+#' linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 #' groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
 #'                 as.character(linkDf_cut[, "spectrum2"]))
 #' groupname <- unique(groupname)
-#' plotCircos(groupname, NULL, initialize=TRUE, featureNames=FALSE, 
-#'      groupName=FALSE, groupSector=FALSE, links=FALSE, highlight=FALSE)
+#' plotCircos(groupname, NULL, initialize = TRUE, featureNames = FALSE, 
+#'     groupName = FALSE, groupSector = FALSE, links = FALSE, highlight = FALSE)
 #' x <- 1
 #' y <- 0
 #' degreeFeatures <- lapply(groupname, 
 #'  function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
-#' minFragCart2Polar(x, y, degreeOfFeatures=degreeFeatures)
+#' minFragCart2Polar(x, y, degreeOfFeatures = degreeFeatures)
 #' @export
 minFragCart2Polar <- function(x, y, degreeOfFeatures) {
     polar <- cart2Polar(x, y)
     minInd <- NA
-    if (polar$r <= 1 & polar$r >= 0.8) 
+    if (polar$r <= 1 & polar$r >= 0.8)
         minInd <- which.min(abs(polar$theta - unlist(degreeOfFeatures)))
     return(minInd)
 }
@@ -433,7 +438,7 @@ cart2Polar <- function(x, y) {
     if (x < 0 & y < 0) theta <- thetaP + 180 ## 3rd quadrant
     if (x >= 0 & y < 0) theta <- thetaP + 360 ## 4th quadrant
     
-    return(list(r=r, theta=theta))
+    return(list(r = r, theta = theta))
 }
 
 
@@ -450,16 +455,16 @@ cart2Polar <- function(x, y) {
 #' @return `ggplot2` plot
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #' @examples 
-#' data("spectra", package="MetCirc")
-#' plotSpectra(spectra_tissue, subject="SPL_1", query="SPL_2")
+#' data("spectra", package = "MetCirc")
+#' plotSpectra(spectra_tissue, subject = "SPL_1", query = "SPL_2")
 #' @export
 plotSpectra <- function(spectra, subject, query) {
     
     ## strsplit subject and spectra to remove sample name
-    subject <- strsplit(subject, split="_")
-    subject <- paste(subject[[1]][-1], collapse="_")
-    query <- strsplit(query, split="_")
-    query <- paste(query[[1]][-1], collapse="_")
+    subject <- strsplit(subject, split = "_")
+    subject <- paste(subject[[1]][-1], collapse = "_")
+    query <- strsplit(query, split = "_")
+    query <- paste(query[[1]][-1], collapse = "_")
     
     mz_sub <- spectra[subject]@listData[[1]]@mz
     int_sub <- spectra[subject]@listData[[1]]@intensity
@@ -470,15 +475,17 @@ plotSpectra <- function(spectra, subject, query) {
     int_sub <- int_sub / max(int_sub) * 100
     int_que <- int_que / max(int_que) * 100
     
-    df_sub <- data.frame(mz=mz_sub, int=-int_sub, is="MS/MS #1")
-    df_que <- data.frame(mz=mz_que, int=int_que, is="MS/MS #2")
+    df_sub <- data.frame(mz = mz_sub, int = -int_sub, is = "MS/MS #1")
+    df_que <- data.frame(mz = mz_que, int = int_que, is = "MS/MS #2")
     
     df <- rbind(df_que, df_sub)
     
     ggplot(df) + 
-        geom_segment(aes(x=mz, xend=mz+0.001, y=int, yend=0, col=is), stat="identity") +
-        xlab("m/z") + 
-        scale_y_continuous("intensity (%)", breaks=c(-100, -50, 0, 50, 100), labels=c("100", "50", "0", "50", "100")) +
-        theme_light() + theme(legend.title=element_blank())
+        geom_segment(aes(x = mz, xend = mz+0.001, y = int, yend = 0, col = is),
+                        stat = "identity") +
+        xlab("m/z") +
+        scale_y_continuous("intensity (%)", breaks = c(-100, -50, 0, 50, 100),
+                        labels = c("100", "50", "0", "50", "100")) +
+        theme_light() + theme(legend.title = element_blank())
     
 }
