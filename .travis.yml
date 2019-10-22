@@ -41,7 +41,7 @@ jobs:
       name: "examples"
     - install: skip
       script: 
-        - travis_wait 10 R CMD build --no-build-vignettes --no-manual
+        - travis_wait 10 R CMD build --no-build-vignettes --no-manual .
         - travis_wait 40 R CMD check --as-cran --no-build-vignettes --no-vignettes --no-manual --no-codoc --no-examples MetCirc*tar.gz
       before_script: rm -rf vignettes
       name: "tests"
