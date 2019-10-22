@@ -59,7 +59,7 @@ jobs:
       name: "lintr"
       on: 
         branch: "master"
-        
+
 
 ## In general the r-travis script automatically dump the logs after failure but
 ## because of a bug in travis the output is often truncated. See
