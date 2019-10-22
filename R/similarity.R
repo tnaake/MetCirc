@@ -77,15 +77,16 @@ compare_Spectra <- function(object, fun, ...) {
 #' @details
 #' The normalized dot product is calculated according to the 
 #' following formula: 
-#' \deqn{NDP = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2) }}{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2 \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2)},
-#' with \eqn{W = [ peak intensity] ^{m} \cdot [m/z]^n}. For further information 
+#' \deqn{NDP = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) \cdot \sum(W_{S2, i} ^ 2) }}{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2 \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2)},
+#' with \eqn{W = [peak intensity]^{m} \cdot [m/z]^n}. For further information 
 #' see Li et al. (2015): Navigating natural variation in herbivory-induced
 #' secondary metabolism in coyote tobacco populations using MS/MS structural 
-#' analysis. PNAS, E4147--E4155. `normalizeddotproduct} returns a numeric 
+#' analysis. PNAS, E4147--E4155. 
+#' `normalizeddotproduct` returns a numeric 
 #' value ranging between 0 and 1, where 0 
 #' indicates no similarity between the two MS/MS features, while 1 indicates 
 #' that the MS/MS features are identical. Arguments can be passed to 
-#' the function `MSnbase:::bin_Spectra}, e.g. to set the width of bins
+#' the function `MSnbase:::bin_Spectra`, e.g. to set the width of bins
 #' (binSize). 
 #' Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values 
 #' are divided by the maximum intensity value.
@@ -140,16 +141,17 @@ normalizeddotproduct <- function(x, y, m = 0.5, n = 2, ...) {
 #'
 #' @details Similarities of spectra based on neutral losses are calculated 
 #' according to the following formula: 
-#' \deqn{NLS = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2) }}{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2 \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2)},
+#' \deqn{NLS = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) \cdot \sum(W_{S2, i} ^ 2) }}{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2 \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2)},
 #' with \eqn{W = [ peak intensity] ^{m} \cdot [ NL ]^n} and 
 #' \eqn{NL = | m/z - precursor m/z |}. For further information 
 #' see Li et al. (2015): Navigating natural variation in herbivory-induced
 #' secondary metabolism in coyote tobacco populations using MS/MS structural 
-#' analysis. PNAS, E4147--E4155. `neutralloss} returns a numeric 
+#' analysis. PNAS, E4147--E4155. 
+#' `neutralloss` returns a numeric 
 #' value ranging between 0 and 1, where 0 
 #' indicates no similarity between the two MS/MS features, while 1 indicates 
 #' that the MS/MS features are identical. Arguments can be passed to 
-#' the function `MSnbase:::bin_Spectra}, e.g. to set the width of bins
+#' the function `MSnbase:::bin_Spectra`, e.g. to set the width of bins
 #' (binSize). 
 #' Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values 
 #' are divided by the maximum intensity value.

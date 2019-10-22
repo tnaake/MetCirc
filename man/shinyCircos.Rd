@@ -42,7 +42,7 @@ stores annotation information about the MS/MS features. Names of features
 within the `similarityMatrix` have to be found as entries 
 in `Spectra`. `names(Spectra)` are used as identifiers and 
 `colnames`/`rownames` from `similarityMatrix` are cleaved 
-by the group identifier, separated by "_"). Annotation information is taken
+by the group identifier (separated by "_"). Annotation information is taken
 from `spectra` from the columns "names", "information", "classes" and
 "adduct" in the slot `elementMetadata` of `spectra`. After exiting 
 the application, the annotation will be written to the respective columns

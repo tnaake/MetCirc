@@ -9,17 +9,17 @@ spectraCond(spectra, condition)
 \arguments{
 \item{spectra}{`Spectra` object of `MSnbase` package}
 
-\item{condition}{`character`, vector with conditions found as columns 
+\item{condition}{`character`, vector with conditions found as columns
 in the elementMetadata slot}
 }
 \value{
-`list`, named `list` with `character` vector as entries that contains 
-the names of the MS/MS entries in `spectra` that are present in the 
+`list`, named `list` with `character` vector as entries that contains
+the names of the MS/MS entries in `spectra` that are present in the
 `conditon` (tissues, stress conditions, time points, etc.)
 }
 \description{
-`spectraCond` returns the names of `spectra` that are 
-present in condition, corresponding to the slot 
+`spectraCond` returns the names of `spectra` that are
+present in condition, corresponding to the slot
 `elementMetadata@listData`.
 }
 \details{
@@ -27,7 +27,8 @@ Helper function in `createLink0df` and `shinyCircos`.
 }
 \examples{
 data("spectra", package = "MetCirc")
-MetCirc:::spectraCond(spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+MetCirc:::spectraCond(spectra_tissue,
+    condition = c("SPL", "LIM", "ANT", "STY"))
 }
 \author{
 Thomas Naake \email{thomasnaake@googlemail.com}

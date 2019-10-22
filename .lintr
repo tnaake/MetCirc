@@ -3,8 +3,8 @@ linters: with_defaults(line_length_linter(80),
 		commented_code_linter=NULL,
 		multiple_dots_linter=NULL,
 		object_length_linter(40),
-		snake_case_linter,
+		object_name_linter("camelCase"),
 		spaces_left_parantheses_linter=NULL)
 exclusions: as.list(c(list.files(path="tests/", recursive=TRUE,
 	        full.names=TRUE)))
-		
+

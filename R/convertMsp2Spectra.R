@@ -27,24 +27,24 @@
 #' @export
 convertMsp2Spectra <- function(msp) {
 
-    nameInd <- grep("NAME:", msp[,1]) ## indices of Name
+    nameInd <- grep("NAME:", msp[, 1]) ## indices of Name
 
     ## get indices of precursor mz or exactmass
-    mzInd_1 <- grep("PRECURSORMZ:", msp[,1])
-    mzInd_2 <- grep("EXACTMASS:", msp[,1])
+    mzInd_1 <- grep("PRECURSORMZ:", msp[, 1])
+    mzInd_2 <- grep("EXACTMASS:", msp[, 1])
 
     mzInd <- if (length(mzInd_1) >= length(mzInd_2)) {
-        mzInd_1 
+        mzInd_1
     } else {
         mzInd_2
     }
 
-    numpeaksInd <- grep("Num Peaks:", msp[,1])
+    numpeaksInd <- grep("Num Peaks:", msp[, 1])
 
     ## get indices of "RETENTIONTIME:"
-    rtInd <- grep("RETENTIONTIME:", msp[,1])
+    rtInd <- grep("RETENTIONTIME:", msp[, 1])
 
-    NAMES <- as.character(msp[nameInd, 2])
+    NAMES <- as.character(msp[nameInd,  2])
     MZ <- as.numeric(as.character(msp[mzInd, 2]))
     NUMPEAKS <- as.numeric(as.character(msp[numpeaksInd, 2]))
 
@@ -55,7 +55,7 @@ convertMsp2Spectra <- function(msp) {
         stop("length of precursor mz != length of names")
 
     ## create annotation vectors
-    RT <- if(length(rtInd) == numEntries) {
+    RT <- if (length(rtInd) == numEntries) {
         as.numeric(as.character(msp[rtInd, 2]))
     } else {
         rep(NaN, numEntries)
@@ -72,7 +72,7 @@ convertMsp2Spectra <- function(msp) {
         ## sort fragments according to increasing fragment values
         fragment <- sort(fragment)
         intensity <- intensity[order(fragment)]
-        
+
         ## delete double entries
         intensity <- intensity[!duplicated(fragment)]
         fragment <- fragment[!duplicated(fragment)]

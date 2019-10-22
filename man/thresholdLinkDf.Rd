@@ -7,17 +7,17 @@
 thresholdLinkDf(link0df, lower = 0.75, upper = 1)
 }
 \arguments{
-\item{link0df}{`data.frame`, a link data frame that gives per each row 
+\item{link0df}{`data.frame`, a link data frame that gives per each row
 information on linked features}
 
 \item{lower}{`numeric`, threshold value for similarity values, below 
 this value linked features will not be returned}
 
-\item{upper}{`numeric`, threshold value for similarity values, above 
+\item{upper}{`numeric`, threshold value for similarity values, above
 this value linked features will not be returned}
 }
 \value{
-`thresholdLinkDf` returns a data frame that gives per each row 
+`thresholdLinkDf` returns a data frame that gives per each row
 information on linked features which are linked within certain thresholds.
 }
 \description{
@@ -26,13 +26,13 @@ similarity values. The function will return that lie within the defined
 bounds.
 }
 \details{
-`lower` and `upper` are numerical values 
+`lower` and `upper` are numerical values
 and truncates mass spectra based on their similarity values.
 }
 \examples{
 data("spectra", package = "MetCirc")
 data("similarityMat", package = "MetCirc")
-link0df <- createLink0df(similarityMatrix = similarityMat, 
+link0df <- createLink0df(similarityMatrix = similarityMat,
     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 thresholdLinkDf(link0df = link0df, lower = 0.5, upper = 1)
 

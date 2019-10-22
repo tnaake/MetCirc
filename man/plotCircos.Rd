@@ -11,12 +11,12 @@ plotCircos(groupname, linkDf, initialize = c(TRUE, FALSE),
   transparency = 0.2)
 }
 \arguments{
-\item{groupname}{`character` vector containing "group" and "name" to 
-display, that is a unique identifier of the features, "group" and "name" have 
-to be separated 
+\item{groupname}{`character` vector containing "group" and "name" to
+display, that is a unique identifier of the features, "group" and "name" have
+to be separated
 by `"_"` where "group" is the first and "name" is the last element}
 
-\item{linkDf}{`data.frame` containing linked features in each row, has 
+\item{linkDf}{`data.frame` containing linked features in each row, has
 five columns (group1, spectrum1, group2, spectrum2, similarity)}
 
 \item{initialize}{`logical`, should plot be initialized?}
@@ -25,30 +25,30 @@ five columns (group1, spectrum1, group2, spectrum2, similarity)}
 
 \item{cexFeatureNames}{`numeric` size of feature names}
 
-\item{groupSector}{`logical`, should groups be displayed with background 
+\item{groupSector}{`logical`, should groups be displayed with background
 colours?}
 
-\item{groupName}{`logical`, should group names (e.g. compartment names or 
+\item{groupName}{`logical`, should group names (e.g. compartment names or
 individual names) be displayed?}
 
 \item{links}{`logical`, should links be plotted?}
 
 \item{highlight}{`logical`, highlight is set to `TRUE`}
 
-\item{colour}{`NULL` or `character`, colour defines the colours 
+\item{colour}{`NULL` or `character`, colour defines the colours
 which are used for plotting, if `NULL` default colours are used}
 
 \item{transparency}{`numeric`, defines the transparency of the colours}
 }
 \value{
-The function will initialize a circlize plot and/or will plot 
+The function will initialize a circlize plot and/or will plot
  features of a circlize plot.
 }
 \description{
 Circular plot to visualise similarity.
 }
 \details{
-Internal use for `shinyCircos` or used outside of 
+Internal use for `shinyCircos` or used outside of
 `shinyCircos` to reproduce figure
 }
 \examples{
@@ -57,7 +57,7 @@ similarityMat <- compare_Spectra(spectra_tissue[1:10],
     fun = normalizeddotproduct, binSize = 0.01)
 ## order similarityMat according to retentionTime
 simM <- orderSimilarityMatrix(similarityMat, spectra = spectra_tissue[1:10],
-            type = "retentionTime", )
+            type = "retentionTime")
 ## create link data.frame
 linkDf <- createLinkDf(similarityMatrix = simM, spectra = spectra_tissue,
      condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)

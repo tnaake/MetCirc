@@ -13,8 +13,8 @@ internal
 }
 \description{
 The `data.frame` `tissue` is used in the subsection
-'Preparing the tissue data set for analysis' in the vignette of 
-`MetCirc`. MS/MS data are merged across floral organs 
+'Preparing the tissue data set for analysis' in the vignette of
+`MetCirc`. MS/MS data are merged across floral organs
 in this `data.frame`.
 }
 \author{

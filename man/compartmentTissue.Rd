@@ -12,9 +12,9 @@ internal
 `data.frame`
 }
 \description{
-The `data.frame` `compartmentTissue` is used in the 
-subsection 'Preparing the tissue data set for analysis' in the vignette 
-of `MetCirc`. In `compartmentTissue`, information on the 
+The `data.frame` `compartmentTissue` is used in the
+subsection 'Preparing the tissue data set for analysis' in the vignette
+of `MetCirc`. In `compartmentTissue`, information on the
 organ-localisation of each MS/MS spectrum is stored.
 }
 \author{
