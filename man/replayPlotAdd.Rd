@@ -28,11 +28,9 @@ features for given thresholds}
 
 \item{indMz}{`numeric`, indices of clicked features for `"mz"` ordering}
 
-\item{indRT}{`numeric`, indices of clicked features for `"retentionTime"` 
-ordering}
+\item{indRT}{`numeric`, indices of clicked features for `"retentionTime"` ordering}
 
-\item{indCluster}{`numeric`, indices of clicked features for `"clustering"` 
-ordering}
+\item{indCluster}{`numeric`, indices of clicked features for `"clustering"` ordering}
 }
 \value{
 Depending on `onCircle` and `indMz` either returns `plotCircos` or 
@@ -69,6 +67,7 @@ circos.initialize(mz_match,##, levels  =  mz_match),
 MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf = linkDf, 
     mz_match = mz_match, rt_match = rt_match, clust_match = clust_match, 
     ind = 1, indMz = NULL, indRT = NULL, indCluster = NULL)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

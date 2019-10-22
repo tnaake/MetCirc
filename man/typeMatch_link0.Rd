@@ -34,6 +34,7 @@ similarityMat <- compare_Spectra(spectra_tissue[1:10],
 MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
     spectra = spectra_tissue, type = "mz", 
     condition = c("SPL", "LIM", "ANT", "STY"))
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

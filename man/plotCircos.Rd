@@ -4,52 +4,52 @@
 \alias{plotCircos}
 \title{Circular plot to visualise similarity}
 \usage{
-plotCircos(groupname, linkDf, initialize = c(TRUE, FALSE), 
-     featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3, 
-     groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE), 
-     links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
-     transparency = 0.2)
+plotCircos(groupname, linkDf, initialize = c(TRUE, FALSE),
+  featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3,
+  groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE),
+  links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
+  transparency = 0.2)
 }
 \arguments{
-\item{groupname}{\code{character} vector containing "group" and "name" to 
+\item{groupname}{`character` vector containing "group" and "name" to 
 display, that is a unique identifier of the features, "group" and "name" have 
 to be separated 
-by \code{"_"} where "group" is the first and "name" is the last element}
+by `"_"` where "group" is the first and "name" is the last element}
 
-\item{linkDf}{\code{data.frame} containing linked features in each row, has 
+\item{linkDf}{`data.frame` containing linked features in each row, has 
 five columns (group1, spectrum1, group2, spectrum2, similarity)}
 
-\item{initialize}{\code{logical}, should plot be initialized?}
+\item{initialize}{`logical`, should plot be initialized?}
 
-\item{featureNames}{\code{logical}, should feature names be displayed?}
+\item{featureNames}{`logical`, should feature names be displayed?}
 
-\item{cexFeatureNames}{\code{numeric}, size of feature names}
+\item{cexFeatureNames}{`numeric` size of feature names}
 
-\item{groupSector}{\code{logical}, should groups be displayed with background 
+\item{groupSector}{`logical`, should groups be displayed with background 
 colours?}
 
-\item{groupName}{\code{logical}, should group names (e.g. compartment names or 
+\item{groupName}{`logical`, should group names (e.g. compartment names or 
 individual names) be displayed?}
 
-\item{links}{\code{logical}, should links be plotted?}
+\item{links}{`logical`, should links be plotted?}
 
-\item{highlight}{\code{logical}, highlight is set to \code{TRUE}}
+\item{highlight}{`logical`, highlight is set to `TRUE`}
 
-\item{colour}{\code{NULL} or \code{character}, colour defines the colours 
-which are used for plotting, if \code{NULL} default colours are used}
+\item{colour}{`NULL` or `character`, colour defines the colours 
+which are used for plotting, if `NULL` default colours are used}
 
-\item{transparency}{\code{numeric}, defines the transparency of the colours}
+\item{transparency}{`numeric`, defines the transparency of the colours}
 }
 \value{
 The function will initialize a circlize plot and/or will plot 
  features of a circlize plot.
 }
 \description{
-Circular plot to visualise similarity
+Circular plot to visualise similarity.
 }
 \details{
-Internal use for \code{shinyCircos} or used outside of 
- \code{shinyCircos} to reproduce figure
+Internal use for `shinyCircos` or used outside of 
+`shinyCircos` to reproduce figure
 }
 \examples{
 data("spectra", package = "MetCirc")
@@ -74,6 +74,7 @@ plotCircos(groupname, linkDf_cut, initialize = TRUE,
     featureNames = TRUE, cexFeatureNames = 0.3, groupSector = TRUE,
      groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL,
      transparency = 0.2)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

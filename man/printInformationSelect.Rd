@@ -4,20 +4,19 @@
 \alias{printInformationSelect}
 \title{Display information on connected features of selected features}
 \usage{
-printInformationSelect(select, spectra = NULL,
-    linkDfInd, linkDf, similarityMatrix, roundDigits = 2)
+printInformationSelect(select, spectra = NULL, linkDfInd, linkDf,
+  similarityMatrix, roundDigits = 2)
 }
 \arguments{
-\item{select}{`character`, obtained from groupname, `character` of 
-selected feature}
+\item{select}{`character`, obtained from groupname, `character` of selected feature}
 
-\item{spectra}{`Spectra` object containing spectra that are compared
-in `similarityMatrix`}
+\item{spectra}{`Spectra` object containing spectra that are compared in 
+`similarityMatrix`}
 
 \item{linkDfInd}{`numeric` indices of selected features}
 
-\item{linkDf}{`data.frame` that contains information of linked 
-features for given thresholds}
+\item{linkDf}{`data.frame` that contains information of linked features for given 
+thresholds}
 
 \item{similarityMatrix}{`matrix` that is used to get information on the 
 degree of similarity, `similarityMat` is an ordered version of a 
@@ -49,8 +48,10 @@ groupname <- unique(groupname)
 ## arbitrarily select a feature
 ind <- 2
 linkDfInds <- getLinkDfIndices(groupname[ind], linkDf_cut)
-MetCirc:::printInformationSelect(groupname[ind], spectra = spectra_tissue[1:10],
-    linkDfInd = linkDfInds, linkDf = linkDf_cut, similarityMatrix = similarityMat)
+MetCirc:::printInformationSelect(groupname[ind], 
+    spectra = spectra_tissue[1:10], linkDfInd = linkDfInds, 
+    linkDf = linkDf_cut, similarityMatrix = similarityMat)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -17,11 +17,13 @@ this value linked features will not be returned}
 this value linked features will not be returned}
 }
 \value{
-\code{thresholdLinkDf} returns a data frame that gives per each row 
-information on linked features which are linked within certain thresholds
+`thresholdLinkDf` returns a data frame that gives per each row 
+information on linked features which are linked within certain thresholds.
 }
 \description{
-Threshold a link data frame
+Threshold a link data frame based on lower and upper
+similarity values. The function will return that lie within the defined
+bounds.
 }
 \details{
 `lower` and `upper` are numerical values 
@@ -33,6 +35,7 @@ data("similarityMat", package = "MetCirc")
 link0df <- createLink0df(similarityMatrix = similarityMat, 
     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 thresholdLinkDf(link0df = link0df, lower = 0.5, upper = 1)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

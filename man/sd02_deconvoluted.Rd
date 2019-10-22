@@ -3,23 +3,20 @@
 \docType{data}
 \name{sd02_deconvoluted}
 \alias{sd02_deconvoluted}
-\title{Example data for \code{MetCirc}: sd02_deconvoluted}
-\format{\code{data.frame}}
+\title{Example data for `MetCirc`: sd02_deconvoluted}
+\format{`data.frame`}
 \source{
 Li et al. (2015)
 }
-\usage{
-sd02_deconvoluted
-}
 \value{
-\code{data.frame}
+`data.frame`
 }
 \description{
-\code{sd02_deconvoluted} contains MS/MS data from Li et al. 
- (2015). It is a \code{data.frame} which hosts m/z values, retention time, 
- intensity and the respective precursor m/z values. \code{sd02_deconvoluted} 
- originates from Li et al. (2015). See Li et al. (2015) for further 
- information.
+`sd02_deconvoluted` contains MS/MS data from Li et al. 
+(2015). It is a `data.frame` which hosts m/z values, retention time, 
+intensity and the respective precursor m/z values. `sd02_deconvoluted`
+originates from Li et al. (2015). See Li et al. (2015) for further
+information.
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -38,6 +38,7 @@ plot.new()
 plot_l <- list(highlightMz = p)
 MetCirc:::replayPlotOrder(orderMatch = "mz", onCircle = TRUE,
     plot_l = plot_l, ind = NULL)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

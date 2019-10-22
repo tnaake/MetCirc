@@ -3,22 +3,19 @@
 \docType{data}
 \name{tissue}
 \alias{tissue}
-\title{Example data for \code{MetCirc}: \code{tissue}}
-\format{\code{data.frame}}
+\title{Example data for `MetCirc`: `tissue`}
+\format{`data.frame`}
 \source{
 internal
 }
-\usage{
-tissue
-}
 \value{
-\code{data.frame}
+`data.frame`
 }
 \description{
-The \code{data.frame} \code{tissue} is used in the subsection
+The `data.frame` `tissue` is used in the subsection
 'Preparing the tissue data set for analysis' in the vignette of 
-\code{MetCirc}. MS/MS data are merged across floral organs 
-in this \code{data.frame}.
+`MetCirc`. MS/MS data are merged across floral organs 
+in this `data.frame`.
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

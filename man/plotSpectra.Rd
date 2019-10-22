@@ -19,7 +19,8 @@ with preceding sample name}
 `ggplot2` plot
 }
 \description{
-``
+`plotSpectra` plots a spectra of a `subject` and `query`
+spectra. `plotSpectra` uses `ggplot` plotting functionality.
 }
 \details{
 Internally, all intensities are normalized to 100\%.
@@ -27,6 +28,7 @@ Internally, all intensities are normalized to 100\%.
 \examples{
 data("spectra", package = "MetCirc")
 plotSpectra(spectra_tissue, subject = "SPL_1", query = "SPL_2")
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

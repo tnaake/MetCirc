@@ -17,7 +17,7 @@ entry `degreeFeatures` that is a `list` of vectors of `numeric(1)`
 }
 \description{
 `recordPlotFill_degreeFeatures` records a plot of filled 
-features and returns the degree of features
+features and returns the degree of features.
 }
 \details{
 Helper function for `shinyCircos`.
@@ -25,6 +25,7 @@ Helper function for `shinyCircos`.
 \examples{
 type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
 MetCirc:::recordPlotFill_degreeFeatures(type_match)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

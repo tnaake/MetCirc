@@ -24,6 +24,7 @@ Helper function for `shinyCircos`.
 \examples{
 type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
 MetCirc:::recordPlotHighlight(type_match)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

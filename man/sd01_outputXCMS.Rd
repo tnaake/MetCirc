@@ -3,20 +3,17 @@
 \docType{data}
 \name{sd01_outputXCMS}
 \alias{sd01_outputXCMS}
-\title{Example data for \code{MetCirc}: \code{sd01_outputXCMS}}
-\format{\code{data.frame}}
+\title{Example data for `MetCirc`: `sd01_outputXCMS`}
+\format{`data.frame`}
 \source{
 Li et al. (2015)
 }
-\usage{
-sd01_outputXCMS
-}
 \value{
-\code{data.frame}
+`data.frame`
 }
 \description{
-\code{sd01_outputXCMS} is the output file from the package
-\code{XCMS} using the data from Li et al. (2015). See Li et al. (2015) 
+`sd01_outputXCMS` is the output file from the package
+`XCMS` using the data from Li et al. (2015). See Li et al. (2015) 
 for further details.
 }
 \author{

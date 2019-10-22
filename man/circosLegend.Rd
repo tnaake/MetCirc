@@ -7,30 +7,27 @@
 circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 }
 \arguments{
-\item{groupname}{\code{character} vector containing "group" and "name" to 
+\item{groupname}{`character` vector containing "group" and "name" to 
 display, that is  a unique identifier of the features, "group" and "name" have 
-to be separated by \code{"_"} where "group" is the first and "name" is the 
+to be separated by `"_"` where "group" is the first and "name" is the 
 last element}
 
-\item{highlight}{\code{logical}, should colours be adjusted to highlight settings?}
+\item{highlight}{`logical`, should colours be adjusted to highlight settings?}
 
-\item{colour}{\code{NULL} or \code{character}, colour defines the colours which are used
-for plotting, if \code{NULL} default colours are used}
+\item{colour}{`NULL` or `character`, colour defines the colours which are 
+used for plotting, if `NULL` default colours are used}
 
-\item{cex}{\code{numeric}, parameter that controls size of the legend in 
-the plot}
+\item{cex}{`numeric`, parameter that controls size of the legend in the plot}
 }
 \value{
-The function will open a new plot and display colours together 
-     with labels.
+The function will open a new plot and display colours together with labels.
 }
 \description{
-\code{circosLegend} plots a legend for circos plot using 
-group names.
+`circosLegend` plots a legend for circos plot using group names.
 }
 \details{
-Internal use in \code{shinyCircos} or outside of \code{shinyCircos} 
- to reproduce figures.
+Internal use in `shinyCircos` or outside of `shinyCircos` 
+to reproduce figures.
 }
 \examples{
 data("spectra", package = "MetCirc")
@@ -46,6 +43,7 @@ groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
 groupname <- unique(groupname)
 ## plot legend
 circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -26,7 +26,7 @@ above this value linked features will not be included}
 information on linked features
 }
 \description{
-Create a data frame which contains features to link (indices)
+Create a data frame which contains features to link (indices).
 }
 \details{
 `lower` and `upper` are numerical values 
@@ -40,6 +40,7 @@ link0df <- createLink0df(similarityMatrix = similarityMat,
     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 createLinkDf(similarityMatrix = similarityMat, spectra = spectra_tissue,
     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

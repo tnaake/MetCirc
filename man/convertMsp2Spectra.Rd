@@ -2,31 +2,32 @@
 % Please edit documentation in R/convertMsp2Spectra.R
 \name{convertMsp2Spectra}
 \alias{convertMsp2Spectra}
-\title{Convert MSP data frame into object of class \code{Spectra}}
+\title{Convert MSP data frame into object of class `Spectra`}
 \usage{
 convertMsp2Spectra(msp)
 }
 \arguments{
-\item{msp}{\code{data.frame} that mimicks the .msp file 
-format, see Details for further information}
+\item{msp}{`data.frame` that mimicks the .msp file format, see Details for further
+information}
 }
 \value{
-\code{convertMsp2Spectra} returns an object of class \code{Spectra}.
+`convertMsp2Spectra` returns an object of class `Spectra`
 }
 \description{
-Convert msp data frame into object of class \code{Spectra}
+Convert msp data frame into object of class `Spectra`
 }
 \details{
-msp is a data frame of a .msp file, a typical data file for 
+msp is a data frame of a .msp file, a typical data file for
 MS/MS libraries. The data frame has two columns and contains in the first
-column the entries "NAME:", 
-"PRECURSORMZ:" (or "EXACTMASS:"), "RETENTIONTIME:", Num Peaks:"  and information on fragments and 
-peak areas/intensities and will
+column the entries "NAME:",
+"PRECURSORMZ:" (or "EXACTMASS:"), "RETENTIONTIME:", Num Peaks:"
+and information on fragments and peak areas/intensities and will
 extract the respective information in the second column.
 }
 \examples{
 data("convertMsp2Spectra", package = "MetCirc")
 convertMsp2Spectra(msp = msp2spectra)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

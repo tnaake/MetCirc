@@ -7,8 +7,7 @@
 select(condition, mz, rt, clust)
 }
 \arguments{
-\item{condition}{`character`, either `"mz"`, `"retentionTime"` or 
-`"clustering"`}
+\item{condition}{`character`, either `"mz"`, `"retentionTime"` or `"clustering"`}
 
 \item{mz}{object to return if `condition == "mz"`}
 
@@ -23,14 +22,14 @@ select(condition, mz, rt, clust)
 `select` returns `mz`, `rt` or `clust` depending on `condition`.
 }
 \details{
-Helper function for `shinyCircos`, `replayPlotOrder` and 
-`replayPlotAdd`-
+Helper function for `shinyCircos`, `replayPlotOrder` and `replayPlotAdd`.
 }
 \examples{
 mz <- 1
 rt <- 2
 clust <- 3
 MetCirc:::select(condition = "mz", mz = mz, rt = rt, clust = clust)
+
 }
 \author{
 Thomas Naake \email{thomasnaake@googlemail.com}

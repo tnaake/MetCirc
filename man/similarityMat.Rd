@@ -3,24 +3,21 @@
 \docType{data}
 \name{similarityMat}
 \alias{similarityMat}
-\title{Example data for \code{MetCirc}: \code{similarityMat}}
-\format{\code{matrix}}
+\title{Example data for `MetCirc`: `similarityMat`}
+\format{`matrix`}
 \source{
 data("tissue", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue,
     fun = normalizeddotproduct, binSize = 0.01)
 save(similarityMat, file = "similarityMat.RData", compress = "xz")
 }
-\usage{
-similarityMat
-}
 \value{
-\code{matrix}
+`matrix`
 }
 \description{
-\code{similarityMat} is a \code{matrix} containing the pair-wise
-similarity scores derived from the \code{idMSMStissueproject} data set.
-See the vignette for a workflow to reproduce the object \code{similarityMat}.
+`similarityMat` is a `matrix` containing the pair-wise
+similarity scores derived from the `idMSMStissueproject` data set.
+See the vignette for a workflow to reproduce the object `similarityMat`.
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -3,8 +3,8 @@
 \docType{data}
 \name{spectra_tissue}
 \alias{spectra_tissue}
-\title{Example data for \code{MetCirc}: \code{spectra_tissue}}
-\format{\code{matrix}}
+\title{Example data for `MetCirc`: `spectra_tissue`}
+\format{`matrix`}
 \source{
 data("idMSMStissueproject", package = "MetCirc")
 ## get all MS/MS spectra
@@ -18,7 +18,8 @@ prec_mz_l <- lapply(prec_mz_l, as.numeric)
 ## obtain m/z from fragments per precursor m/z
 mz_l <- lapply(id_uniq, function(x) tissue[tissue[, "id"] == x, "mz"])
 ## obtain corresponding intensity values
-int_l <- lapply(id_uniq, function(x) tissue[tissue[, "id"] == x, "intensity"])
+int_l <- lapply(id_uniq, function(x) {
+    tissue[tissue[, "id"] == x, "intensity"]})
 ## obtain retention time by averaging all retention time values
 rt_l <- lapply(id_uniq, function(x) tissue[tissue[, "id"] == x, "rt"])
 rt_l <- lapply(rt_l, mean)
@@ -39,12 +40,12 @@ save(spectra_tissue, file = "spectra.RData", compress = "xz")
 similarityMat
 }
 \value{
-\code{matrix}
+`matrix`
 }
 \description{
-\code{spectra_tissue} is a \code{Spectra} object containing
-\code{Spectrum2} objects derived from the \code{idMSMStissueproject} data set.
-See the vignette for a workflow to reproduce the object \code{spectra}.
+`spectra_tissue` is a `Spectra` object containing
+`Spectrum2` objects derived from the `idMSMStissueproject` data set.
+See the vignette for a workflow to reproduce the object `spectra`.
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

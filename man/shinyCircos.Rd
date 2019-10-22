@@ -2,7 +2,8 @@
 % Please edit documentation in R/shinyApp.R
 \name{shinyCircos}
 \alias{shinyCircos}
-\title{Interactive visualisation of similarity and navigation of MS/MS features}
+\title{Interactive visualisation of similarity and navigation of MS/MS
+features}
 \usage{
 shinyCircos(similarityMatrix, spectra, condition, ...)
 }
@@ -30,11 +31,10 @@ object containing the annotation.
 \description{
 Visualise the similarity of MS/MS features in a reactive 
  context. See `Details` the vignette for further descriptions on how to use 
- `shinyCircos`.
+`shinyCircos`.
 }
 \details{
-The function is based on the `shiny` and `circlize` 
-package. 
+The function is based on the `shiny` and `circlize` package. 
 The user can choose interactively thresholds, type of links (between or 
 within groups), display information about MS/MS features, permanently select 
 MS/MS features and export selected precursors. The `Spectra` object
@@ -44,10 +44,10 @@ in `Spectra`. `names(Spectra)` are used as identifiers and
 `colnames`/`rownames` from `similarityMatrix` are cleaved 
 by the group identifier, separated by "_"). Annotation information is taken
 from `spectra` from the columns "names", "information", "classes" and
-"adduct" in the slot elementMetadata of `spectra`. After exiting 
+"adduct" in the slot `elementMetadata` of `spectra`. After exiting 
 the application, the annotation will be written to the respective columns
-in the slot elementMetadata. If one or several of these columns is 
-already present in elementMetadata, the column(s) will be used as the 
+in the slot `elementMetadata`. If one or several of these columns is 
+already present in `elementMetadata`, the column(s) will be used as the 
 source of annotation information.
 }
 \author{

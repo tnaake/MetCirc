@@ -7,7 +7,7 @@
 cutLinkDf(linkDf, type = c("all", "inter", "intra"))
 }
 \arguments{
-\item{linkDf}{`data.frame`, that gives per each row 
+\item{linkDf}{`data.frame`, that gives per each row
 information on linked features}
 
 \item{type}{`character`, one of "all", "inter" or "intra"}
@@ -34,6 +34,7 @@ linkDf <- createLinkDf(similarityMatrix = similarityMat,
     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"), 
     lower = 0.75, upper = 1)
 cutLinkDf(linkDf = linkDf, type = "all")
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

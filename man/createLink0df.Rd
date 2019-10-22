@@ -33,6 +33,7 @@ data("spectra", package = "MetCirc")
 data("similarityMat", package = "MetCirc")
 link0df <- createLink0df(similarityMatrix = similarityMat, 
     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

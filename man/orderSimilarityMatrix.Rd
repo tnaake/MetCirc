@@ -5,41 +5,41 @@
 \title{Order columns and rows of a similarity matrix according to 
 m/z, retention time and clustering}
 \usage{
-orderSimilarityMatrix(similarityMatrix, spectra, 
-    type = c("retentionTime", "mz", "clustering"), group = FALSE)
+orderSimilarityMatrix(similarityMatrix, spectra,
+  type = c("retentionTime", "mz", "clustering"), group = FALSE)
 }
 \arguments{
-\item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} contains 
+\item{similarityMatrix}{`matrix`, `similarityMatrix` contains 
 pair-wise similarity coefficients which give information about the similarity 
 between precursors}
 
-\item{spectra}{\code{Spectra} object containing spectra that are compared
-in \code{similarityMatrix}}
+\item{spectra}{`Spectra` object containing spectra that are compared
+in `similarityMatrix`}
 
-\item{type}{\code{character}, one of "retentionTime", "mz" or "clustering"}
+\item{type}{`character`, one of "retentionTime", "mz" or "clustering"}
 
-\item{group}{\code{logical}, if TRUE group separated by "_" will be cleaved
+\item{group}{`logical`, if TRUE group separated by "_" will be cleaved
 from rownames/colnames of similarityMatrix and matched against names of 
 spectra, if FALSE rownames/colnames of similarityMatrix are taken as are 
 and matched against names of spectra}
 }
 \value{
 `matrix`, `orderSimilarityMatrix` returns a similarity matrix 
-with ordered rownames according to the \code{character} vector given to order
+with ordered rownames according to the `character` vector given to order
 }
 \description{
 Internal function for shiny application. May also be used 
 outside of shiny to reconstruct figures.
 }
 \details{
-\code{orderSimilarityMatrix} takes  a similarity matrix,
+`orderSimilarityMatrix` takes  a similarity matrix,
 spectra (containing information on m/z and retentionTime and a 
-\code{character} vector
+`character` vector
 as arguments. It will then reorder rows and columns of 
 the similarityMatrix object such, that it orders rows and columns of 
 similarityMatrix according to m/z, retention time or clustering in 
-each group. \code{orderSimilarityMatrix} is employed in the shinyCircos 
-function to create \code{similarityMatrix} objects which will allow to switch
+each group. `orderSimilarityMatrix` is employed in the `shinyCircos` 
+function to create `similarityMatrix` objects which will allow to switch
 between different types of ordering in between groups (sectors) in the 
 circos plot. It may be used as well externally, to reproduce plots outside
 of the reactive environment (see vignette for a workflow).
@@ -51,6 +51,7 @@ similarityMat <- compare_Spectra(spectra_tissue[1:10],
 ## order according to retention time 
 orderSimilarityMatrix(similarityMatrix = similarityMat, 
     spectra_tissue, type = "retentionTime", group = FALSE)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

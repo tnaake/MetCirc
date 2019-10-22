@@ -7,26 +7,27 @@
 getLinkDfIndices(groupnameselected, linkDf)
 }
 \arguments{
-\item{groupnameselected}{\code{character} vector with groupname of selected 
+\item{groupnameselected}{`character` vector with groupname of selected 
 feature, vector containing "group" and "name" to display, that is 
 a unique identifier of the features, "group" and "name" have to be separated
-by \code{"_"} where "group" is the first and "name" is the last element}
+by `"_"` where "group" is the first and "name" is the last element}
 
-\item{linkDf}{\code{data.frame}, in each row there is information about 
+\item{linkDf}{`data.frame`, in each row there is information about 
 features to be connected}
 }
 \value{
-\code{getLinkDfIndices} returns indices concerning 
- \code{linkDf} to which \code{groupnameselected} connects
+`getLinkDfIndices` returns indices concerning `linkDf` to which 
+`groupnameselected` connects
 }
 \description{
 Gets indices in linkDf of feature
 }
 \details{
-Internal use for function \code{highlight}.
+Internal use for function `highlight`
 }
 \examples{
 \dontrun{getLinkDfIndices(groupnameselected, linkMatrix)}
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

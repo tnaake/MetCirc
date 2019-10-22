@@ -12,29 +12,29 @@ minFragCart2Polar(x, y, degreeOfFeatures)
 
 \item{y}{cartesian y coordinate}
 
-\item{degreeOfFeatures}{list of positions of features}
+\item{degreeOfFeatures}{`list` of positions of features}
 }
 \value{
-\code{minFragCart2Polar} returns the index of the feature that has the
- smallest distance to the given coordinates. As \code{minFragCart2Polar} is 
- used in \code{shinyCircos} for the track 1 only polar r coordinates between
- 0.8 and 1 will be used to find the feature with smallest distance.
+`minFragCart2Polar` returns the index of the feature that has the
+smallest distance to the given coordinates. As `minFragCart2Polar` is 
+used in `shinyCircos` for the track 1 only polar r coordinates between
+0.8 and 1 will be used to find the feature with smallest distance.
 }
 \description{
 Calculates the nearest feature in polar coordinates given 
- cartesian coordinates
+cartesian coordinates.
 }
 \details{
-\code{minFragCart2Polar} is employed to find the feature with 
- the smallest distance from given cartesian coordinates.
+`minFragCart2Polar` is employed to find the feature with 
+the smallest distance from given cartesian coordinates.
 }
 \examples{
 data("spectra", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue[1:10], 
     fun = normalizeddotproduct, binSize = 0.01)
 linkDf <- createLinkDf(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue[1:10], condition = c("SPL", "LIM", "ANT", "STY"), 
-    lower = 0.5, upper = 1) 
+    spectra = spectra_tissue[1:10], 
+    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1) 
 ## cut link data.frame (here: only display links between groups)
 linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
@@ -47,6 +47,7 @@ y <- 0
 degreeFeatures <- lapply(groupname, 
  function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
 minFragCart2Polar(x, y, degreeOfFeatures = degreeFeatures)
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

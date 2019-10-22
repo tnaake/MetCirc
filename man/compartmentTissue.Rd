@@ -3,21 +3,18 @@
 \docType{data}
 \name{compartmentTissue}
 \alias{compartmentTissue}
-\title{Example data for \code{MetCirc}: \code{compartmentTissue}}
-\format{\code{data.frame}}
+\title{Example data for `MetCirc`: `compartmentTissue`}
+\format{`data.frame`}
 \source{
 internal
 }
-\usage{
-tissue
-}
 \value{
-\code{data.frame}
+`data.frame`
 }
 \description{
-The \code{data.frame} \code{compartmentTissue} is used in the 
+The `data.frame` `compartmentTissue` is used in the 
 subsection 'Preparing the tissue data set for analysis' in the vignette 
-of \code{MetCirc}. In \code{compartmentTissue}, information on the 
+of `MetCirc`. In `compartmentTissue`, information on the 
 organ-localisation of each MS/MS spectrum is stored.
 }
 \author{
