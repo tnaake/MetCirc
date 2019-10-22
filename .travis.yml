@@ -55,7 +55,7 @@ jobs:
     - stage: "lintr" 
       install: skip
       script:
-        - travis_wait 20 Rscript -e 'lintr::lint_package()' 
+        - travis_wait 20 Rscript -e 'lintr::lint_package()'
       name: "lintr"
       on: 
         branch: "master"
