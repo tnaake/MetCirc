@@ -171,10 +171,10 @@ MetCirc:::replayPlotOrder(orderMatch = "clustering",
 test_that("replayPlotOrder", {
     expect_error(MetCirc:::replayPlotOrder(orderMatch = "mz",
         onCircle = FALSE, plot_l = plot_l[-1], ind = 1),
-        "argument is not of class \"recordedplot\"")
+        "argument is not of class")
     expect_error(MetCirc:::replayPlotOrder(orderMatch = "mz",
         onCircle = FALSE, plot_l=plot_l_mock, ind = 1),
-        "argument is not of class \"recordedplot\"")
+        "argument is not of class")
     expect_error(MetCirc:::replayPlotOrder(orderMatch = "mz",
         onCircle = "a", plot_l = plot_l, ind = 1),
         "invalid argument type")
