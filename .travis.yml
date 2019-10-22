@@ -22,6 +22,7 @@ jobs:
         - covr
         - knitr
         - roxygen2
+	- testthat
       r_github_packages:
         - jimhester/lintr
       before_install: 
@@ -38,9 +39,10 @@ jobs:
       before_script: rm -rf vignettes
       install: skip
       name: "examples"
-    - r_build_args: --no-build-vignettes --no-manual
-      r_check_args: --as-cran --no-build-vignettes --no-vignettes --no-manual --no-codoc --no-examples
-      install: skip
+    - install: skip
+      script: 
+        - travis_wait 10 R CMD build --no-build-vignettes --no-manual
+        - travis_wait 40 R CMD check --as-cran --no-build-vignettes --no-vignettes --no-manual --no-codoc --no-examples MetCirc*tar.gz
       before_script: rm -rf vignettes
       name: "tests"
     - stage: "CodeCov"
