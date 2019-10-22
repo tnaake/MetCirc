@@ -23,35 +23,42 @@ ind <- 18
 linkDfInds <- getLinkDfIndices(inds_cond[ind], linkDf)
 
 ## START unit test shinyCircos
-test_shinyCircos <- function() {
-    checkException(shinyCircos(1:2, spectra, condition))
-    checkException(shinyCircos(similarityMat, NULL, condition))
-    checkException(shinyCircos(similarityMat, spectra, "a"))
-}
+test_that("shinyCircos", {
+    expect_error(shinyCircos(1:2, spectra, condition), 
+        "no slot of name \"elementMetadata\" for this")
+    expect_error(shinyCircos(similarityMat, NULL, condition),
+        "trying to get slot \"elementMetadata\" from an object")
+    expect_error(shinyCircos(similarityMat, spectra, "a"),
+        "no slot of name \"elementMetadata\" for this")
+})
 ## END unit test shinyCircos
 
 
 ## START unit test printInformationSelect
-test_printInformationSelect <- function() {
-    checkException(MetCirc:::printInformationSelect(
+test_that("printInformationSelect", {
+    expect_error(MetCirc:::printInformationSelect(
         select = NULL, spectra = spectra_tissue, linkDfInd = linkDfInds,
-        linkDf = linkDf, similarityMatrix = similarityMat))
-    checkException(MetCirc:::printInformationSelect(
+        linkDf = linkDf, similarityMatrix = similarityMat),
+        "argument is of length zero")
+    expect_error(MetCirc:::printInformationSelect(
         select = inds_cond[ind], spectra = NULL, linkDfInd = linkDfInds,
-        linkDf = linkDf, similarityMatrix = similarityMat))
-    checkException(MetCirc:::printInformationSelect( 
+        linkDf = linkDf, similarityMatrix = similarityMat),
+        "trying to get slot \"precursorMz\" from an object")
+    expect_error(MetCirc:::printInformationSelect( 
         select = inds_cond[ind], spectra = spectra_tissue,
         linkDfInd = linkDfInds, linkDf = NULL,
-        similarityMatrix = similarityMat))
-    checkException(MetCirc:::printInformationSelect(
+        similarityMatrix = similarityMat),
+        "subscript is out of bounds")
+    expect_error(MetCirc:::printInformationSelect(
         select = inds_cond[ind], spectra = spectra_tissue,
-        linkDfInd = linkDfInds, linkDf = linkDf, similarityMatrix = NULL))
-    checkEquals(MetCirc:::printInformationSelect(
+        linkDfInd = linkDfInds, linkDf = linkDf, similarityMatrix = NULL),
+        "non-numeric argument to mathematical function")
+    expect_equal(MetCirc:::printInformationSelect(
         select = inds_cond[ind], spectra = spectra_tissue,
         linkDfInd = numeric(),  linkDf = linkDf,
         similarityMatrix = similarityMat),
         "LIM_18 (1398.71, 1018.98, , , , ) does not connect to any feature ")
-}
+})
 ## END unit test printInformationSelect
 
 
@@ -69,30 +76,33 @@ Clust <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
 link0df_clust <- Clust[["link0df"]]
 clust_match <- Clust[["type_match"]]
 
-test_typeMatch_link0 <- function() {
-    checkEquals(length(mz_match), 106)
-    checkEquals(length(mz_match), length(rt_match))
-    checkEquals(length(mz_match), length(clust_match))
-    checkEquals(dim(link0df_mz), c(5521, 5))
-    checkEquals(dim(link0df_mz), dim(link0df_rt))
-    checkEquals(dim(link0df_mz), dim(link0df_clust))
-    checkTrue(is.character(mz_match))
-    checkTrue(is.character(rt_match))
-    checkTrue(is.character(clust_match))
-    checkTrue(is.data.frame(link0df_mz))
-    checkTrue(is.data.frame(link0df_rt))
-    checkTrue(is.data.frame(link0df_clust))
-    checkException(MetCirc:::typeMatch_link0(similarityMatrix = NULL,
-        spectra = spectra_tissue, type = "mz", condition = condition))
-    checkException(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-        spectra = NULL, type = "mz", condition = condition))
-    checkException(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-        spectra = spectra_tissue, type = "a", condition = condition))
-    checkException(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-        spectra = spectra_tissue, type = "mz", condition = "abc"))
-}
+test_that("typeMatch_link0",  {
+    expect_equal(length(mz_match), 106)
+    expect_equal(length(mz_match), length(rt_match))
+    expect_equal(length(mz_match), length(clust_match))
+    expect_equal(dim(link0df_mz), c(5521, 5))
+    expect_equal(dim(link0df_mz), dim(link0df_rt))
+    expect_equal(dim(link0df_mz), dim(link0df_clust))
+    expect_true(is.character(mz_match))
+    expect_true(is.character(rt_match))
+    expect_true(is.character(clust_match))
+    expect_true(is.data.frame(link0df_mz))
+    expect_true(is.data.frame(link0df_rt))
+    expect_true(is.data.frame(link0df_clust))
+    expect_error(MetCirc:::typeMatch_link0(similarityMatrix = NULL,
+        spectra = spectra_tissue, type = "mz", condition = condition),
+        "only matrix diagonals can be replaced")
+    expect_error(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
+        spectra = NULL, type = "mz", condition = condition),
+        "argument 1 is not a vector")
+    expect_error(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
+        spectra = spectra_tissue, type = "a", condition = condition),
+        "should be one of ")
+    expect_error(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
+        spectra = spectra_tissue, type = "mz", condition = "abc"),
+        "n < m")
+})
 ## END unit test typeMatch_link0
-
 
 ## START unit test recordPlotFill_degreeFeatures
 plotFill_degree_mz <- MetCirc:::recordPlotFill_degreeFeatures(mz_match)
@@ -105,21 +115,22 @@ plotFill_degree_clust <- MetCirc:::recordPlotFill_degreeFeatures(clust_match)
 degree_clust <- plotFill_degree_clust[["degreeFeatures"]]
 plotFill_clust <- plotFill_degree_clust[["plotFill"]]
 
-test_recordPlotFill_degreeFeatures <- function() {
-    checkTrue(is.list(degree_mz))
-    checkTrue(is.list(degree_rt))
-    checkTrue(is.list(degree_clust))
-    is.numeric(unlist(degree_mz))
-    is.numeric(unlist(degree_rt))
-    is.numeric(unlist(degree_clust))
-    checkEquals(length(degree_mz), length(mz_match))
-    checkEquals(length(degree_rt), length(rt_match))
-    checkEquals(length(degree_clust), length(clust_match))
-    checkTrue(class(plotFill_mz) == "recordedplot")
-    checkTrue(class(plotFill_rt) == "recordedplot")
-    checkTrue(class(plotFill_clust) == "recordedplot")
-    checkException(MetCirc:::recordPlotFill_degreeFeatures(c("1", "1", "1")))
-}
+test_that("recordPlotFill_degreeFeatures", {
+    expect_true(is.list(degree_mz))
+    expect_true(is.list(degree_rt))
+    expect_true(is.list(degree_clust))
+    expect_true(is.numeric(unlist(degree_mz)))
+    expect_true(is.numeric(unlist(degree_rt)))
+    expect_true(is.numeric(unlist(degree_clust)))
+    expect_equal(length(degree_mz), length(mz_match))
+    expect_equal(length(degree_rt), length(rt_match))
+    expect_equal(length(degree_clust), length(clust_match))
+    expect_true(class(plotFill_mz) == "recordedplot")
+    expect_true(class(plotFill_rt) == "recordedplot")
+    expect_true(class(plotFill_clust) == "recordedplot")
+    expect_error(MetCirc:::recordPlotFill_degreeFeatures(c("1", "1", "1")),
+        "factor level [[]2[]] is duplicated")
+})
 ## END unit test recordPlotFill_degreeFeatures
 
 
@@ -128,11 +139,11 @@ highlightMz <- MetCirc:::recordPlotHighlight(mz_match)
 highlightRt <- MetCirc:::recordPlotHighlight(rt_match)
 highlightClust <- MetCirc:::recordPlotHighlight(clust_match)
 
-test_recordPlotHighlight <- function() {
-    checkTrue(class(highlightMz) == "recordedplot")
-    checkTrue(class(highlightRt) == "recordedplot")
-    checkTrue(class(highlightClust) == "recordedplot")
-}
+test_that("recordPlotHighlight", {
+    expect_true(class(highlightMz) == "recordedplot")
+    expect_true(class(highlightRt) == "recordedplot")
+    expect_true(class(highlightClust) == "recordedplot")
+})
 ## END unit test recordPlotHighlight
 
 
@@ -157,16 +168,20 @@ MetCirc:::replayPlotOrder(orderMatch = "retentionTime",
 MetCirc:::replayPlotOrder(orderMatch = "clustering",
     onCircle = FALSE, plot_l = plot_l, ind = 1) ## highlight clust
 
-test_replayPlotOrder <- function() {
-    checkException(MetCirc:::replayPlotOrder(orderMatch = "mz",
-        onCircle = FALSE, plot_l = plot_l[-1], ind = 1))
-    checkException(MetCirc:::replayPlotOrder(orderMatch = "mz",
-        onCircle = FALSE, plot_l=plot_l_mock, ind=1))
-    checkException(MetCirc:::replayPlotOrder(orderMatch = "mz",
-        onCircle = "a", plot_l = plot_l, ind = 1))
-    checkException(MetCirc:::replayPlotOrder(orderMatch = "a",
-        onCircle = FALSE, plot_l = plot_l, ind = 1))
-}
+test_that("replayPlotOrder", {
+    expect_error(MetCirc:::replayPlotOrder(orderMatch = "mz",
+        onCircle = FALSE, plot_l = plot_l[-1], ind = 1),
+        "argument is not of class \"recordedplot\"")
+    expect_error(MetCirc:::replayPlotOrder(orderMatch = "mz",
+        onCircle = FALSE, plot_l=plot_l_mock, ind = 1),
+        "argument is not of class \"recordedplot\"")
+    expect_error(MetCirc:::replayPlotOrder(orderMatch = "mz",
+        onCircle = "a", plot_l = plot_l, ind = 1),
+        "invalid argument type")
+    expect_error(MetCirc:::replayPlotOrder(orderMatch = "a",
+        onCircle = FALSE, plot_l = plot_l, ind = 1),
+        "condition not equal to 'mz', 'retentionTime' or 'clustering'")
+})
 ## END unit test replayPlotOrder
 
 
@@ -192,68 +207,78 @@ MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf = linkDf,
      mz_match = mz_match, rt_match = rt_match, clust_match = clust_match,
      ind = 1, indMz = NULL, indRT = NULL, indCluster = NULL)
 
-test_replayPlotAdd <- function() {
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "a", onCircle = FALSE,
+test_that("replayPlotAdd", {
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "a", onCircle = FALSE,
         linkDf = link0df_mz, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = NULL, indRT = NULL,
-        indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = "a",
+        indCluster = NULL),
+        "condition not equal to 'mz', 'retentionTime' or 'clustering'")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = "a",
         linkDf = link0df_mz, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = NULL, indRT = NULL,
-        indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = TRUE,
+        indCluster = NULL),
+        "invalid argument type")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = TRUE,
         linkDf = NULL, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = NULL, indRT = NULL,
-        indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE,
+        indCluster = NULL),
+        "argument is of length zero")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE,
         linkDf = link0df_mz, mz_match = NULL, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = NULL, indRT = NULL,
-        indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "retentionTime",
+        indCluster = NULL),
+        "non-character argument")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "retentionTime",
         onCircle = FALSE, linkDf = link0df_mz, mz_match = mz_match,
         rt_match = NULL, clust_match = clust_match, ind = 1, indMz = NULL,
-        indRT = NULL, indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "clustering",
+        indRT = NULL, indCluster = NULL),
+        "non-character argument")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "clustering",
         onCircle = FALSE, linkDf = link0df_mz, mz_match = mz_match,
         rt_match = rt_match, clust_match = NULL, ind = 1, indMz = NULL,
-        indRT = NULL, indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = TRUE,
+        indRT = NULL, indCluster = NULL),
+        "non-character argument")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = TRUE,
         linkDf = link0df_mz, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = "a", indMz = NULL, indRT = NULL,
-        indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE,
+        indCluster = NULL),
+        "contains index that does not beling to available sectors")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE,
         linkDf = link0df_mz, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = "a", indRT = NULL,
-        indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "retentionTime",
+        indCluster = NULL),
+        "contains index that does not beling to available sectors")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "retentionTime",
         onCircle = FALSE, linkDf = link0df_mz, mz_match = mz_match,
         rt_match = rt_match, clust_match = clust_match, ind = 1, indMz = NULL,
-        indRT = "a", indCluster = NULL))
-    checkException(MetCirc:::replayPlotAdd(orderMatch = "clustering",
+        indRT = "a", indCluster = NULL),
+        "contains index that does not beling to available sectors")
+    expect_error(MetCirc:::replayPlotAdd(orderMatch = "clustering",
         onCircle = FALSE, linkDf = link0df_mz, mz_match = mz_match,
         rt_match = rt_match, clust_match = clust_match, ind = 1, indMz = NULL,
-        indRT = NULL, indCluster = "a"))
-}
+        indRT = NULL, indCluster = "a"),
+        "contains index that does not beling to available sectors")
+})
 ## END unit test replayPlotAdd
 
 ## START unit test select
 mz <- 1
 rt <- 2
 clust <- 3
-test_select <- function() {
-    checkEquals(MetCirc:::select(condition = "mz", mz = mz, rt = rt,
+test_that("select", {
+    expect_equal(MetCirc:::select(condition = "mz", mz = mz, rt = rt,
         clust = clust), 1)
-    checkEquals(MetCirc:::select(condition = "retentionTime", mz = mz, rt = rt,
+    expect_equal(MetCirc:::select(condition = "retentionTime", mz = mz, rt = rt,
         clust = clust), 2)
-    checkEquals(MetCirc:::select(condition = "clustering", mz = mz, rt = rt,
+    expect_equal(MetCirc:::select(condition = "clustering", mz = mz, rt = rt,
         clust = clust), 3)
-    checkException(MetCirc:::select(condition = "a", mz = mz, rt = rt,
+    expect_error(MetCirc:::select(condition = "a", mz = mz, rt = rt,
         clust = clust))
-    checkException(MetCirc:::select(condition = "mz", rt = rt,
-        clust = clust))
-    checkException(MetCirc:::select(condition = "retentionTime", mz = mz,
-        clust = clust))
-    checkException(MetCirc:::select(condition = "clustering", mz = mz, rt = rt))
-}
+    expect_error(MetCirc:::select(condition = "mz", rt = rt,
+        clust = clust), "is missing, with no default")
+    expect_error(MetCirc:::select(condition = "retentionTime", mz = mz,
+        clust = clust), "is missing, with no default")
+    expect_error(MetCirc:::select(condition = "clustering", mz = mz, rt = rt),
+        "is missing, with no default")
+})
 ## END unit test select
-

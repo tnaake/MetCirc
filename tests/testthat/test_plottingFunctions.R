@@ -1,0 +1,223 @@
+## load ggplot2
+library(ggplot2)
+
+## create objects which will be used in unit tests
+data("spectra", package = "MetCirc")
+## use only a selection
+condition <- c("SPL", "LIM", "ANT", "STY")
+spectra_tissue <- spectra_tissue[c(1:20, 29:48, 113:132, 240:259), ]
+similarityMat <- compare_Spectra(spectra_tissue, fun = normalizeddotproduct)
+groupname <- rownames(similarityMat)
+inds <- MetCirc:::spectraCond(spectra_tissue, condition = condition)
+inds_match <- lapply(inds, function(x) {inds_match <- match(groupname, x)
+inds_match <- inds_match[!is.na(inds_match)]; x[inds_match]})
+inds_cond <- lapply(seq_along(inds_match),
+    function(x) {
+        if (length(inds_match[[x]]) > 0) {
+            paste(condition[x], inds_match[[x]], sep = "_")
+        } else character()
+})
+inds_cond <- unique(unlist(inds_cond))
+group <- unlist(lapply(strsplit(inds_cond, "_"), "[", 1))
+
+## create link0df
+linkDf <- createLinkDf(similarityMat, spectra_tissue, condition, lower = 0.95,
+    upper = 1)
+
+## START unit test for plotCircos
+circos.clear()
+circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
+           track.margin = c(0.0, 0))
+test_that("plotCircos",  {
+    expect_error(plotCircos(inds_cond, NULL, initialize = TRUE,
+        featureNames = FALSE, groupSector = FALSE, groupName = FALSE,
+        links = TRUE, highlight = FALSE, colour = NULL, transparency = 0.2),
+        "argument is of length zero")
+    expect_error(plotCircos(groupname, linkDf, initialize = TRUE,
+        featureNames = FALSE, groupSector = FALSE, groupName = FALSE,
+        links = TRUE, highlight = FALSE, colour = NULL, transparency = 0.2),
+        "must be the same length as the vector")
+    expect_error(plotCircos(featureNames = TRUE), 
+        "argument \"groupname\" is missing, with no default")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = FALSE,
+        groupName = FALSE, links = TRUE, highlight = FALSE, transparency = 0.2,
+        colour = c("red", "blue")), 
+        "length of colour does not match with length of group")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = TRUE,
+        groupName = FALSE, links = TRUE, highlight = FALSE,
+        colour = c("red", "blue"), transparency = 0.2), 
+        "length of colour does not match with length of group")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = FALSE,
+        initialize = TRUE, featureNames = FALSE, groupSector = TRUE,
+        groupName = FALSE, links = TRUE, highlight = FALSE, colour = NULL,
+        transparency = 0.2), 
+        "cexFeatureNames is not numeric")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = "a", featureNames = FALSE, groupSector = TRUE,
+        groupName = FALSE, links = TRUE, highlight = FALSE, colour = NULL,
+        transparency = 0.2),
+        "initialize is not logical")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = "a", groupSector = TRUE,
+        groupName = FALSE, links = TRUE, highlight = FALSE, colour = NULL,
+        transparency = 0.2), 
+        "featureNames is not logical")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = "a",
+        groupName = FALSE, links = TRUE, highlight = FALSE, colour = NULL,
+        transparency = 0.2),
+        "groupSector is not logical")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = TRUE,
+        groupName = "a", links = TRUE, highlight = FALSE, colour = NULL,
+        transparency = 0.2),
+        "groupName is not logical")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = TRUE,
+        groupName = FALSE, links = "a", highlight = FALSE, colour = NULL,
+        transparency = 0.2),
+        "links is not logical")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = TRUE,
+        groupName = FALSE, links = TRUE, highlight = "a", colour = NULL,
+        transparency = 0.2),
+        "highlight is not logical")
+    expect_error(plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3,
+        initialize = TRUE, featureNames = FALSE, groupSector = TRUE,
+        groupName = FALSE, links = TRUE, highlight = FALSE, colour = NULL,
+        transparency = "a"),
+        "transparency is not numeric")
+})
+
+## plot with different arguments are TRUE
+plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3, initialize = TRUE,
+    featureNames = TRUE, groupSector = TRUE, groupName = FALSE, links = TRUE,
+    highlight = FALSE, colour = NULL, transparency = 0.3)
+plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3, initialize = TRUE,
+    featureNames = FALSE, groupSector = TRUE, groupName = FALSE, links = TRUE,
+    highlight = FALSE, colour = c(1, 2, 3, 4), transparency = 0.3)
+plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3, initialize = TRUE,
+    featureNames = TRUE, groupSector = FALSE, groupName = TRUE, links = TRUE,
+    highlight = FALSE, colour = NULL, transparency = 0.3)
+## END unit test for plotCircos
+
+
+## START unit test for highlight
+test_that("highlight", {
+    expect_error(highlight(inds_cond, 1, NULL, NULL, 0.4), 
+        "argument is of length zero")
+    expect_error(highlight(inds_cond, length(inds_cond) + 1, NULL, NULL, 0.4),
+        "contains index that does not beling to available sectors")
+    expect_error(highlight(inds_cond, length(inds_cond) + 1, NULL, NULL, 0.4,
+        colour = "red"), 
+        "contains index that does not beling to available sectors")
+    expect_error(highlight(inds_cond,
+        linkDf = cbind("spectrum1" = 0, "spectrum2" = 0), ind = 1),
+        "must be the same length as the vector")
+    expect_error(highlight(inds_cond,
+        linkDf = cbind("spectrum1" = c(0, 2), "spectrum2" = c(2, 0)), ind = 1),
+        "must be the same length as the vector")
+    expect_error(highlight(groupname, linkDf = linkDf, links = FALSE,
+        ind = 100), "contains index that does not beling to available sectors")
+    expect_error(highlight(groupname, linkDf = linkDf, links = TRUE,
+        ind = 100), "contains index that does not beling to available sectors")
+    ## names in linkMat do not match names in groupname
+    expect_error(highlight(groupname, 1, linkDf, NULL, 0.4),
+        "contains index that does not beling to available sectors")
+})
+
+## plot which does not fail
+highlight(inds_cond, ind = 10, linkDf, links = TRUE)
+## END unit test for highlight
+
+## START unit test for circosLegend
+test_that("circosLegend", {
+    expect_error(circosLegend(1, highlight = TRUE, colour = NULL), 
+        "non-character argument")
+    expect_error(circosLegend(1, highlight = TRUE, colour = "red"),
+        "non-character argument")
+    expect_error(circosLegend(1, highlight = FALSE, colour = NULL),
+        "non-character argument")
+    expect_error(circosLegend(1, highlight = FALSE, colour = "red"),
+        "non-character argument")
+})
+
+## plot which does not fail
+circosLegend(inds_cond)
+circosLegend(inds_cond, colour = 1:4) 
+circosLegend(inds_cond, colour = 1:4, highlight = TRUE)
+circosLegend(inds_cond, colour = 1:4, highlight = FALSE)
+## END unit test for circosLegend
+
+
+## START unit test for getLinkDfIndices
+circos.clear()
+## set circlize paramters
+circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
+           track.margin = c(0.0, 0))
+plotCircos(inds_cond, NULL, initialize = TRUE, featureNames = FALSE,
+    groupSector = FALSE, groupName = FALSE, links = FALSE, highlight = FALSE)
+test_that("getLinkDfIndices",  {
+    expect_equal(getLinkDfIndices(inds_cond[4], linkDf), numeric())
+    expect_equal(getLinkDfIndices(inds_cond[9], linkDf), 1)
+    expect_equal(getLinkDfIndices(inds_cond[12], linkDf), c(2, 3))
+    expect_equal(getLinkDfIndices(inds_cond[4:12], linkDf), c(1:3))
+    expect_error(getLinkDfIndices(inds_cond[1], NULL), 
+        "incorrect number of dimensions")
+})
+## END unit test for getLinkMatrixIndices
+
+## START unit test minFragCart2Polar
+degreeFeatures <- lapply(inds_cond,
+    function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
+test_that("minFragCart2Polar",  {
+    expect_equal(minFragCart2Polar(1, 0, degreeFeatures), 106)
+    expect_equal(minFragCart2Polar(0.1, 0.9, degreeFeatures), 82)
+    expect_equal(minFragCart2Polar(1, 1, degreeFeatures), NA)
+    expect_equal(minFragCart2Polar(1, 0, NULL), integer())
+    expect_error(minFragCart2Polar(NA, NA, degreeFeatures), 
+        "missing value where TRUE/FALSE needed")
+    expect_error(minFragCart2Polar(1, NA, degreeFeatures),
+        "missing value where TRUE/FALSE needed")
+    expect_error(minFragCart2Polar(NA, 1, degreeFeatures),
+        "missing value where TRUE/FALSE needed")
+})
+## END unit test minFragCart2Polar
+
+
+## START unit test cart2Polar
+test_that("cart2Polar",  {
+    expect_equal(cart2Polar(0, 0), list(r = 0, theta = 0))
+    expect_equal(cart2Polar(1, 1), list(r = 1.414214, theta = 45),
+        tolerance = 0.00001)
+    expect_equal(cart2Polar(0, 1), list(r = 1, theta = 90))
+    expect_equal(cart2Polar(-1, 1), list(r = 1.414214, theta = 135),
+        tolerance = 0.00001)
+    expect_equal(cart2Polar(-1, -1), list(r = 1.414214, theta = 225),
+        tolerance = 0.00001)
+    expect_equal(cart2Polar(1, -1), list(r = 1.414214, theta = 315),
+        tolerance = 0.00001)
+    expect_error(cart2Polar(NA, NA), "missing value where TRUE/FALSE needed")
+    expect_error(cart2Polar(1, NA), "missing value where TRUE/FALSE needed")
+    expect_error(cart2Polar(NA, 1), "missing value where TRUE/FALSE needed")
+})
+## END unit test cart2Polar
+
+## START unit test plotSpectra
+## plot which does not fail
+gg <- plotSpectra(spectra_tissue, subject = "SPL_1", query = "SPL_2")
+
+test_that("plotSpectra", {
+    expect_error(plotSpectra(NULL, "LIM_1", "LIM_1"),
+        "trying to get slot \"listData\" from an object of a basic class ")
+    expect_error(plotSpectra(spectra_tissue, NULL, "LIM_1"),
+        "non-character argument")
+    expect_error(plotSpectra(spectra_tissue, "LIM_1", NULL),
+        "non-character argument")
+    expect_error(plotSpectra(spectra_tissue, "LIM_1", "LIM_0"),
+        "subscript contains invalid names")
+    expect_equal(is(gg), "gg")
+})
+## END unit test plotSpectra
