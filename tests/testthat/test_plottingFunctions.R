@@ -145,10 +145,11 @@ test_that("circosLegend", {
 })
 
 ## plot which does not fail
+colours <- c("red", "blue", "green", "yellow")
 circosLegend(inds_cond)
-circosLegend(inds_cond, colour = 1:4) 
-circosLegend(inds_cond, colour = 1:4, highlight = TRUE)
-circosLegend(inds_cond, colour = 1:4, highlight = FALSE)
+circosLegend(inds_cond, colour = colours) 
+circosLegend(inds_cond, colour = colours, highlight = TRUE)
+circosLegend(inds_cond, colour = colours, highlight = FALSE)
 ## END unit test for circosLegend
 
 
