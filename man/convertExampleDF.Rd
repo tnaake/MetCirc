@@ -8,9 +8,6 @@
 \source{
 internal
 }
-\usage{
-convertExampleDF
-}
 \value{
 `data.frame`
 }

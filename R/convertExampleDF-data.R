@@ -16,8 +16,6 @@
 #'
 #' @docType data
 #'
-#' @usage convertExampleDF
-#'
 #' @return `data.frame`
 #'
 #' @format `data.frame`

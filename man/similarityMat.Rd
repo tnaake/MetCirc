@@ -6,7 +6,7 @@
 \title{Example data for `MetCirc`: `similarityMat`}
 \format{`matrix`}
 \source{
-data("tissue", package = "MetCirc")
+data("spectra", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue,
     fun = normalizeddotproduct, binSize = 0.01)
 save(similarityMat, file = "similarityMat.RData", compress = "xz")
