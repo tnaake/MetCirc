@@ -8,8 +8,6 @@
 #'
 #' @docType data
 #'
-#' @usage similarityMat
-#'
 #' @return `matrix`
 #'
 #' @format `matrix`

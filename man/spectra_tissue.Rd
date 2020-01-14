@@ -36,9 +36,6 @@ spectra_tissue <- Spectra(spectrum2_tissue,
 
 save(spectra_tissue, file = "spectra.RData", compress = "xz")
 }
-\usage{
-similarityMat
-}
 \value{
 `matrix`
 }
