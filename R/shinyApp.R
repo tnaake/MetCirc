@@ -8,7 +8,7 @@
 #'
 #' @description
 #' Visualise the similarity of MS/MS features in a reactive 
-#'  context. See `Details` the vignette for further descriptions on how to use 
+#' context. See `Details` the vignette for further descriptions on how to use 
 #' `shinyCircos`.
 #'
 #' @param
@@ -54,13 +54,14 @@
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
-#' @examples
+#' @examples 
 #' data("spectra", package = "MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1 :10],
+#' similarityMat <- compare_Spectra(spectra_tissue[1:10],
 #'     fun = normalizeddotproduct, binSize = 0.01)
-#' \dontrun{shinyCircos(similarityMatrix = similarityMat, 
-#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY))}
-#'
+#' \dontrun{
+#' shinyCircos(similarityMatrix = similarityMat, 
+#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY))
+#' }
 #' @export
 shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 

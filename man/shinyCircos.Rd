@@ -30,7 +30,7 @@ object containing the annotation.
 }
 \description{
 Visualise the similarity of MS/MS features in a reactive 
- context. See `Details` the vignette for further descriptions on how to use 
+context. See `Details` the vignette for further descriptions on how to use 
 `shinyCircos`.
 }
 \details{

@@ -40,6 +40,10 @@ linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
                 as.character(linkDf_cut[, "spectrum2"]))
 groupname <- unique(groupname)
+## set circlize parameters
+circos.clear()
+circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
+    track.margin = c(0.0, 0))
 plotCircos(groupname, NULL, initialize = TRUE, featureNames = FALSE, 
     groupName = FALSE, groupSector = FALSE, links = FALSE, highlight = FALSE)
 x <- 1

@@ -50,6 +50,7 @@ similarityMat <- compare_Spectra(spectra_tissue[1:10],
  ## cut link matrix (here: only display links between groups)
  linkDf_cut <- cutLinkDf(linkDf, type = "inter")
  ## set circlize parameters
+ circos.clear()
  circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
          track.margin = c(0.0, 0))
  groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
