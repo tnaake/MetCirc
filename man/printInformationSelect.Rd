@@ -20,7 +20,7 @@ thresholds}
 
 \item{similarityMatrix}{`matrix` that is used to get information on the 
 degree of similarity, `similarityMat` is an ordered version of a 
-similarity matrix, see `?createOrderedSimMat`}
+similarity matrix, see `?orderSimilarityMatrix`}
 
 \item{roundDigits}{`numeric`,  how many digits should be displayed?}
 }

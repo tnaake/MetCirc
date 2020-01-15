@@ -582,7 +582,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @param
 #' similarityMatrix `matrix` that is used to get information on the 
 #' degree of similarity, `similarityMat` is an ordered version of a 
-#' similarity matrix, see `?createOrderedSimMat`
+#' similarity matrix, see `?orderSimilarityMatrix`
 #'
 #' @param
 #' roundDigits `numeric`,  how many digits should be displayed?

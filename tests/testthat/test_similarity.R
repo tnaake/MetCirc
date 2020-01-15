@@ -45,7 +45,7 @@ test_that("neutralloss", {
 ## END unit test neutralloss
 
 
-## START unit test createOrderedSimMat
+## START unit test orderSimilarityMatrix
 simMat_o_mz <- orderSimilarityMatrix(simMat, spl, type = "mz", group = FALSE)
 simMat_o_rt <- orderSimilarityMatrix(simMat, spl, type = "retentionTime",
     group = FALSE)
@@ -57,7 +57,7 @@ simMat_gr <- simMat
 rownames(simMat_gr) <- colnames(simMat_gr) <- paste("A", rownames(simMat),
     sep = "_")
 
-test_that("createOrderedSimMat", {
+test_that("orderSimilarityMatrix", {
     expect_error(orderSimilarityMatrix(simMat, spl, type = "foo"),
         "'arg' should be one of ")
     expect_error(orderSimilarityMatrix(simMat, spl, type = "mz", group = "a"),
@@ -91,4 +91,4 @@ test_that("createOrderedSimMat", {
     expect_equal(colnames(orderSimilarityMatrix(simMat_gr, spl, type = "mz",
             group = TRUE)), c("A_1", "A_2"))
 })
-## END unit test createOrderedSimMat
+## END unit test orderSimilarityMatrix
