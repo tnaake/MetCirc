@@ -249,7 +249,8 @@ orderSimilarityMatrix <- function(similarityMatrix, spectra,
         type = c("retentionTime","mz", "clustering"), group = FALSE) {
 
     if (!(group %in% c(TRUE, FALSE))) stop("group has to be TRUE or FALSE")
-
+    if (!is.matrix(similarityMatrix)) stop("similarityMatrix is not a matrix")
+    
     type <- match.arg(type)
     groupname <- rownames(similarityMatrix)
     
