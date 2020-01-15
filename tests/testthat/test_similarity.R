@@ -66,8 +66,8 @@ test_that("createOrderedSimMat", {
     #    "is missing, with no default")
     #expect_error(orderSimilarityMatrix(type = "retentionTime"), 
     #    "is missing, with no default")
-    #expect_error(orderSimilarityMatrix(type = "clustering"),
-    #    "is missing, with no default")
+    expect_error(orderSimilarityMatrix(type = "clustering"),
+        "is missing, with no default")
     expect_equal(colnames(simMat), colnames(simMat_o_mz))
     expect_equal(rownames(simMat), rownames(simMat_o_mz))
     expect_equal(colnames(simMat_o_mz), rownames(simMat_o_mz))
