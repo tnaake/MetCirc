@@ -250,10 +250,11 @@ orderSimilarityMatrix <- function(similarityMatrix, spectra,
 
     if (!(group %in% c(TRUE, FALSE))) stop("group has to be TRUE or FALSE")
 
-    ## set diagonal of similarityMatrix to 1
-    diag(similarityMatrix) <- 1
     type <- match.arg(type)
     groupname <- rownames(similarityMatrix)
+    
+    ## set diagonal of similarityMatrix to 1
+    diag(similarityMatrix) <- 1
 
     ## if a group is preciding the rownames of similarityMatrix
     if (group) {
