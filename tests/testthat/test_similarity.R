@@ -62,8 +62,8 @@ test_that("orderSimilarityMatrix", {
         "'arg' should be one of ")
     expect_error(orderSimilarityMatrix(simMat, spl, type = "mz", group = "a"),
         "group has to be TRUE or FALSE")
-    #expect_error(orderSimilarityMatrix(type = "mz"), 
-    #    "is missing, with no default")
+    expect_error(orderSimilarityMatrix(type = "mz"), 
+        "is missing, with no default")
     #expect_error(orderSimilarityMatrix(type = "retentionTime"), 
     #    "is missing, with no default")
     expect_error(orderSimilarityMatrix(type = "clustering"),
