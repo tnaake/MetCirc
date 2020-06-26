@@ -4,7 +4,9 @@
 \name{similarityMat}
 \alias{similarityMat}
 \title{Example data for `MetCirc`: `similarityMat`}
-\format{`matrix`}
+\format{
+`matrix`
+}
 \source{
 data("spectra", package = "MetCirc")
 similarityMat <- compare_Spectra(spectra_tissue,

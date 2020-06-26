@@ -4,11 +4,19 @@
 \alias{plotCircos}
 \title{Circular plot to visualise similarity}
 \usage{
-plotCircos(groupname, linkDf, initialize = c(TRUE, FALSE),
-  featureNames = c(TRUE, FALSE), cexFeatureNames = 0.3,
-  groupSector = c(TRUE, FALSE), groupName = c(TRUE, FALSE),
-  links = c(TRUE, FALSE), highlight = c(TRUE, FALSE), colour = NULL,
-  transparency = 0.2)
+plotCircos(
+  groupname,
+  linkDf,
+  initialize = c(TRUE, FALSE),
+  featureNames = c(TRUE, FALSE),
+  cexFeatureNames = 0.3,
+  groupSector = c(TRUE, FALSE),
+  groupName = c(TRUE, FALSE),
+  links = c(TRUE, FALSE),
+  highlight = c(TRUE, FALSE),
+  colour = NULL,
+  transparency = 0.2
+)
 }
 \arguments{
 \item{groupname}{`character` vector containing "group" and "name" to

@@ -1,17 +1,17 @@
-#' @importFrom MSnbase Spectra compareSpectra intensity
-#' @importMethodsFrom MSnbase Spectrum2 Spectra
+#' @importFrom MSnbase MSpectra compareSpectra intensity
+#' @importClassesFrom MSnbase Spectrum2 MSpectra
 #' @importFrom S4Vectors DataFrame
 #' @importFrom utils combn
 #'
 #' @name compare_Spectra
 #'
-#' @title Create similarity matrix from `MSnbase::Spectra` object
+#' @title Create similarity matrix from `MSnbase::MSpectra` object
 #'
 #' @description
 #' `compare_Spectra`` creates a similarity matrix of all Spectrum objects in 
 #' `object`
 #'
-#' @param object `Spectra`
+#' @param object `MSpectra`
 #'
 #' @param 
 #' fun `function` or `character`, see `?MSnbase::compareSpectra` for further
@@ -206,7 +206,7 @@ neutralloss <- function(x, y, m = 0.5, n = 2, ...) {
 #' between precursors
 #'
 #' @param
-#' spectra `Spectra` object containing spectra that are compared
+#' spectra `MSpectra` object containing spectra that are compared
 #' in `similarityMatrix`
 #'
 #' @param

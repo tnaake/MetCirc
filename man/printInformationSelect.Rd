@@ -4,13 +4,19 @@
 \alias{printInformationSelect}
 \title{Display information on connected features of selected features}
 \usage{
-printInformationSelect(select, spectra = NULL, linkDfInd, linkDf,
-  similarityMatrix, roundDigits = 2)
+printInformationSelect(
+  select,
+  spectra = NULL,
+  linkDfInd,
+  linkDf,
+  similarityMatrix,
+  roundDigits = 2
+)
 }
 \arguments{
 \item{select}{`character`, obtained from groupname, `character` of selected feature}
 
-\item{spectra}{`Spectra` object containing spectra that are compared in 
+\item{spectra}{`MSpectra` object containing spectra that are compared in 
 `similarityMatrix`}
 
 \item{linkDfInd}{`numeric` indices of selected features}

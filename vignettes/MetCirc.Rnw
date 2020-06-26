@@ -101,7 +101,7 @@ data. It is especially designed to
 improve the interactive exploration of metabolomics data obtained from 
 cross-species/cross-tissues comparative experiments. \Rpackage{MetCirc} relies
 on the \Rpackage{MSnbase} infrastructure to handle MS/MS spectra. Specifically,
-\Rpackage{MetCirc} uses the \Robject{Spectra} class from which similarities 
+\Rpackage{MetCirc} uses the \Robject{MSpectra} class from which similarities 
 between \Robject{Spectrum2} objects are calculated and which stores 
 information on spectra in the columns of the slot \Robject{elementMetadata}.
 Notably, \Rpackage{MetCirc} 
@@ -131,7 +131,7 @@ definitely helps obtaining biochemically-meaningful MS/MS groupings.
 Furthermore, any
 other function to calculate similarities can be provided or a similarity 
 matrix providing similarity (in the range from 0 to 1) for features that 
-are present in the \Robject{Spectra} object. \newline
+are present in the \Robject{MSpectra} object. \newline
 
 The interpretation drawn from network reconstruction highly depends 
 from topological parameters applied during the network construction steps. 
@@ -151,7 +151,7 @@ This vignette uses as a case study indiscriminant MS/MS (idMS/MS) data from
 collected from different organs of tobacco flowers and data from the 
 Global Natural Product Social Molecular Networking (GNPS) library
 to navigate through the 
-analysis pipeline. The pipeline includes the creation of \Robject{Spectra}
+analysis pipeline. The pipeline includes the creation of \Robject{MSpectra}
 objects, the calculation of a similarity measure (NDP), 
 assignment to a similarity matrix and visualisation of similarity based 
 on interactive and non-interactive graphical tools using the 
@@ -183,15 +183,15 @@ library(MetCirc)
 @
 
 The central infrastructure class of the \Rpackage{MetCirc} package is the 
-\Robject{Spectra} object. The \Robject{Spectra} objects stores information 
+\Robject{MSpectra} object. The \Robject{MSpectra} objects stores information 
 on precursor m/z, retention time, m/z and intensity values of fragments 
 and possible additional information, e.g. to which class the MS/MS feature 
 belong to, the identity of the MS/MS feature, information on the adduct of the
-precursor, additional information. Furthermore the \Robject{Spectra} object 
+precursor, additional information. Furthermore the \Robject{MSpectra} object 
 can host information under which condition (in which tissue, etc.) the 
 MS/MS feature was detected. \newline
 
-We provide here three examplary workflows to create \Robject{Spectra} from 
+We provide here three examplary workflows to create \Robject{MSpectra} from 
 data frames that are loaded into R: 
 (1) by loading a data frame with a minimum requirement of a column "id" (comprising unique identifiers
 for MS/MS features) and of the columns "mz" and "intensity" comprising the
@@ -264,7 +264,7 @@ data("convertMsp2Spectra", package = "MetCirc")
 
 \subsection{Preparing the sd02\_deconvoluted data set for analysis}
 Here, we convert the examplatory data from \citet{Li2015} into a 
-\Robject{Spectra} object that is later used as the input for mass spectral 
+\Robject{MSpectra} object that is later used as the input for mass spectral 
 similarity calculations. 
 Data in the formof the data frame sd02\_deconvoluted require columns that 
 store the m/z values of fragments, the intensity values 
@@ -279,7 +279,7 @@ and contains information about the precursor identity and its isotope cluster.
 The column "id" may additionally contain information 
 about the precursor retention time. \newline
 
-Create \Robject{Spectra} object from the data of \citep{Li2015}:
+Create \Robject{MSpectra} object from the data of \citep{Li2015}:
 <<eval=TRUE>>=
 ## get all MS/MS spectra
 id_uniq <- unique(sd02_deconvoluted[, "id"])
@@ -300,8 +300,8 @@ rt_l <- lapply(rt_l, mean)
 ## create list of spectrum2 objects
 spN_l <- lapply(1:length(mz_l), function(x) new("Spectrum2", rt=rt_l[[x]], precursorMz=prec_mz_l[[x]], mz=mz_l[[x]], intensity=int_l[[x]]))
 
-## combine list of spectrum2 objects to Spectra object
-spectra_li <- MSnbase::Spectra(spN_l, elementMetadata=S4Vectors::DataFrame(show=rep(TRUE, length(spN_l)))) 
+## combine list of spectrum2 objects to MSpectra object
+spectra_li <- MSnbase::MSpectra(spN_l, elementMetadata=S4Vectors::DataFrame(show=rep(TRUE, length(spN_l)))) 
 @
 
 Furthermore, further columns in the \Robject{DataFrame} passed to 
@@ -315,7 +315,7 @@ We would like to restrict the proof-of-function analysis to four tissues
 (sepal, SPL; limb, LIM; anther, ANT; 
 style, STY). We will truncate \Robject{tissue} in order that it contains only these 
 instances belonging to these types of tissue. In a next step, we will 
-create a \Rpackage{Spectra}-object, \Robject{spl} with information concerning
+create a \Rpackage{MSpectra}-object, \Robject{spl} with information concerning
 if the MS/MS features are found in the tissues SPL, LIM, ANT and STY. 
 <<eval=TRUE>>=
 ## get all MS/MS spectra
@@ -338,14 +338,14 @@ rt_l <- lapply(rt_l, mean)
 ## create list of spectrum2 objects
 spN_l <- lapply(1:length(mz_l), function(x) new("Spectrum2", rt=rt_l[[x]], precursorMz=prec_mz_l[[x]], mz=mz_l[[x]], intensity=int_l[[x]]))
 
-## combine list of spectrum2 objects to Spectra object, 
+## combine list of spectrum2 objects to MSpectra object, 
 ## use SPL, LIM, ANT, STY for further analysis
-spectra_tissue <- MSnbase::Spectra(spN_l, 
+spectra_tissue <- MSnbase::MSpectra(spN_l, 
     elementMetadata=S4Vectors::DataFrame(compartmentTissue[, c("SPL", "LIM", "ANT", "STY")])) 
 @
 
 \subsection{Preparing the GNPS data set for analysis}
-Alternatively as mentioned above, an \Robject{Spectra}-object can also created 
+Alternatively as mentioned above, an \Robject{MSpectra}-object can also created 
 from .MSP objects, 
 that are typical data formats for storing MS/MS libraries. 
 Required properties of such a data frame are the name of the metabolite
@@ -356,7 +356,7 @@ fragments and peak areas (for further information see convertMsp2Spectra
 and retrieve \Robject{data("convertMsp2Spectra", package = "MetCirc")} for a typical
 msp data frame). \newline
 
-Create \Robject{Spectra}-object from the GNPS .MSP file:
+Create \Robject{MSpectra}-object from the GNPS .MSP file:
 <<eval=TRUE>>=
 spectra_msp <- convertMsp2Spectra(msp2spectra)
 @
@@ -368,7 +368,7 @@ spectra_msp <- convertMsp2Spectra(msp2spectra)
 
 \paragraph{Calculation of the similarity matrix.} The similarity matrix can be 
 obtained by by the \Rpackage{MSnbase} package 
-function compare$\_$Spectra which takes a \Robject{Spectra} object and a 
+function compare$\_$Spectra which takes a \Robject{MSpectra} object and a 
 function for the similarity calculation as input. \newline
 
 The \Rpackage{MetCirc} package comes with two functions to calculate pair-wise
@@ -407,7 +407,7 @@ similarityMat <- compare_Spectra(spectra_tissue[1:100,], fun=normalizeddotproduc
 @
 
 \Rfunction{createSimilarityMatrix} returns a square matrix with 
-the names of the \Robject{Spectra} MS/MS features as column and row names. 
+the names of the \Robject{MSpectra} MS/MS features as column and row names. 
 The entries of the returned matrix have to be similarites cores ranging between 
 0 and 1 that are  the pair-wise similarities between the MS/MS features. 
 
@@ -513,19 +513,19 @@ To start the shiny app, run
 <<eval=FALSE>>=
 selectedFeatures <- shinyCircos(similarityMat, spectra=spectra_tissue, condition=c("LIM", "ANT", "STY"))
 @
-to the console. This will load information stored in the \Robject{Spectra} object
+to the console. This will load information stored in the \Robject{MSpectra} object
 \Robject{spl} to the \Robject{shinyCircos} interface. Information (metabolite names and
 class, adduct ion name and further information) will be printed to the 
-interface when (single-)clicking on MS/MS features. Since this \Robject{Spectra}
+interface when (single-)clicking on MS/MS features. Since this \Robject{MSpectra}
 object did not contain any information about metabolite names, class, adduct
 ion name and further information, initally all fields for these instances 
 are set to "Unkwown". Note, that on the 
 sidebar on the right side text fields will appear, that allow for changing 
 the annotation of the selected feature. Click "update annotation" to save the 
-changes to the \Robject{Spectra}-object. On exiting \Robject{shinyCircos} via
-the exit button, selected precursors and the (updated) \Robject{Spectra}-object will
+changes to the \Robject{MSpectra}-object. On exiting \Robject{shinyCircos} via
+the exit button, selected precursors and the (updated) \Robject{MSpectra}-object will
 be returned to the console. In the example above, enter 
-\Robject{selectedFeatures\$spectra} to retrieve the \Robject{Spectra} object 
+\Robject{selectedFeatures\$spectra} to retrieve the \Robject{MSpectra} object 
 with updated annotation. \newline
 
 \Rpackage{MetCirc} allows also to create such figures outside of an

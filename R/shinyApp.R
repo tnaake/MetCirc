@@ -17,8 +17,8 @@
 #' between MS/MS features
 #'
 #' @param
-#' spectra an S4 object of class `Spectra`, the 
-#' `Spectra` object will be used to display information about the selected 
+#' spectra an S4 object of class `MSpectra`, the 
+#' `MSpectra` object will be used to display information about the selected 
 #' feature and will store information of annotation
 #'
 #' @param
@@ -34,10 +34,10 @@
 #' The function is based on the `shiny` and `circlize` package. 
 #' The user can choose interactively thresholds, type of links (between or 
 #' within groups), display information about MS/MS features, permanently select 
-#' MS/MS features and export selected precursors. The `Spectra` object
+#' MS/MS features and export selected precursors. The `MSpectra` object
 #' stores annotation information about the MS/MS features. Names of features 
 #' within the `similarityMatrix` have to be found as entries 
-#' in `Spectra`. `names(Spectra)` are used as identifiers and 
+#' in `MSpectra`. `names(MSpectra)` are used as identifiers and 
 #' `colnames`/`rownames` from `similarityMatrix` are cleaved 
 #' by the group identifier (separated by "_"). Annotation information is taken
 #' from `spectra` from the columns "names", "information", "classes" and
@@ -49,7 +49,7 @@
 #'
 #' @return
 #' `character`, `shinyCircos` returns a `character` vector with the 
-#' permanently selected precursors and an object with the `Spectra`
+#' permanently selected precursors and an object with the `MSpectra`
 #' object containing the annotation.
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
@@ -60,7 +60,7 @@
 #'     fun = normalizeddotproduct, binSize = 0.01)
 #' \dontrun{
 #' shinyCircos(similarityMatrix = similarityMat, 
-#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY))
+#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 #' }
 #' @export
 shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
@@ -570,7 +570,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' select `character`, obtained from groupname, `character` of selected feature
 #'
 #' @param 
-#' spectra `Spectra` object containing spectra that are compared in 
+#' spectra `MSpectra` object containing spectra that are compared in 
 #' `similarityMatrix`
 #'
 #' @param linkDfInd `numeric` indices of selected features
@@ -924,7 +924,7 @@ recordPlotHighlight <- function(type_match, ...) {
 #'
 #' @param similarityMatrix `matrix` with pair-wise similarity values
 #'
-#' @param spectra `Spectra` object
+#' @param spectra `MSpectra` object
 #'
 #' @param type `character`, either `"mz"`, `"retentionTime"`, `"clustering"`
 #'

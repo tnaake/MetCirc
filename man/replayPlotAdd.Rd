@@ -4,8 +4,18 @@
 \alias{replayPlotAdd}
 \title{Plot plotCircos or highlight}
 \usage{
-replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf, mz_match,
-  rt_match, clust_match, ind, indMz, indRT, indCluster)
+replayPlotAdd(
+  orderMatch = "mz",
+  onCircle = FALSE,
+  linkDf,
+  mz_match,
+  rt_match,
+  clust_match,
+  ind,
+  indMz,
+  indRT,
+  indCluster
+)
 }
 \arguments{
 \item{orderMatch}{orderMatch `character`, either `"mz"`, `"retentionTime"` 

@@ -4,7 +4,9 @@
 \name{tissue}
 \alias{tissue}
 \title{Example data for `MetCirc`: `tissue`}
-\format{`data.frame`}
+\format{
+`data.frame`
+}
 \source{
 internal
 }

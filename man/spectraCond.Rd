@@ -7,7 +7,7 @@
 spectraCond(spectra, condition)
 }
 \arguments{
-\item{spectra}{`Spectra` object of `MSnbase` package}
+\item{spectra}{`MSpectra` object of `MSnbase` package}
 
 \item{condition}{`character`, vector with conditions found as columns
 in the elementMetadata slot}

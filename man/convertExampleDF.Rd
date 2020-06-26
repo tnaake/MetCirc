@@ -4,7 +4,9 @@
 \name{convertExampleDF}
 \alias{convertExampleDF}
 \title{Example data for `MetCirc`: convertExampleDF}
-\format{`data.frame`}
+\format{
+`data.frame`
+}
 \source{
 internal
 }

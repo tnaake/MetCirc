@@ -8,7 +8,7 @@
 #' `elementMetadata@listData`.
 #'
 #' @param
-#' spectra `Spectra` object of `MSnbase` package
+#' spectra `MSpectra` object of `MSnbase` package
 #'
 #' @param
 #' condition `character`, vector with conditions found as columns
@@ -52,7 +52,7 @@ spectraCond <- function(spectra, condition) {
 #' similarityMatrix `matrix`, a similarity matrix that contains the
 #' NDP similarity measure between all precursors in the data set
 #'
-#' @param spectra `Spectra` object
+#' @param spectra `MSpectra` object
 #'
 #' @param condition `character`, which conditions should be included?
 #'
@@ -191,7 +191,7 @@ thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
 #' similarityMatrix `matrix`, a similarity matrix that contains the
 #' similarity measure between all precursors in the data set
 #'
-#' @param spectra Spectra object containing spectra of similarityMatrix
+#' @param spectra MSpectra object containing spectra of similarityMatrix
 #'
 #' @param condition `character`, vector containing the
 #' conditions/samples for which a linkDf is created

@@ -10,7 +10,7 @@ createLinkDf(similarityMatrix, spectra, condition, lower, upper)
 \item{similarityMatrix}{`matrix`, a similarity matrix that contains the
 similarity measure between all precursors in the data set}
 
-\item{spectra}{Spectra object containing spectra of similarityMatrix}
+\item{spectra}{MSpectra object containing spectra of similarityMatrix}
 
 \item{condition}{`character`, vector containing the
 conditions/samples for which a linkDf is created}

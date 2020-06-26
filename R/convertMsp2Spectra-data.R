@@ -10,7 +10,7 @@
 #' (Num Peaks), together with fragments and their
 #' intensity values. In the example used in the function
 #' `convertMsp2Spectra` the `data.frame` `msp2spectra`
-#' is used to construct an object of class `Spectra`.
+#' is used to construct an object of class `MSpectra`.
 #'
 #' @docType data
 #'

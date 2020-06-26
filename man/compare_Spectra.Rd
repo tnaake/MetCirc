@@ -2,12 +2,12 @@
 % Please edit documentation in R/similarity.R
 \name{compare_Spectra}
 \alias{compare_Spectra}
-\title{Create similarity matrix from `MSnbase::Spectra` object}
+\title{Create similarity matrix from `MSnbase::MSpectra` object}
 \usage{
 compare_Spectra(object, fun, ...)
 }
 \arguments{
-\item{object}{`Spectra`}
+\item{object}{`MSpectra`}
 
 \item{fun}{`function` or `character`, see `?MSnbase::compareSpectra` for further
 information}
