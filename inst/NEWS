@@ -1,3 +1,6 @@
+Changes in version 1.19.0 (2020-07-02)
++ adapt to changes in MSnbase (renaming of Spectra to MSpectra)
+
 Changes in version 1.17.0 (2020-01-14)
 + change unit tests to testthat
 + change color 1:4 to colour character vector 

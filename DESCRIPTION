@@ -7,9 +7,13 @@ Date: 2019-10-21
 Authors@R: c(person(given = "Thomas", family = "Naake",
     email = "thomasnaake@googlemail.com",
     role = c("aut","cre")),
+  person(given = "Johannes", family = "Rainer",
+    email = "johannes.rainer@eurac.edu",
+    role = "ctb"),
   person(given = "Emmanuel", family = "Gaquerel",
     email = "emmanuel.gaquerel@ibmp-cnrs.unistra.fr", role = "aut"))
-Author: Thomas Naake <thomasnaake@googlemail.com> and Emmanuel Gaquerel
+Author: Thomas Naake <thomasnaake@googlemail.com>, 
+    Johannes Rainer <johannes.rainer@eurac.edu> and Emmanuel Gaquerel
     <emmanuel.gaquerel@ibmp-cnrs.unistra.fr>
 Maintainer: Thomas Naake <thomasnaake@googlemail.com>
 VignetteBuilder: knitr
