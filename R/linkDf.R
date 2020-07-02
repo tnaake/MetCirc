@@ -100,7 +100,7 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
     inds_uniq_combn <- combn(inds_uniq, 2)
 
     ## get similarity values for all combinations
-    sim <- lapply(1:ncol(inds_uniq_combn), function(x) {
+    sim <- lapply(seq_len(ncol(inds_uniq_combn)), function(x) {
         row_sim <- strsplit(inds_uniq_combn[1, x], split = "_")[[1]][2]
         col_sim <- strsplit(inds_uniq_combn[2, x], split = "_")[[1]][2]
         similarityMatrix[row_sim, col_sim]
@@ -135,7 +135,7 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
 #' information on linked features
 #'
 #' @param
-#' lower `numeric`, threshold value for similarity values, below 
+#' lower `numeric`, threshold value for similarity values, below
 #' this value linked features will not be returned
 #'
 #' @param
@@ -168,7 +168,7 @@ thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
     sim <- link0df[, "similarity"]
     if (lower > upper) stop("lower greater than upper")
     if (upper > 1) stop("upper greater than 1")
-    if (lower > max(sim)) 
+    if (lower > max(sim))
         warning("lower greater than max similarity value in link0df")
 
     ## which rows have a coefficient >= threshold?
@@ -223,7 +223,7 @@ thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
 createLinkDf <- function(similarityMatrix, spectra, condition, lower, upper) {
 
     ## first create a link0Matrix
-    link0df <- createLink0df(similarityMatrix = similarityMatrix, 
+    link0df <- createLink0df(similarityMatrix = similarityMatrix,
         spectra = spectra, condition = condition)
 
     ## than threshold link0Matrix
@@ -275,10 +275,10 @@ cutLinkDf <- function(linkDf, type = c("all", "inter", "intra")) {
         linkDf <- linkDf
 
     if (type == "inter")
-        linkDf <- linkDf[which(linkDf[,"group1"] != linkDf[,"group2"]), ]
+        linkDf <- linkDf[which(linkDf[, "group1"] != linkDf[, "group2"]), ]
 
     if (type == "intra")
-        linkDf <- linkDf[which(linkDf[,"group1"] == linkDf[,"group2"]), ]
+        linkDf <- linkDf[which(linkDf[, "group1"] == linkDf[, "group2"]), ]
 
     return(linkDf)
 }

@@ -8,17 +8,17 @@
 #'
 #' @description
 #' Visualise the similarity of MS/MS features in a reactive 
-#' context. See `Details` the vignette for further descriptions on how to use 
+#' context. See `Details` the vignette for further descriptions on how to use
 #' `shinyCircos`.
 #'
 #' @param
-#' similarityMatrix `matrix`, `similarityMatrix` contains 
-#' pair-wise similarity coefficients which give information about the similarity 
+#' similarityMatrix `matrix`, `similarityMatrix` contains pair-wise
+#' similarity coefficients which give information about the similarity
 #' between MS/MS features
 #'
 #' @param
-#' spectra an S4 object of class `MSpectra`, the 
-#' `MSpectra` object will be used to display information about the selected 
+#' spectra an S4 object of class `MSpectra`, the
+#' `MSpectra` object will be used to display information about the selected
 #' feature and will store information of annotation
 #'
 #' @param
@@ -26,29 +26,29 @@
 #' are displayed
 #'
 #' @param
-#' ... further arguments passed to `shinyCircos`, e.g. 
-#' `cexFeatureNames` to pass to `plotCircos` to set font size in 
+#' ... further arguments passed to `shinyCircos`, e.g.
+#' `cexFeatureNames` to pass to `plotCircos` to set font size in
 #' `plotCircos` of feature names
 #'
 #' @details
-#' The function is based on the `shiny` and `circlize` package. 
-#' The user can choose interactively thresholds, type of links (between or 
-#' within groups), display information about MS/MS features, permanently select 
+#' The function is based on the `shiny` and `circlize` package.
+#' The user can choose interactively thresholds, type of links (between or
+#' within groups), display information about MS/MS features, permanently select
 #' MS/MS features and export selected precursors. The `MSpectra` object
-#' stores annotation information about the MS/MS features. Names of features 
-#' within the `similarityMatrix` have to be found as entries 
-#' in `MSpectra`. `names(MSpectra)` are used as identifiers and 
-#' `colnames`/`rownames` from `similarityMatrix` are cleaved 
+#' stores annotation information about the MS/MS features. Names of features
+#' within the `similarityMatrix` have to be found as entries
+#' in `MSpectra`. `names(MSpectra)` are used as identifiers and
+#' `colnames`/`rownames` from `similarityMatrix` are cleaved
 #' by the group identifier (separated by "_"). Annotation information is taken
 #' from `spectra` from the columns "names", "information", "classes" and
-#' "adduct" in the slot `elementMetadata` of `spectra`. After exiting 
+#' "adduct" in the slot `elementMetadata` of `spectra`. After exiting
 #' the application, the annotation will be written to the respective columns
-#' in the slot `elementMetadata`. If one or several of these columns is 
-#' already present in `elementMetadata`, the column(s) will be used as the 
+#' in the slot `elementMetadata`. If one or several of these columns is
+#' already present in `elementMetadata`, the column(s) will be used as the
 #' source of annotation information.
 #'
 #' @return
-#' `character`, `shinyCircos` returns a `character` vector with the 
+#' `character`, `shinyCircos` returns a `character` vector with the
 #' permanently selected precursors and an object with the `MSpectra`
 #' object containing the annotation.
 #'
@@ -59,7 +59,7 @@
 #' similarityMat <- compare_Spectra(spectra_tissue[1:10],
 #'     fun = normalizeddotproduct, binSize = 0.01)
 #' \dontrun{
-#' shinyCircos(similarityMatrix = similarityMat, 
+#' shinyCircos(similarityMatrix = similarityMat,
 #'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 #' }
 #' @export
@@ -105,7 +105,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     ## where group is the first element and name the last element separated by _
     groupRT <- lapply(strsplit(rt_match, split = "_"), "[", 1)
     groupRT <- unlist(groupRT)
-    nameRT <- lapply(strsplit(rt_match, split = "_"), function (x) x[length(x)])
+    nameRT <- lapply(strsplit(rt_match, split = "_"), function(x) x[length(x)])
     nameRT <- unlist(nameRT)
 
     ## plot filled and get degree features
@@ -127,7 +127,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     ## where group is the first element and name the last element separated by _
     groupMZ <- lapply(strsplit(mz_match, split = "_"), "[", 1)
     groupMZ <- unlist(groupMZ)
-    nameMZ <- lapply(strsplit(mz_match, split = "_"), function (x) x[length(x)])
+    nameMZ <- lapply(strsplit(mz_match, split = "_"), function(x) x[length(x)])
     nameMZ <- unlist(nameMZ)
 
     ## plot filled and get degree features
@@ -149,7 +149,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
     ## where group is the first element and name the last element separated by _
     groupClust <- lapply(strsplit(clust_match, split = "_"), "[", 1)
     groupClust <- unlist(groupClust)
-    nameClust <- lapply(strsplit(clust_match, split = "_"), function (x) x[length(x)])
+    nameClust <- lapply(strsplit(clust_match, split = "_"), function(x) x[length(x)])
     nameClust <- unlist(nameClust)
 
     ## plot filled and get degree features
@@ -201,20 +201,20 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
                         uiOutput("querySpectra")
                     )),
                     tabPanel("Appearance", id = "Appearance", wellPanel(
-                        sliderInput("plotSize", "plot size", 
+                        sliderInput("plotSize", "plot size",
                            min = 0.5, max = 1.5, value = 1),
                         sliderInput("precision", "precision of numbers",
                            value = 2, min = 0, max = 5, step = 1),
                         checkboxInput("legend", "legend", value = FALSE)
                     ))
-             
+
                 )
             ),
             plotOutput("circosLegend", height = "300")
         ),
         column(8,
             conditionalPanel(condition = "input.tabs  == 'Spectra'",
-                plotOutput("plotSpec")), 
+                plotOutput("plotSpec")),
             fluidRow(uiOutput("sized_plot")),
             fluidRow(
                 verbatimTextOutput("dimension_display"),
@@ -232,16 +232,16 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 
         output$annotationName <- renderUI({
             if (length(indSgl$ind) > 0 && onCircle$is) {
-                textInput("names", label = "name", 
+                textInput("names", label = "name",
                     value = isolate(spe$spectra@elementMetadata$names[ind()]))
-            } else NULL  
+            } else NULL
         })
 
         output$annotationClass <- renderUI({
             if (length(indSgl$ind) > 0 && onCircle$is) {
                 textInput("classes", label = "class",
                     value = isolate(spe$spectra@elementMetadata$classes[ind()]))
-            } else NULL 
+            } else NULL
         })
 
         output$annotationInformation <- renderUI({
@@ -249,14 +249,14 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
                 #if (onCircle$is) {
                 textInput("information", label = "information",
                     value = isolate(spe$spectra@elementMetadata$information[ind()]))
-            } else NULL  
+            } else NULL
         })
 
         output$annotationAdduct <- renderUI({
             if (length(indSgl$ind) > 0 && onCircle$is) {
                 textInput("adduct", label = "adduct",
                     value = isolate(spe$spectra@elementMetadata$adduct[ind()]))
-            } else NULL  
+            } else NULL
         })
 
         output$annotationButton <- renderUI({
@@ -287,11 +287,14 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         annotateClasses <- eventReactive(input$annotate, {input$classes})
 
         ## eventReactive for input$information
-        annotateInformation <- eventReactive(input$annotate, 
-            {input$information})
+        annotateInformation <- eventReactive(input$annotate, {
+            input$information
+        })
 
         ## eventReactive for input$adduct
-        annotateAdduct <- eventReactive(input$annotate, {input$adduct})
+        annotateAdduct <- eventReactive(input$annotate, {
+            input$adduct
+        })
 
         ## observe annotations and write to respective columns in slot
         ## elementMetadata
@@ -304,7 +307,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         })
 
         observe({
-            spe$spectra@elementMetadata$information[indAnn()] <- 
+            spe$spectra@elementMetadata$information[indAnn()] <-
                                                         annotateInformation()
         })
 
@@ -397,7 +400,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         indDbl <- reactiveValues(ind = NULL, new = NULL)
         observe({
             if (!is.null(input$circosDbl$x)) {
-                
+
                 minInd <- minFragCart2Polar(input$circosDbl$x,
                                                 input$circosDbl$y, degFeat())
                 if (!is.na(minInd)) {
@@ -405,7 +408,7 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
                     selected <- strsplit(GNselect, split = "_")[[1]]
                     groupSelected <- selected[1]
                     nameSelected <- selected[2:length(selected)]
-                    
+
                     newNG <- paste(groupSelected, nameSelected, sep = "_")
                     ## write truncated name to indDbl$new
                     indDbl$new <- newNG
