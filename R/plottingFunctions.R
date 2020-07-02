@@ -544,7 +544,7 @@ cart2Polar <- function(x, y) {
 #' @description `plotSpectra` plots a spectra of a `subject` and `query`
 #' spectra. `plotSpectra` uses `ggplot` plotting functionality.
 #'
-#' @param spectra `Spectra`` object
+#' @param spectra `MSpectra` object
 #'
 #' @param
 #' subject character, name of spectra that is aligned against, character

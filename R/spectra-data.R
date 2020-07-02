@@ -2,7 +2,7 @@
 #'
 #' @title Example data for `MetCirc`: `spectra_tissue`
 #'
-#' @description `spectra_tissue` is a `Spectra` object containing
+#' @description `spectra_tissue` is a `MSpectra` object containing
 #' `Spectrum2` objects derived from the `idMSMStissueproject` data set.
 #' See the vignette for a workflow to reproduce the object `spectra`.
 #'
@@ -36,9 +36,9 @@
 #'         new("Spectrum2", rt = rt_l[[x]], precursorMz = prec_mz_l[[x]], 
 #'         mz = mz_l[[x]], intensity = int_l[[x]])})
 #'
-#' ## combine list of spectrum2 objects to Spectra object, 
+#' ## combine list of spectrum2 objects to MSpectra object, 
 #' ## use SPL, LIM, ANT, STY for further analysis
-#' spectra_tissue <- Spectra(spectrum2_tissue, 
+#' spectra_tissue <- MSpectra(spectrum2_tissue, 
 #'     elementMetadata = DataFrame(compartmentTissue[, c("SPL", "LIM", "ANT", "STY")])) 
 #'
 #' save(spectra_tissue, file = "spectra.RData", compress = "xz")

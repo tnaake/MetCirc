@@ -4,7 +4,9 @@
 \name{sd01_outputXCMS}
 \alias{sd01_outputXCMS}
 \title{Example data for `MetCirc`: `sd01_outputXCMS`}
-\format{`data.frame`}
+\format{
+`data.frame`
+}
 \source{
 Li et al. (2015)
 }

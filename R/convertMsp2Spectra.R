@@ -1,8 +1,8 @@
 #' @name convertMsp2Spectra
 #'
-#' @title Convert MSP data frame into object of class `Spectra`
+#' @title Convert MSP data frame into object of class `MSpectra`
 #'
-#' @description Convert msp data frame into object of class `Spectra`
+#' @description Convert msp data frame into object of class [MSpectra()]
 #'
 #' @param
 #' msp `data.frame` that mimicks the .msp file format, see Details for further
@@ -16,7 +16,7 @@
 #' and information on fragments and peak areas/intensities and will
 #' extract the respective information in the second column.
 #'
-#' @return `convertMsp2Spectra` returns an object of class `Spectra`
+#' @return `convertMsp2Spectra` returns an object of class `MSpectra`
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
@@ -84,6 +84,6 @@ convertMsp2Spectra <- function(msp) {
                          mz = fragment, intensity = intensity)
     }
 
-    spl <- Spectra(spN_l, elementMetadata = DataFrame(names = NAMES))
+    spl <- MSpectra(spN_l, elementMetadata = DataFrame(names = NAMES))
     return(spl)
 }

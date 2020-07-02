@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertMsp2Spectra.R
 \name{convertMsp2Spectra}
 \alias{convertMsp2Spectra}
-\title{Convert MSP data frame into object of class `Spectra`}
+\title{Convert MSP data frame into object of class `MSpectra`}
 \usage{
 convertMsp2Spectra(msp)
 }
@@ -11,10 +11,10 @@ convertMsp2Spectra(msp)
 information}
 }
 \value{
-`convertMsp2Spectra` returns an object of class `Spectra`
+`convertMsp2Spectra` returns an object of class `MSpectra`
 }
 \description{
-Convert msp data frame into object of class `Spectra`
+Convert msp data frame into object of class [MSpectra()]
 }
 \details{
 msp is a data frame of a .msp file, a typical data file for

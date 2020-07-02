@@ -12,8 +12,8 @@ shinyCircos(similarityMatrix, spectra, condition, ...)
 pair-wise similarity coefficients which give information about the similarity 
 between MS/MS features}
 
-\item{spectra}{an S4 object of class `Spectra`, the 
-`Spectra` object will be used to display information about the selected 
+\item{spectra}{an S4 object of class `MSpectra`, the 
+`MSpectra` object will be used to display information about the selected 
 feature and will store information of annotation}
 
 \item{condition}{`character` vector, specifies which condtions/samples
@@ -25,7 +25,7 @@ are displayed}
 }
 \value{
 `character`, `shinyCircos` returns a `character` vector with the 
-permanently selected precursors and an object with the `Spectra`
+permanently selected precursors and an object with the `MSpectra`
 object containing the annotation.
 }
 \description{
@@ -37,10 +37,10 @@ context. See `Details` the vignette for further descriptions on how to use
 The function is based on the `shiny` and `circlize` package. 
 The user can choose interactively thresholds, type of links (between or 
 within groups), display information about MS/MS features, permanently select 
-MS/MS features and export selected precursors. The `Spectra` object
+MS/MS features and export selected precursors. The `MSpectra` object
 stores annotation information about the MS/MS features. Names of features 
 within the `similarityMatrix` have to be found as entries 
-in `Spectra`. `names(Spectra)` are used as identifiers and 
+in `MSpectra`. `names(MSpectra)` are used as identifiers and 
 `colnames`/`rownames` from `similarityMatrix` are cleaved 
 by the group identifier (separated by "_"). Annotation information is taken
 from `spectra` from the columns "names", "information", "classes" and
@@ -49,6 +49,15 @@ the application, the annotation will be written to the respective columns
 in the slot `elementMetadata`. If one or several of these columns is 
 already present in `elementMetadata`, the column(s) will be used as the 
 source of annotation information.
+}
+\examples{
+data("spectra", package = "MetCirc")
+similarityMat <- compare_Spectra(spectra_tissue[1:10],
+    fun = normalizeddotproduct, binSize = 0.01)
+\dontrun{
+shinyCircos(similarityMatrix = similarityMat, 
+    spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+}
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

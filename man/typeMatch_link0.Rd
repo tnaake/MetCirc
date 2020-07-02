@@ -9,7 +9,7 @@ typeMatch_link0(similarityMatrix, spectra, type, condition)
 \arguments{
 \item{similarityMatrix}{`matrix` with pair-wise similarity values}
 
-\item{spectra}{`Spectra` object}
+\item{spectra}{`MSpectra` object}
 
 \item{type}{`character`, either `"mz"`, `"retentionTime"`, `"clustering"`}
 

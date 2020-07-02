@@ -4,7 +4,7 @@ spl <- convertMsp2Spectra(msp = msp2spectra)
 ## START unit test convertMSP2MSP
 test_that("convertMsp2Spectra", {
     expect_equal(length(spl), 22)
-    expect_equal(is(spl), c("Spectra", "SimpleList", "List", "Vector", 
+    expect_equal(is(spl), c("MSpectra", "SimpleList", "List", "Vector", 
         "list_OR_List", "Annotated", "vector_OR_Vector"))
     expect_equal(dim(spl@elementMetadata), c(22, 1))
     expect_true(is.character(spl@elementMetadata$names))

@@ -7,7 +7,7 @@
 plotSpectra(spectra, subject, query)
 }
 \arguments{
-\item{spectra}{`Spectra`` object}
+\item{spectra}{`MSpectra` object}
 
 \item{subject}{character, name of spectra that is aligned against, character
 with preceding sample name}

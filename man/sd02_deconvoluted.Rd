@@ -4,7 +4,9 @@
 \name{sd02_deconvoluted}
 \alias{sd02_deconvoluted}
 \title{Example data for `MetCirc`: sd02_deconvoluted}
-\format{`data.frame`}
+\format{
+`data.frame`
+}
 \source{
 Li et al. (2015)
 }

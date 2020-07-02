@@ -4,7 +4,9 @@
 \name{msp2spectra}
 \alias{msp2spectra}
 \title{Example data for `MetCirc`: `msp2spectra`}
-\format{`data.frame`}
+\format{
+`data.frame`
+}
 \source{
 http://prime.psc.riken.jp/Metabolomics_Software/MS-DIAL/, truncated
 .MSP file of GNPS MS/MS Negative (contains 22 entries):
@@ -21,7 +23,7 @@ mz (PRECURSORMZ), the retention time (RETENTIONTIME), number of peaks
 (Num Peaks), together with fragments and their
 intensity values. In the example used in the function
 `convertMsp2Spectra` the `data.frame` `msp2spectra`
-is used to construct an object of class `Spectra`.
+is used to construct an object of class `MSpectra`.
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

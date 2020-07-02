@@ -10,7 +10,7 @@ createLink0df(similarityMatrix, spectra, condition)
 \item{similarityMatrix}{`matrix`, a similarity matrix that contains the
 NDP similarity measure between all precursors in the data set}
 
-\item{spectra}{`Spectra` object}
+\item{spectra}{`MSpectra` object}
 
 \item{condition}{`character`, which conditions should be included?}
 }
