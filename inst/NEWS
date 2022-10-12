@@ -1,3 +1,6 @@
+Changes in version 1.27.1 (2022-10-12)
++ add ShinyApps in biocViews
+
 Changes in version 1.19.0 (2020-07-02)
 + adapt to changes in MSnbase (renaming of Spectra to MSpectra)
 
@@ -93,7 +96,6 @@ Changes in version 0.99.6 (2016-10-10)
 
 Changes in version 0.99.5 (2016-09-15)
 + add arguments colour and transparency for functions plotCircos and highlight
-   
 
 Changes in version 0.99.4 (2016-08-17)
 + add arguments splitIndMZ and splitIndRT in function convert2MSP and
