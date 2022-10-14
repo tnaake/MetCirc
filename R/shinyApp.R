@@ -1,6 +1,3 @@
-#' @import grDevices
-#' @import graphics
-
 #' @name shinyCircos
 #'
 #' @title Interactive visualisation of similarity and navigation of MS/MS
@@ -8,105 +5,103 @@
 #'
 #' @description
 #' Visualise the similarity of MS/MS features in a reactive 
-#' context. See `Details` the vignette for further descriptions on how to use
-#' `shinyCircos`.
+#' context. See \code{Details} the vignette for further descriptions on how to 
+#' use \code{shinyCircos}.
 #'
-#' @param
-#' similarityMatrix `matrix`, `similarityMatrix` contains pair-wise
-#' similarity coefficients which give information about the similarity
-#' between MS/MS features
-#'
-#' @param
-#' spectra an S4 object of class `MSpectra`, the
-#' `MSpectra` object will be used to display information about the selected
-#' feature and will store information of annotation
-#'
-#' @param
-#' condition `character` vector, specifies which condtions/samples
+#' @param similarityMatrix \code{matrix}, \code{similarityMatrix} 
+#' contains pair-wise similarity coefficients which give information about the
+#' similarity between MS/MS features
+#' @param sps \code{Spectra}, \code{sps} will be used to display information 
+#' about the selected feature and will store information of annotation
+#' @param condition \code{character} vector, specifies which conditions/samples
 #' are displayed
-#'
-#' @param
-#' ... further arguments passed to `shinyCircos`, e.g.
-#' `cexFeatureNames` to pass to `plotCircos` to set font size in
-#' `plotCircos` of feature names
+#' @param ... further arguments passed to \code{shinyCircos}, e.g.
+#' \code{cexFeatureNames} to pass to \code{plotCircos} to set font size in
+#' \code{plotCircos} of feature names
 #'
 #' @details
-#' The function is based on the `shiny` and `circlize` package.
+#' The function is based on the \code{shiny} and \code{circlize} package.
 #' The user can choose interactively thresholds, type of links (between or
 #' within groups), display information about MS/MS features, permanently select
-#' MS/MS features and export selected precursors. The `MSpectra` object
+#' MS/MS features and export selected precursors. The \code{Spectra} object
 #' stores annotation information about the MS/MS features. Names of features
-#' within the `similarityMatrix` have to be found as entries
-#' in `MSpectra`. `names(MSpectra)` are used as identifiers and
-#' `colnames`/`rownames` from `similarityMatrix` are cleaved
-#' by the group identifier (separated by "_"). Annotation information is taken
-#' from `spectra` from the columns "names", "information", "classes" and
-#' "adduct" in the slot `elementMetadata` of `spectra`. After exiting
-#' the application, the annotation will be written to the respective columns
-#' in the slot `elementMetadata`. If one or several of these columns is
-#' already present in `elementMetadata`, the column(s) will be used as the
-#' source of annotation information.
+#' within the \code{similarityMatrix} have to be found as entries
+#' in \code{Spectra}. \code{sps$name} are used as identifiers and
+#' \code{colnames}/\code{rownames} from \code{similarityMatrix} are cleaved
+#' by the group identifier (separated by \code{"_"}). Annotation information 
+#' is taken from \code{spectra} from the columns "names", "information", 
+#' "classes" and "adduct" in the slot \code{metadata} of \code{spectra}. 
+#' After exiting the application, the annotation will be written to the 
+#' respective columns in the slot \code{metadata}. If one or several of these 
+#' columns is already present in \code{metadata}, the column(s) will be used as 
+#' the source of annotation information.
 #'
-#' @return
-#' `character`, `shinyCircos` returns a `character` vector with the
-#' permanently selected precursors and an object with the `MSpectra`
-#' object containing the annotation.
+#' @return \code{character}, \code{shinyCircos} returns a \code{character} 
+#' vector with the permanently selected precursors and an object with the 
+#' \code{MSpectra} object containing the annotation.
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
 #' @examples 
 #' data("spectra", package = "MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1:10],
-#'     fun = normalizeddotproduct, binSize = 0.01)
+#' similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+#'     FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+#' rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
 #' \dontrun{
 #' shinyCircos(similarityMatrix = similarityMat,
-#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+#'     sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 #' }
+#' 
+#' @importFrom circlize circos.par circlize circos.initialize 
+#' @importFrom circlize circos.trackPlotRegion circos.clear
+#' @importFrom MsCoreUtils ndotproduct
+#' @importFrom shiny fluidPage tags column fluidRow tabsetPanel tabPanel HTML
+#' @importFrom shiny wellPanel radioButtons sliderInput uiOutput actionButton
+#' @importFrom shiny checkboxInput plotOutput conditionalPanel textInput
+#' @importFrom shiny verbatimTextOutput renderUI htmlOutput reactiveValues 
+#' @importFrom shiny isolate actionButton reactive eventReactive observe 
+#' @importFrom shiny renderPlot renderText stopApp runApp req updateSelectInput
+#' 
 #' @export
-shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
+shinyCircos <- function(similarityMatrix, sps, condition, ...) {
 
     ## check if names, information, classes or adduct is present in
-    ## @elementMetadata and add respectively, these slots will be querid
-    if (is.null(spectra@elementMetadata$names))
-        spectra@elementMetadata <- cbind(spectra@elementMetadata,
-                                                    names = "Unknown")
+    ## @metadata and add respectively, these slots will be queried
+    if (is.null(sps@metadata$names))
+        sps@metadata[["names"]] <- "Unknown"
 
-    if (is.null(spectra@elementMetadata$information))
-        spectra@elementMetadata <- cbind(spectra@elementMetadata,
-                                                    information = "Unknown")
+    if (is.null(sps@metadata$information))
+        sps@metadata[["information"]] <- "Unknown"
 
-    if (is.null(spectra@elementMetadata$classes))
-        spectra@elementMetadata <- cbind(spectra@elementMetadata,
-                                                    classes = "Unknown")
+    if (is.null(sps@metadata$classes))
+        sps@metadata[["classes"]] <- "Unknown"
 
-    if (is.null(spectra@elementMetadata$adduct))
-        spectra@elementMetadata <- cbind(spectra@elementMetadata,
-                                                    adduct = "Unknown")
+    if (is.null(sps@metadata$adduct))
+        sps@metadata[["adduct"]] <- "Unknown"
 
     ## circlize parameters
-    circos.par(gap.degree = 0, cell.padding = c(0, 0, 0, 0),
-                                                    track.margin = c(0.0, 0))
+    circlize::circos.par(gap.degree = 0, cell.padding = c(0, 0, 0, 0),
+        track.margin = c(0.0, 0))
 
-    ## order spectra per condition according to rt, mz, cluster
-    rt <- unlist(lapply(spectra@listData, function(x) x@rt))
-    prec_mz <- unlist(lapply(spectra@listData, function(x) x@precursorMz))
-
+    ## order sps per condition according to rt, mz, cluster
+    rt <- sps$rtime
+    prec_mz <- sps$precursorMz
     groupname <- rownames(similarityMatrix)
 
     ## create plots and assign to objects by recordPlot
     ## rt
     RT <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMatrix,
-        spectra = spectra, type = "retentionTime", condition = condition)
+        sps = sps, type = "retentionTime", condition = condition)
     link0dfRT <- RT[["link0df"]]
     rt_match <- RT[["type_match"]]
 
     ## get group and name from rt_match
     ## rt_match is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
-    groupRT <- lapply(strsplit(rt_match, split = "_"), "[", 1)
-    groupRT <- unlist(groupRT)
-    nameRT <- lapply(strsplit(rt_match, split = "_"), function(x) x[length(x)])
-    nameRT <- unlist(nameRT)
+    groupRT <- lapply(strsplit(rt_match, split = "_"), "[", 1) |>
+        unlist()
+    nameRT <- lapply(strsplit(rt_match, split = "_"), function(x) x[length(x)]) |>
+        unlist()
 
     ## plot filled and get degree features
     fillRT <- MetCirc:::recordPlotFill_degreeFeatures(rt_match, ...)
@@ -118,17 +113,17 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 
     ## mz
     MZ <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMatrix,
-        spectra = spectra, type = "mz", condition = condition)
+        sps = sps, type = "mz", condition = condition)
     link0dfMZ <- MZ[["link0df"]]
     mz_match <- MZ[["type_match"]]
 
     ## get group and name from mz_match
     ## mz_match is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
-    groupMZ <- lapply(strsplit(mz_match, split = "_"), "[", 1)
-    groupMZ <- unlist(groupMZ)
-    nameMZ <- lapply(strsplit(mz_match, split = "_"), function(x) x[length(x)])
-    nameMZ <- unlist(nameMZ)
+    groupMZ <- lapply(strsplit(mz_match, split = "_"), "[", 1) |>
+        unlist()
+    nameMZ <- lapply(strsplit(mz_match, split = "_"), function(x) x[length(x)]) |>
+        unlist()
 
     ## plot filled and get degree features
     fillMZ <- MetCirc:::recordPlotFill_degreeFeatures(mz_match, ...)
@@ -140,17 +135,17 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 
     ## clustering
     Clust <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMatrix,
-        spectra = spectra, type = "clustering", condition = condition)
+        sps = sps, type = "clustering", condition = condition)
     link0dfClust <- Clust[["link0df"]]
     clust_match <- Clust[["type_match"]]
 
     ## get group and name from clust_match
     ## clust_match is a vector containing information about group and name,
     ## where group is the first element and name the last element separated by _
-    groupClust <- lapply(strsplit(clust_match, split = "_"), "[", 1)
-    groupClust <- unlist(groupClust)
-    nameClust <- lapply(strsplit(clust_match, split = "_"), function(x) x[length(x)])
-    nameClust <- unlist(nameClust)
+    groupClust <- lapply(strsplit(clust_match, split = "_"), "[", 1) |>
+        unlist()
+    nameClust <- lapply(strsplit(clust_match, split = "_"), function(x) x[length(x)]) |>
+        unlist()
 
     ## plot filled and get degree features
     fillClust <- MetCirc:::recordPlotFill_degreeFeatures(clust_match, ...)
@@ -165,188 +160,88 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
         highlightRT = highlightRT, fillRT = fillRT,
         highlightClust = highlightClust, fillClust = fillClust)
 
-    ui <- fluidPage(
-        tags$head(tags$script('
-                $(document).on("shiny:connected", function(e) {
-                Shiny.onInputChange("innerWidth", window.innerWidth);
-                });
-                $(window).resize(function(e) {
-                Shiny.onInputChange("innerWidth", window.innerWidth);
-                });
-                '
+    ui <- shiny::fluidPage(
+        shiny::tags$head(shiny::tags$script('
+            $(document).on("shiny:connected", function(e) {
+            Shiny.onInputChange("innerWidth", window.innerWidth);
+            });
+            $(window).resize(function(e) {
+            Shiny.onInputChange("innerWidth", window.innerWidth);
+            });
+            '
         )),
-        column(4,
-            fluidRow(
-                tabsetPanel(id = "tabs",
-                    tabPanel("Main", id = "Main", wellPanel(
-                        radioButtons("choiceLinks", "choose type of links",
+        shiny::column(4,
+            shiny::fluidRow(
+                shiny::tabsetPanel(id = "tabs",
+                    shiny::tabPanel("Main", id = "Main", shiny::wellPanel(
+                        shiny::radioButtons("choiceLinks", "choose type of links",
                             choices = c("all" = "all", "inter-class links" = "inter",
                                 "intra-class links" = "intra"), selected = "all"),
-                        sliderInput("threshold",
+                        shiny::sliderInput("threshold",
                             "Threshold for similarity to display",
                                    min = 0, max = 1, value = c(0.8, 1)),
-                        radioButtons("order", "order within groups",
+                        shiny::radioButtons("order", "order within groups",
                             choices = c("clustering" = "clustering", "m/z" = "mz",
                               "retention time" = "retentionTime"), selected = "mz"),
-                        uiOutput("annotationName"),
-                        uiOutput("annotationClass"),
-                        uiOutput("annotationInformation"),
-                        uiOutput("annotationAdduct"),
-                        uiOutput("annotationButton"),
-                        actionButton("resetClickIndices", "Unselect features"),
-                        actionButton("stop", "Stop and export \n selected features")
+                        shiny::uiOutput("annotationName"),
+                        shiny::uiOutput("annotationClass"),
+                        shiny::uiOutput("annotationInformation"),
+                        shiny::uiOutput("annotationAdduct"),
+                        shiny::uiOutput("annotationButton"),
+                        shiny::actionButton("resetClickIndices", "Unselect features"),
+                        shiny::actionButton("stop", "Stop and export \n selected features")
                     )),
-                    tabPanel("Spectra", id = "Spectra", wellPanel(
-                        uiOutput("subjectSpectra"),
-                        uiOutput("querySpectra")
+                    shiny::tabPanel("Spectra", id = "Spectra", shiny::wellPanel(
+                        shiny::selectInput(inputId = "subjectSpectra", 
+                            label = "Choose MS/MS spectra #1:",
+                            choices = sps$name, selected = sps$name[1]),
+                        shiny::selectInput(inputId = "querySpectra", 
+                            label = "Choose MS/MS spectra #2:",
+                            choices = sps$name, selected = sps$name[1])
                     )),
-                    tabPanel("Appearance", id = "Appearance", wellPanel(
-                        sliderInput("plotSize", "plot size",
+                    shiny::tabPanel("Appearance", id = "Appearance", shiny::wellPanel(
+                        shiny::sliderInput("plotSize", "plot size",
                            min = 0.5, max = 1.5, value = 1),
-                        sliderInput("precision", "precision of numbers",
+                        shiny::sliderInput("precision", "precision of numbers",
                            value = 2, min = 0, max = 5, step = 1),
-                        checkboxInput("legend", "legend", value = FALSE)
+                        shiny::checkboxInput("legend", "legend", value = FALSE)
                     ))
-
                 )
             ),
-            plotOutput("circosLegend", height = "300")
+            shiny::plotOutput("circosLegend", height = "300")
         ),
-        column(8,
-            conditionalPanel(condition = "input.tabs  == 'Spectra'",
-                plotOutput("plotSpec")),
-            fluidRow(uiOutput("sized_plot")),
-            fluidRow(
-                verbatimTextOutput("dimension_display"),
-                htmlOutput("sglConnectedFeature"),
-                verbatimTextOutput("dblClickFeature")
+        shiny::column(8,
+            shiny::conditionalPanel(condition = "input.tabs  == 'Spectra'",
+                shiny::plotOutput("plotSpec")),
+            shiny::fluidRow(shiny::plotOutput("circos",
+                dblclick = "circosDbl", click = "circosSgl", 
+                width = "80%", height = "80%")),
+            shiny::fluidRow(
+                shiny::verbatimTextOutput("dimension_display"),
+                shiny::textOutput("sglConnectedFeature"),
+                shiny::verbatimTextOutput("dblClickFeature")
             )
         )
     )
 
     server <- function(input, output, session) {
 
-        ## annotation
-        ## reactiveValues for spectra, stores annotation information
-        spe <- reactiveValues(spectra = spectra)
-
-        output$annotationName <- renderUI({
-            if (length(indSgl$ind) > 0 && onCircle$is) {
-                textInput("names", label = "name",
-                    value = isolate(spe$spectra@elementMetadata$names[ind()]))
-            } else NULL
+        ## reactiveValues for sps, stores annotation information
+        spe <- shiny::reactiveValues(sps = sps)
+        
+        ## single click: which is the current sector?
+        indSgl <- shiny::reactiveValues(ind = NULL)
+        shiny::observe({
+            if (!is.null(input$circosSgl$x))
+                indSgl$ind <- minFragCart2Polar(input$circosSgl$x,
+                    input$circosSgl$y, degFeat())
         })
-
-        output$annotationClass <- renderUI({
-            if (length(indSgl$ind) > 0 && onCircle$is) {
-                textInput("classes", label = "class",
-                    value = isolate(spe$spectra@elementMetadata$classes[ind()]))
-            } else NULL
-        })
-
-        output$annotationInformation <- renderUI({
-            if (length(indSgl$ind) > 0 && onCircle$is) {
-                #if (onCircle$is) {
-                textInput("information", label = "information",
-                    value = isolate(spe$spectra@elementMetadata$information[ind()]))
-            } else NULL
-        })
-
-        output$annotationAdduct <- renderUI({
-            if (length(indSgl$ind) > 0 && onCircle$is) {
-                textInput("adduct", label = "adduct",
-                    value = isolate(spe$spectra@elementMetadata$adduct[ind()]))
-            } else NULL
-        })
-
-        output$annotationButton <- renderUI({
-            if (length(indSgl$ind) > 0 && onCircle$is)
-                actionButton(inputId = "annotate", label = "update annotation")
-        })
-
-        ind <- reactive({
-            if (length(indSgl$ind) > 0) {
-                nameSgl <- GN()[indSgl$ind]
-                nameSgl <- strsplit(nameSgl, split = "_")
-                nameSgl <- lapply(nameSgl, "[", -1)
-                nameSgl <- lapply(nameSgl, function(x) paste(x, collapse = "_"))
-                nameSgl <- unlist(nameSgl)
-                which(nameSgl == names(spectra))
-            }
-        })
-
-        ## eventReactive for annotation ind
-        indAnn <- eventReactive(input$annotate, {ind()})
-
-        ## eventReactive for input$name (records "character" for annotation)
-        annotateNames <- eventReactive(input$annotate, {
-            input$names ##as.character(input$names)
-        })
-
-        ## eventReactive for input$classes
-        annotateClasses <- eventReactive(input$annotate, {input$classes})
-
-        ## eventReactive for input$information
-        annotateInformation <- eventReactive(input$annotate, {
-            input$information
-        })
-
-        ## eventReactive for input$adduct
-        annotateAdduct <- eventReactive(input$annotate, {
-            input$adduct
-        })
-
-        ## observe annotations and write to respective columns in slot
-        ## elementMetadata
-        observe({
-            spe$spectra@elementMetadata$names[indAnn()] <- annotateNames()
-        })
-
-        observe({
-            spe$spectra@elementMetadata$classes[indAnn()] <- annotateClasses()
-        })
-
-        observe({
-            spe$spectra@elementMetadata$information[indAnn()] <-
-                                                        annotateInformation()
-        })
-
-        observe({
-            spe$spectra@elementMetadata$adduct[indAnn()] <- annotateAdduct()
-        })
-
-        ## end annotation
-
-        ## ordering of features, use predefined groupname object
-        GN <- reactive({
-            MetCirc:::select(input$order, mz_match, rt_match, clust_match)
-        })
-
-        ## get degree of features
-        degFeat <- reactive({
-            MetCirc:::select(input$order, degFeatMZ, degFeatRT, degFeatClust)
-        })
-
-        ## get link0df
-        link0df <- reactive({
-            MetCirc:::select(input$order, link0dfMZ, link0dfRT, link0dfClust)
-        })
-
-        ## create reactive expression for linkDf which is cut according to
-        ## set radioButton (input$choiceLinks)
-        linkDf_cut <- reactive(
-            cutLinkDf(link0df(), type = input$choiceLinks))
-
-        ## threshold linkDf_cut
-        linkDf_threshold <- reactive(
-            thresholdLinkDf(linkDf_cut(),
-                            input$threshold[1], input$threshold[2]))
-
+        
         ## reactiveValues for click coordinates
-        coordsNewSgl <- reactiveValues(X = 0, Y = 0)
-        coordsOldSgl <- reactiveValues(X = 0, Y = 0)
+        coordsNewSgl <- shiny::reactiveValues(X = 0, Y = 0)
+        coordsOldSgl <- shiny::reactiveValues(X = 0, Y = 0)
 
-        observe({
+        shiny::observe({
             if (!is.null(input$circosSgl$x)) {
                 coordsNewSgl$X <- input$circosSgl$x
                 coordsNewSgl$Y <- input$circosSgl$y
@@ -358,32 +253,11 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
             }
         })
 
-        ## is mouse over the track 1?
-        onCircle <- reactiveValues(is = NULL)
-        observe({
-            if (!is.null(coordsNewSgl$X)) {
-                .dist <- sqrt(coordsOldSgl$X^2 + coordsOldSgl$Y^2)
-                if (.dist >= 0.8 & .dist <= 1) {
-                    onCircle$is <- TRUE
-                } else {
-                    onCircle$is <- FALSE
-                }
-            } else onCircle$is <- FALSE
-        })
-
-        ## single click: which is the current sector?
-        indSgl <- reactiveValues(ind = NULL)
-        observe({
-            if (!is.null(input$circosSgl$x))
-                indSgl$ind <- minFragCart2Polar(input$circosSgl$x,
-                                        input$circosSgl$y, degFeat())
-        })
-
         ## double click: which is the current sector?
-        coordsNewDbl <- reactiveValues(X = 0, Y = 0)
-        coordsOldDbl <- reactiveValues(X = 0, Y = 0)
+        coordsNewDbl <- shiny::reactiveValues(X = 0, Y = 0)
+        coordsOldDbl <- shiny::reactiveValues(X = 0, Y = 0)
 
-        observe({
+        shiny::observe({
             if (!is.null(input$circosDbl$x)) {
                 coordsNewDbl$X <- input$circosDbl$x
                 coordsNewDbl$Y <- input$circosDbl$y
@@ -394,172 +268,305 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
                 coordsNewDbl$Y <- coordsOldDbl$Y
             }
         })
-
+        
         ## reactive value which stores double clicked indices (inds = storage,
         ## new = new indices)
-        indDbl <- reactiveValues(ind = NULL, new = NULL)
-        observe({
+        indDbl <- shiny::reactiveValues(ind = NULL, new = NULL)
+        shiny::observe({
             if (!is.null(input$circosDbl$x)) {
 
                 minInd <- minFragCart2Polar(input$circosDbl$x,
-                                                input$circosDbl$y, degFeat())
+                        input$circosDbl$y, degFeat())
                 if (!is.na(minInd)) {
                     GNselect <- GN()[minInd]
                     selected <- strsplit(GNselect, split = "_")[[1]]
                     groupSelected <- selected[1]
                     nameSelected <- selected[2:length(selected)]
-
                     newNG <- paste(groupSelected, nameSelected, sep = "_")
                     ## write truncated name to indDbl$new
                     indDbl$new <- newNG
                 } else  indDbl$new <- NULL
-            } 
+            }
         })
 
-        observe({
-            input$resetClickIndices
-            isolate(indDblMZ$ind <- NULL)
-            isolate(indDblRT$ind <- NULL)
-            isolate(indDblCluster$ind <- NULL)
-            isolate(indDbl$new <- NULL)
-            isolate(onCircle$is <- FALSE)
-            isolate(indSgl$ind <- NULL)
-        })
-
-        ## reset indSgl when changing radio button order
-        observe({
-            input$order
-            isolate(onCircle$is <- FALSE)
-            isolate(indSgl$ind <- NULL)
-        })
 
         ## write double-clicked (truncated) names to indDblMZ, indDblRT,
         ## indDblCluster
-        indDblMZ <- reactiveValues(ind = NULL)
-        observe({
+        indDblMZ <- shiny::reactiveValues(ind = NULL)
+        shiny::observe({
             if (!is.null(input$circosDbl$x)) {
                 if (!is.null(indDbl$new)) {
                     newMZ <- paste(groupMZ, nameMZ, sep = "_")
                     newIndMZ <- match(indDbl$new, newMZ)
-                    if (isolate(newIndMZ %in% indDblMZ$ind)) {
-                        indDblMZ$ind <- isolate(indDblMZ$ind[-which(newIndMZ == indDblMZ$ind)])
-                    } else {indDblMZ$ind <- isolate(c(indDblMZ$ind, newIndMZ))}
+                    if (shiny::isolate(newIndMZ %in% indDblMZ$ind)) {
+                        indDblMZ$ind <- shiny::isolate(indDblMZ$ind[-which(newIndMZ == indDblMZ$ind)])
+                    } else {
+                        indDblMZ$ind <- shiny::isolate(c(indDblMZ$ind, newIndMZ))
+                    }
                 }
             }
         })
 
-        indDblRT <- reactiveValues(ind = NULL)
-        observe({
+        indDblRT <- shiny::reactiveValues(ind = NULL)
+        shiny::observe({
             if (!is.null(input$circosDbl$x)) {
                 if (!is.null(indDbl$new)) {
                     newRT <- paste(groupRT, nameRT, sep = "_")
                     newIndRT <- match(indDbl$new, newRT)
-                    if (isolate(newIndRT %in% indDblRT$ind)) {
+                    if (shiny::isolate(newIndRT %in% indDblRT$ind)) {
                         indDblRT$ind <- isolate(indDblRT$ind[-which(newIndRT == indDblRT$ind)])
-                    } else {indDblRT$ind <- isolate(c(indDblRT$ind, newIndRT))}
+                    } else {
+                        indDblRT$ind <- shiny::isolate(c(indDblRT$ind, newIndRT))
+                    }
                 }
             }
         })
 
-        indDblCluster <- reactiveValues(ind = NULL)
-        observe({
+        indDblCluster <- shiny::reactiveValues(ind = NULL)
+        shiny::observe({
             if (!is.null(input$circosDbl$x)) {
                 if(!is.null(indDbl$new)) {
                     newCl <- paste(groupClust, nameClust, sep = "_")
                     newIndCl <- match(indDbl$new, newCl)
-                    
                     if (isolate(newIndCl %in% indDblCluster$ind)) {
-                        indDblCluster$ind <- isolate(indDblCluster$ind[-which(newIndCl == indDblCluster$ind)])
-                    } else {indDblCluster$ind <- isolate(c(indDblCluster$ind, newIndCl))}
+                        indDblCluster$ind <- shiny::isolate(indDblCluster$ind[-which(newIndCl == indDblCluster$ind)])
+                    } else {
+                        indDblCluster$ind <- shiny::isolate(c(indDblCluster$ind, newIndCl))
+                    }
                 }
             }
         })
+        
+        shiny::observe({
+            input$resetClickIndices
+            shiny::isolate(indDblMZ$ind <- NULL)
+            shiny::isolate(indDblRT$ind <- NULL)
+            shiny::isolate(indDblCluster$ind <- NULL)
+            shiny::isolate(indDbl$new <- NULL)
+            shiny::isolate(onCircle$is <- FALSE)
+            shiny::isolate(indSgl$ind <- NULL)
+        })
+
+        ## reset indSgl when changing radio button order
+        shiny::observe({
+            input$order
+            shiny::isolate(onCircle$is <- FALSE)
+            shiny::isolate(indSgl$ind <- NULL)
+        })
+
+        
+        ## ordering of features, use predefined groupname object
+        GN <- shiny::reactive({
+            MetCirc:::select(input$order, mz_match, rt_match, clust_match)
+        })
+
+        ## get degree of features
+        degFeat <- shiny::reactive({
+            MetCirc:::select(input$order, degFeatMZ, degFeatRT, degFeatClust)
+        })
+        
+        ind <- reactive({
+            if (length(indSgl$ind) > 0) {
+                
+                nameSgl <- GN()[indSgl$ind] |>
+                    strsplit(split = "_") |>
+                    lapply(function(i) i[[-1]]) |>
+                    lapply(function(x) paste(x, collapse = "_")) |>
+                    unlist()
+                which(nameSgl == sps$name)
+            }
+        })
+        
+        ## is mouse over the track 1?
+        onCircle <- shiny::reactiveValues(is = NULL)
+        shiny::observe({
+            if (!is.null(coordsNewSgl$X)) {
+                .dist <- sqrt(coordsOldSgl$X^2 + coordsOldSgl$Y^2)
+                if (.dist >= 0.8 & .dist <= 1) {
+                    onCircle$is <- TRUE
+                } else {
+                    onCircle$is <- FALSE
+                }
+            } else onCircle$is <- FALSE
+        })
+
+        ## annotation
+        output$annotationName <- shiny::renderUI({
+            if (length(indSgl$ind) > 0 && onCircle$is) {
+                shiny::textInput("names", label = "name",
+                    value = shiny::isolate(spe$sps@metadata$names[ind()]))
+            } else NULL
+        })
+
+        output$annotationClass <- shiny::renderUI({
+            if (length(indSgl$ind) > 0 && onCircle$is) {
+                shiny::textInput("classes", label = "class",
+                    value = shiny::isolate(spe$sps@metadata$classes[ind()]))
+            } else NULL
+        })
+
+        output$annotationInformation <- shiny::renderUI({
+            if (length(indSgl$ind) > 0 && onCircle$is) {
+                shiny::textInput("information", label = "information",
+                    value = shiny::isolate(spe$sps@metadata$information[ind()]))
+            } else NULL
+        })
+
+        output$annotationAdduct <- shiny::renderUI({
+            if (length(indSgl$ind) > 0 && onCircle$is) {
+                shiny::textInput("adduct", label = "adduct",
+                    value = shiny::isolate(spe$sps@metadata$adduct[ind()]))
+            } else NULL
+        })
+
+        output$annotationButton <- shiny::renderUI({
+            if (length(indSgl$ind) > 0 && onCircle$is)
+                shiny::actionButton(inputId = "annotate", label = "update annotation")
+        })
+
+        ## eventReactive for annotation ind
+        indAnn <- shiny::eventReactive(input$annotate, {ind()})
+
+        ## eventReactive for input$name (records "character" for annotation)
+        annotateNames <- shiny::eventReactive(input$annotate, {
+            input$names
+        })
+
+        ## eventReactive for input$classes
+        annotateClasses <- shiny::eventReactive(input$annotate, {
+            input$classes
+        })
+
+        ## eventReactive for input$information
+        annotateInformation <- shiny::eventReactive(input$annotate, {
+            input$information
+        })
+
+        ## eventReactive for input$adduct
+        annotateAdduct <- shiny::eventReactive(input$annotate, {
+            input$adduct
+        })
+
+        ## observe annotations and write to respective columns in slot
+        ## elementMetadata
+        shiny::observe({
+            spe$sps@metadata$names[indAnn()] <- annotateNames()
+        })
+        shiny::observe({
+            spe$sps@metadata$classes[indAnn()] <- annotateClasses()
+        })
+        shiny::observe({
+            spe$sps@metadata$information[indAnn()] <- annotateInformation()
+        })
+        shiny::observe({
+            spe$sps@metadata$adduct[indAnn()] <- annotateAdduct()
+        })
+        ## end annotation
+
+
+        ## get link0df
+        link0df <- shiny::reactive({
+            MetCirc:::select(input$order, link0dfMZ, link0dfRT, link0dfClust)
+        })
+
+        ## create reactive expression for linkDf which is cut according to
+        ## set radioButton (input$choiceLinks)
+        linkDf_cut <- shiny::reactive(
+            cutLinkDf(link0df(), type = input$choiceLinks))
+
+        ## threshold linkDf_cut
+        linkDf_threshold <- shiny::reactive(
+            thresholdLinkDf(linkDf_cut(),
+                input$threshold[1], input$threshold[2]))
 
         ## plotting
-        initializePlot <- reactive({
-            circos.initialize(factor(GN(), levels = GN()),
+        initializePlot <- shiny::reactive({
+            circlize::circos.initialize(factor(GN(), levels = GN()),
                 xlim = matrix(rep(c(0,1), length(mz_match)), ncol = 2, byrow = TRUE))
-            circos.trackPlotRegion(factor(GN(), levels = GN()), ylim = c(0,1))  
+            circlize::circos.trackPlotRegion(factor(GN(), levels = GN()), ylim = c(0,1))
         })
 
         ## assign to output$circos: actual plotting
-        output$circos <- renderPlot({
+        output$circos <- shiny::renderPlot({
             indDblMZ$ind
             initializePlot()
             MetCirc:::replayPlotOrder(orderMatch = input$order,
                 onCircle = onCircle$is, plot_l = plot_l, ind = indDblMZ$ind)
-            MetCirc:::replayPlotAdd(orderMatch = input$order, onCircle = onCircle$is,
-                linkDf = linkDf_threshold(), mz_match = mz_match, rt_match = rt_match,
-                clust_match = clust_match, ind = indSgl$ind, indMz = indDblMZ$ind,
-                indRT = indDblRT$ind, indCluster = indDblCluster$ind)
-        })
+            MetCirc:::replayPlotAdd(orderMatch = input$order,
+                onCircle = onCircle$is, linkDf = linkDf_threshold(),
+                mz_match = mz_match, rt_match = rt_match,
+                clust_match = clust_match, ind = indSgl$ind,
+                indMz = indDblMZ$ind, indRT = indDblRT$ind,
+                indCluster = indDblCluster$ind)
+        }, 
+            width = shiny::reactive(
+                ifelse(is.null(input$innerWidth), "50%", 
+                    input$innerWidth * 0.6)),
+            height = shiny::reactive(
+                ifelse(is.null(input$innerWidth), "50%", 
+                    input$innerWidth * 0.6))
+        )
 
-        output$sized_plot <- renderUI({
-            plotOutput("circos",
-                dblclick = "circosDbl", click = "circosSgl",
-                width = ifelse(is.null(input$innerWidth), 0, input$innerWidth * 0.5 * input$plotSize),
-                height = ifelse(is.null(input$innerWidth), 0, input$innerWidth * 0.5 * input$plotSize))
-        })
-
-        output$circosLegend <- renderPlot({
+        output$circosLegend <- shiny::renderPlot({
             if (!is.null(input$legend)) if(input$legend)
                 circosLegend(rt_match, highlight = TRUE)
         })
 
         ## show when Clicking the feature which connects to it
-        linkDfIndsSgl <- reactive({
+        linkDfIndsSgl <- shiny::reactive({
             getLinkDfIndices(GN()[indSgl$ind], linkDf_threshold())
         })
 
-        output$sglConnectedFeature <- renderUI({
-            if (!is.null(onCircle$is)) {
-                if (onCircle$is)
-                    HTML(printInformationSelect(select = GN()[indSgl$ind],
-                            spectra = spe$spectra, linkDfInd = linkDfIndsSgl(),
-                            linkDf = linkDf_threshold(),
-                            similarityMatrix = similarityMatrix,
-                            roundDigits = input$precision))
+        output$sglConnectedFeature <- shiny::renderText({
+            if (!is.null(onCircle$is) & onCircle$is) {
+                    printInformationSelect(select = GN()[indSgl$ind],
+                        sps = spe$sps, linkDfInd = linkDfIndsSgl(),
+                        linkDf = linkDf_threshold(),
+                        similarityMatrix = similarityMatrix,
+                        roundDigits = input$precision)
             }
         })
 
-        output$dblClickFeature <- renderText({
-            if (length(indDblMZ$ind) > 0) 
+        output$dblClickFeature <- shiny::renderText({
+            if (length(indDblMZ$ind) > 0)
                 c("(permanently) selected features: ", mz_match[indDblMZ$ind])
             else "no features (permanently) selected"
         })
 
         ## Tab Spectra
-        output$querySpectra <- renderUI({
-            selectInput("query", "Choose MS/MS spectra #2:", choices = GN())
+        shiny::observe({
+            shiny::updateSelectInput(session = session,
+                inputId = "subjectSpectra", choices = GN(),
+                selected = GN()[indSgl$ind])
+        })
+        shiny::observe({
+            shiny::req(GN())
+            shiny::updateSelectInput(session = session,
+                inputId = "querySpectra", choices = GN())
         })
 
-        output$subjectSpectra <- renderUI({
-            selectInput("subject", "Choose MS/MS spectra #1:", 
-                choices = GN(), selected = GN()[indSgl$ind])
-        })
-
-        output$plotSpec <- renderPlot({
+        output$plotSpec <- shiny::renderPlot({
             if (!is.null(input$subject) && !is.null(input$query)) {
-                plotSpectra(spectra, input$subject, input$query)
+                plotSpectra(sps, subject = input$subject, query = input$query)
             }
         })
 
         ## on exit
-        observe({
+        shiny::observe({
             if (input$stop == 0) {return()
             } else {
-                circos.clear()
+                circlize::circos.clear()
                 selFeat <- as.character(paste(
                     groupMZ[indDblMZ$ind], nameMZ[indDblMZ$ind],
                     sep = "_"))
-                stopApp(list(spectra = spe$spectra, selectedFeatures = selFeat))
+                shiny::stopApp(list(sps = spe$sps, selectedFeatures = selFeat))
             }
         })
 
     }
 
     app <- list(ui = ui, server = server)
-    runApp(app)
+    shiny::runApp(app)
 }
 
 #' @name printInformationSelect
@@ -569,146 +576,137 @@ shinyCircos <- function(similarityMatrix, spectra, condition, ...) {
 #' @description
 #' Displays information on connected features of selected features.
 #'
-#' @param 
-#' select `character`, obtained from groupname, `character` of selected feature
-#'
-#' @param 
-#' spectra `MSpectra` object containing spectra that are compared in 
-#' `similarityMatrix`
-#'
-#' @param linkDfInd `numeric` indices of selected features
-#'
-#' @param
-#' linkDf `data.frame` that contains information of linked features for given 
-#' thresholds
-#'
-#' @param
-#' similarityMatrix `matrix` that is used to get information on the 
-#' degree of similarity, `similarityMat` is an ordered version of a 
-#' similarity matrix, see `?orderSimilarityMatrix`
-#'
-#' @param
-#' roundDigits `numeric`,  how many digits should be displayed?
+#' @param select \code{character}, obtained from \code{groupname}, 
+#' \code{character} of selected feature
+#' @param sps \code{Spectra} object containing spectra that are compared in 
+#' \code{similarityMatrix}
+#' @param linkDfInd \code{numeric} indices of selected features
+#' @param linkDf \code{data.frame} that contains information of linked features 
+#' for given thresholds
+#' @param similarityMatrix \code{matrix} that is used to get information on the 
+#' degree of similarity, \code{similarityMatrix} is an ordered version of a 
+#' similarity matrix, see \code{?orderSimilarityMatrix}
+#' @param roundDigits \code{numeric(1)},  how many digits should be displayed?
 #'
 #' @details
-#' `printInformationSelect` is for internal use.
+#' \code{printInformationSelect} is for internal use.
 #'
 #' @return
-#' `character` that is in HTML format
+#' \code{character} that is in HTML format
 #'
 #' @examples
 #' data("spectra", package = "MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1:10],
-#'     fun = normalizeddotproduct, binSize = 0.01)
+#' similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+#'     FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+#' rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
 #' linkDf <- createLinkDf(similarityMatrix = similarityMat,
-#'     spectra = spectra_tissue[1:10], 
+#'     sps = sps_tissue[1:10], 
 #'     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
+#'     
 #' ## cut link data.frame (here: only display links between groups)
 #' linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 #' groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
 #'             as.character(linkDf_cut[, "spectrum2"]))
 #' groupname <- unique(groupname)
+#' 
 #' ## arbitrarily select a feature
 #' ind <- 2
 #' linkDfInds <- getLinkDfIndices(groupname[ind], linkDf_cut)
-#' MetCirc:::printInformationSelect(groupname[ind], 
-#'     spectra = spectra_tissue[1:10], linkDfInd = linkDfInds, 
+#' MetCirc:::printInformationSelect(select = groupname[ind], 
+#'     sps = sps_tissue[1:10], linkDfInd = linkDfInds, 
 #'     linkDf = linkDf_cut, similarityMatrix = similarityMat)
+#' 
+#' @importFrom MsCoreUtils ndotproduct
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
-printInformationSelect <- function(select, spectra = NULL, 
-                linkDfInd, linkDf, similarityMatrix, roundDigits = 2) {
+printInformationSelect <- function(select, sps = NULL, 
+    linkDfInd, linkDf, similarityMatrix, roundDigits = 2) {
 
     ## connected features: find
-    connect <- as.character(unique(unlist(linkDf[linkDfInd, c("spectrum1", "spectrum2")])))
+    connect <- linkDf[linkDfInd, c("spectrum1", "spectrum2")] |>
+        unlist() |>
+        unique() |>
+        as.character()
     
     ## remove duplicated hovFeat in connect
-    if (select %in% connect) connect <- connect[-which(connect == select)]
+    connect <- connect[connect != select]
     
     ## truncate group
-    connect_cut <- lapply(strsplit(connect, split = "_"), "[", -1)
-    connect_cut <- unlist(lapply(connect_cut, function(x) paste(x, collapse = "_")))
-    select_cut <- lapply(strsplit(select, split = "_"), "[", -1)
-    select_cut <- unlist(lapply(select_cut, function(x) paste(x, collapse = "_")))
+    connect_cut <- lapply(strsplit(connect, split = "_"), "[", -1) |>
+        lapply(function(x) paste(x, collapse = "_")) |> 
+        unlist()
+    select_cut <- lapply(strsplit(select, split = "_"), "[", -1) |>
+        lapply(function(x) paste(x, collapse = "_")) |>
+        unlist()
     
-    ## truncate spectra for select and connecting features
-    select_spectra <- spectra[select_cut, ]
-    connect_spectra <- spectra[connect_cut, ]
+    ## truncate sps for select and connecting features
+    select_sps <- sps[sps$name %in% select_cut]
+    connect_sps <- sps[sps$name %in% connect_cut]
 
-    if (length(linkDfInd) == 0) {
-        return(paste0(select, " (",
-            round(select_spectra[[1]]@precursorMz, roundDigits), ", ",
-            round(select_spectra[[1]]@rt, roundDigits), ", ",
-            select_spectra@elementMetadata$names, ", ",
-            select_spectra@elementMetadata$information, ", ",
-            select_spectra@elementMetadata$classes, ", ",
-            select_spectra@elementMetadata$adduct,
-            ") does not connect to any feature "))
+    ## define columns to collapse
+    cols <- c("names", "information", "classes", "adduct")
+    
+    if (length(connect) == 0) {
+        
+        res <- paste0(select, " (",
+            round(select_sps$precursorMz, roundDigits), ", ",
+            round(select_sps$rtime, roundDigits), ", ",
+            paste(select_sps@metadata[select_cut, cols], collapse = ", "),
+            ") does not connect to any feature ")
+        
     } else { ## if length > 0
 
         connChar <- character()
         degreeSimilarity <- similarityMatrix[select_cut, ]
   
-        for (i in 1:length(connect_cut)) {
+        for (i in seq_along(connect)) {
 
             connect_i <- connect_cut[i]
-            degreeSimilarityI <- round(degreeSimilarity[connect_i], 3)
-            degreeSimilarityI <- as.numeric(degreeSimilarityI)
+            degreeSimilarityI <- round(degreeSimilarity[[connect_i]], 3)
+            sps_i <- connect_sps[connect_sps$name == connect_i]
 
-            spectra_i <- connect_spectra[[i]]
-
-            newFeat <- paste0(connect[i], " (", degreeSimilarityI, ", ",
-                round(spectra_i@precursorMz, roundDigits), ", ",
-                round(spectra_i@rt, roundDigits), ", ",
-                connect_spectra@elementMetadata$names[i], ", ",
-                connect_spectra@elementMetadata$information[i], ", ",
-                connect_spectra@elementMetadata$classes[i], ", ",
-                connect_spectra@elementMetadata$adduct[i], ")", "<br/>")
-                
-            connChar <- c(connChar, newFeat)
+            connChar <- c(connChar, 
+                paste0(connect[i], " (", degreeSimilarityI, ", ",
+                    round(sps_i$precursorMz, roundDigits), ", ",
+                    round(sps_i$rtime, roundDigits), ", ",
+                    paste(connect_sps@metadata[connect_i, cols], collapse = ", "), 
+                    ")", "<br/>")
+            )
         }
  
         connChar <- paste(connChar, collapse = " ")
 
-        return(paste0(select, " (", 
-            round(select_spectra[[1]]@precursorMz, roundDigits), ", ",
-            round(select_spectra[[1]]@rt, roundDigits), ", ",
-            select_spectra@elementMetadata$names, ", ",
-            select_spectra@elementMetadata$information, ", ",
-            select_spectra@elementMetadata$classes, ", ",
-            select_spectra@elementMetadata$adduct, ") connects to ",
-            " <br/>", connChar))
+        res <- paste0(select, " (", 
+            round(select_sps$precursorMz, roundDigits), ", ",
+            round(select_sps$rtime, roundDigits), ", ",
+            paste(select_sps@metadata[select_cut, cols], collapse = ", "),
+            ") connects to ", " <br/>", connChar)
     }
+    
+    ## return 
+    res
 }
 
 #' @name replayPlotOrder
 #' 
-#' @title Wrapper for `replayPlot`
+#' @title Wrapper for \code{replayPlot}
 #' 
 #' @description
-#' `replayPlotOrder` will call `replayPlot` from `grDevices` with 
-#' a `recordedplot` object based on `orderMatch`.
+#' \code{replayPlotOrder} will call \code{replayPlot} from \code{grDevices} with
+#' a \code{recordedplot} object based on \code{orderMatch}.
 #'
-#' @param
-#' orderMatch `character`, either `"mz"`, `"retentionTime"` or 
-#' `"clustering"`
-#'
-#' @param
-#' plot_l `list` with plots
-#'
-#' @param
-#' onCircle `logical`, are coordinates on circle. If FALSE and
-#' no features are selected (`length(ind) == 0`), then filled plots are 
-#' replayed, otherwise highlighted plots are replayed.
-#'
-#' @param
-#' ind `numeric`, indices of clicked features
+#' @param orderMatch \code{character}, either \code{"mz"}, 
+#' \code{"retentionTime"} or \code{"clustering"}
+#' @param plot_l \code{list} with plots
+#' @param onCircle \code{logical}, are coordinates on circle. If \code{FALSE} 
+#' and no features are selected (\code{length(ind) == 0}), then filled plots 
+#' are replayed, otherwise highlighted plots are replayed.
+#' @param ind \code{numeric}, indices of clicked features
 #'
 #' @details
-#' Helper function for `shinyCircos`.
+#' Helper function for \code{shinyCircos}.
 #'
-#' @return
-#' `replayedplot`
+#' @return \code{replayedplot}
 #'
 #' @examples 
 #' type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
@@ -721,24 +719,26 @@ printInformationSelect <- function(select, spectra = NULL,
 #' MetCirc:::replayPlotOrder(orderMatch = "mz", onCircle = TRUE,
 #'     plot_l = plot_l, ind = NULL)
 #'
+#' @importFrom grDevices replayPlot
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 replayPlotOrder <- function(orderMatch = "mz", onCircle = FALSE, plot_l, ind) {
 
     if (!onCircle & length(ind) == 0) {
 
         ## get plot based on orderMatch 
-        p <- MetCirc:::select(orderMatch, plot_l[["fillMz"]],
-                    plot_l[["fillRT"]], plot_l[["fillClust"]])
+        p <- MetCirc:::select(orderMatch, mz = plot_l[["fillMz"]],
+            rt = plot_l[["fillRT"]], clust = plot_l[["fillClust"]])
+        
         ## plot
-        replayPlot(p)
+        grDevices::replayPlot(p)
     } else {
 
         ## get plot based on orderMatch
-        p <- MetCirc:::select(orderMatch, plot_l[["highlightMz"]],
-                    plot_l[["highlightRT"]], plot_l[["highlightClust"]])
+        p <- MetCirc:::select(orderMatch, mz = plot_l[["highlightMz"]],
+            rt = plot_l[["highlightRT"]], clust = plot_l[["highlightClust"]])
 
         ## plot
-        replayPlot(p)
+        grDevices::replayPlot(p)
     }
 }
 
@@ -747,66 +747,56 @@ replayPlotOrder <- function(orderMatch = "mz", onCircle = FALSE, plot_l, ind) {
 #' @title Plot plotCircos or highlight
 #'
 #' @description
-#' `replayPlotAdd` plots additional plots on a plot, either
-#' plots `plotCircos` or `highlight`.
+#' \code{replayPlotAdd} plots additional plots on a plot, either
+#' plots \code{plotCircos} or \code{highlight}.
 #'
-#' @param
-#' orderMatch orderMatch `character`, either `"mz"`, `"retentionTime"` 
-#' or `"clustering"`
-#'
-#' @param
-#' onCircle `logical`, are coordinates on circle. If FALSE and
-#' no features are selected (`length(ind) == 0`), then filled plots are 
+#' @param orderMatch \code{character(1)}, either \code{"mz"}, 
+#' \code{"retentionTime"}, or \code{"clustering"}
+#' @param onCircle \code{logical}, are coordinates on circle. If \code{FALSE} 
+#' and no features are selected (\code{length(ind) == 0}), then filled plots are 
 #' replayed, otherwise highlighted plots are replayed.
-#'
-#' @param 
-#' linkDf `data.frame` that contains information of linked 
-#'  features for given thresholds
-#'
-#' @param
-#' mz_match `character`, ordered vector according to m/z
-#'
-#' @param
-#' rt_match `character`, ordered vector according to retention time
-#'
-#' @param
-#' clust_match `character`, ordered vector according to clustering
-#'
-#' @param
-#' ind  `numeric`, indices of clicked features
-#'
-#' @param
-#' indMz `numeric`, indices of clicked features for `"mz"` ordering
-#'
-#' @param
-#' indRT `numeric`, indices of clicked features for `"retentionTime"` ordering
-#'
-#' @param
-#' indCluster `numeric`, indices of clicked features for `"clustering"` ordering
+#' @param linkDf \code{data.frame} that contains information of linked 
+#' features for given thresholds
+#' @param mz_match \code{character}, ordered vector according to m/z
+#' @param rt_match \code{character}, ordered vector according to retention time
+#' @param clust_match \code{character}, ordered vector according to clustering
+#' @param ind \code{numeric}, indices of clicked features
+#' @param indMz \code{numeric}, indices of clicked features for \code{"mz"}
+#' ordering
+#' @param indRT \code{numeric}, indices of clicked features for 
+#' \code{"retentionTime"} ordering
+#' @param indCluster \code{numeric}, indices of clicked features for 
+#' \code{"clustering"} ordering
 #'
 #' @details
-#' Helper function for `shinyCircos`.
+#' Helper function for \code{shinyCircos}.
 #'
 #' @return
-#' Depending on `onCircle` and `indMz` either returns `plotCircos` or 
-#' `highlight`
+#' Depending on \code{onCircle} and \code{indMz} either returns 
+#' \code{plotCircos} or \code{highlight}
 #'
 #' @examples
 #' data("spectra", package = "MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun = normalizeddotproduct, binSize = 0.01)
-#' ## order according to retention time 
+#' similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+#'     FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+#' rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+#'   
+#' ## order according to m/z 
 #' mz_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-#'     spectra = spectra_tissue, type = "mz", 
+#'     sps = sps_tissue, type = "mz", 
 #'     condition = c("SPL", "LIM", "ANT", "STY"))
 #' linkDf <- mz_match[["link0df"]]
 #' mz_match <- mz_match[["type_match"]]
+#' 
+#' ## order according to retention time 
 #' rt_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-#'     spectra = spectra_tissue, type = "retentionTime", 
+#'     sps = sps_tissue, type = "retentionTime", 
 #'     condition = c("SPL", "LIM", "ANT", "STY"))
 #' rt_match <- rt_match[["type_match"]]
+#'
+#' ## order according to clustering
 #' clust_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-#'     spectra = spectra_tissue, type = "clustering", 
+#'     sps = sps_tissue, type = "clustering", 
 #'     condition = c("SPL", "LIM", "ANT", "STY"))
 #' clust_match <- clust_match[["type_match"]]
 #' circos.initialize(mz_match,##, levels  =  mz_match),
@@ -815,6 +805,8 @@ replayPlotOrder <- function(orderMatch = "mz", onCircle = FALSE, plot_l, ind) {
 #' MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = FALSE, linkDf = linkDf, 
 #'     mz_match = mz_match, rt_match = rt_match, clust_match = clust_match, 
 #'     ind = 1, indMz = NULL, indRT = NULL, indCluster = NULL)
+#'
+#' @importFrom MsCoreUtils ndotproduct
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 replayPlotAdd <- function(orderMatch = "mz", onCircle = FALSE, linkDf,
@@ -826,16 +818,16 @@ replayPlotAdd <- function(orderMatch = "mz", onCircle = FALSE, linkDf,
 
     if (!onCircle & length(inds) == 0) {
         ## plot
-        return(plotCircos(type_match, linkDf, initialize = FALSE,
+        plotCircos(type_match, linkDf, initialize = FALSE,
             featureNames = FALSE, groupSector = FALSE, groupName = FALSE,
-            links = TRUE, highlight = FALSE))
+            links = TRUE, highlight = FALSE)
 
     } else {
         ## get inds
         inds <- if (onCircle) c(ind, inds) else inds
 
         ## plot
-        return(highlight(type_match, inds, linkDf))
+        highlight(type_match, inds, linkDf)
     }
 }
 
@@ -845,76 +837,83 @@ replayPlotAdd <- function(orderMatch = "mz", onCircle = FALSE, linkDf,
 #' @title Record a plot of filled features and the degree of features
 #'
 #' @description
-#' `recordPlotFill_degreeFeatures` records a plot of filled 
+#' \code{recordPlotFill_degreeFeatures} records a plot of filled 
 #' features and returns the degree of features.
 #'
-#' @param
-#' type_match `character`, ordered vector according to type
-#'
-#' @param
-#' ... further arguments passed to `plotCircos`
+#' @param type_match \code{character}, ordered vector according to type
+#' @param ... further arguments passed to \code{plotCircos}
 #'
 #' @details
-#' Helper function for `shinyCircos`.
+#' Helper function for \code{shinyCircos}.
 #'
 #' @return
-#' `list` of length 2, entry `plotFill` is of `recordedplot` and 
-#' entry `degreeFeatures` that is a `list` of vectors of `numeric(1)`
+#' \code{list} of length 2, entry \code{plotFill} is of \code{recordedplot} and 
+#' entry \code{degreeFeatures} is a \code{list} of vectors of \code{numeric(1)}
 #'
 #' @examples
 #' type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
 #' MetCirc:::recordPlotFill_degreeFeatures(type_match)
 #'
+#' @importFrom grDevices recordPlot
+#' @importFrom graphics plot.new
+#'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 recordPlotFill_degreeFeatures <- function(type_match, ...) {
+    
     plotCircos(type_match, NULL, initialize = TRUE, featureNames = TRUE, 
                groupSector = TRUE, groupName = FALSE, links = FALSE, 
                highlight = FALSE, ...)
 
-    fill <- recordPlot()
+    fill <- grDevices::recordPlot()
 
     ## get degree of features
     degree <- lapply(type_match, function(x) {
         mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")])
     })
 
-    plot.new()
-    return(list(plotFill = fill, degreeFeatures = degree))
+    graphics::plot.new()
+    
+    ## return the list
+    list(plotFill = fill, degreeFeatures = degree)
 
 }
 
 #' @name recordPlotHighlight
 #'
-#' @title Return a `recordedplot` of `plotCircos` plot with `highlight = TRUE`
+#' @title Return a \code{recordedplot} of \code{plotCircos} plot with 
+#' \code{highlight = TRUE}
 #'
 #' @description
-#' `recordPlotHighlight` returns a `recordedplot` object of 
-#' `plotCircos` with `highlight = TRUE`
+#' \code{recordPlotHighlight} returns a \code{recordedplot} object of 
+#' \code{plotCircos} with \code{highlight = TRUE}
 #'
-#' @param
-#' type_match `character`, ordered vector according to type
-#'
-#' @param
-#' ... further arguments passed to `plotCircos`
+#' @param type_match \code{character}, ordered vector according to type
+#' @param ... further arguments passed to \code{plotCircos}
 #'
 #' @details
-#' Helper function for `shinyCircos`.
+#' Helper function for \code{shinyCircos}.
 #'
-#' @return `recordedplot`
+#' @return \code{recordedplot}
 #'
 #' @examples 
 #' type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
 #' MetCirc:::recordPlotHighlight(type_match)
 #'
+#' @importFrom graphics plot.new
+#' @importFrom grDevices recordPlot
+#' 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 recordPlotHighlight <- function(type_match, ...) {
-    ## use plotCircos
+    
+    ## use plotCircos and record the plt
     plotCircos(type_match, NULL, initialize = TRUE, featureNames = TRUE,
                groupSector = TRUE, groupName = FALSE, links = FALSE,
                highlight = TRUE, ...)
-    highlight <- recordPlot()
-    plot.new()
-    return(highlight)
+    highlight <- grDevices::recordPlot()
+    graphics::plot.new()
+    
+    ## return
+    highlight
 }
 
 #' @name typeMatch_link0
@@ -922,52 +921,57 @@ recordPlotHighlight <- function(type_match, ...) {
 #' @title Get typeMatch and link0 data frame
 #'
 #' @description
-#' `typeMatch_link0` returns a list with accessors `"link0df"` and
-#' `"type_match"`
+#' \code{typeMatch_link0} returns a list with accessors \code{"link0df"} and
+#' \code{"type_match"}
 #'
-#' @param similarityMatrix `matrix` with pair-wise similarity values
+#' @param similarityMatrix \code{matrix} with pairwise similarity values
+#' @param sps \code{Spectra} object
+#' @param type \code{character(1)}, either \code{"mz"}, \code{"retentionTime"}, 
+#' \code{"clustering"}
+#' @param condition \code{character}
 #'
-#' @param spectra `MSpectra` object
-#'
-#' @param type `character`, either `"mz"`, `"retentionTime"`, `"clustering"`
-#'
-#' @param condition `character`, tissue
-#'
-#' @details Helper function for `shinyCircos`. 
+#' @details Helper function for \code{shinyCircos}. 
 #'
 #' @return
-#' `list` of length 2,  entry `link0df` is of `data.frame` and 
-#' entry `type_match` that is a `character` vector
+#' \code{list} of length 2,  entry \code{link0df} is a \code{data.frame} and 
+#' entry \code{type_match} is a \code{character} vector
 #'
 #' @examples 
 #' data("spectra", package = "MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun = normalizeddotproduct, binSize = 0.01)
+#' similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+#'     FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+#' rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+#' 
 #' ## order according to retention time 
 #' MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-#'     spectra = spectra_tissue, type = "mz", 
+#'     sps = sps_tissue, type = "mz", 
 #'     condition = c("SPL", "LIM", "ANT", "STY"))
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
-typeMatch_link0 <- function(similarityMatrix, spectra, type, condition) {
-    simMat <- orderSimilarityMatrix(similarityMatrix, spectra = spectra, 
-                                    type = type, group = FALSE)
+typeMatch_link0 <- function(similarityMatrix, sps, type, condition) {
 
-    ## get names of spectra per condition
-    inds <- MetCirc:::spectraCond(spectra, condition)
+    simMat <- orderSimilarityMatrix(similarityMatrix, sps = sps, type = type, 
+        group = FALSE)
 
-    link0df <- createLink0df(simMat, spectra = spectra, condition = condition)
+    ## get names of sps per condition
+    inds <- MetCirc:::spectraCondition(sps, condition)
+
+    link0df <- createLink0df(simMat, sps = sps, condition = condition)
     groupname <- rownames(simMat)
-    type_match <- lapply(inds, function(x) {type_match <- match(groupname, x)
-    type_match <- type_match[!is.na(type_match)]; x[type_match]})
-    type_match <- lapply(seq_along(type_match), function(x) {
-        if (length(type_match[[x]]) > 0) {
-            paste(condition[x], type_match[[x]], sep = "_")
+    
+    type_match <- lapply(inds, function(inds_i) {
+        type_match <- match(groupname, inds_i)
+        type_match <- type_match[!is.na(type_match)]; inds_i[type_match]
+    })
+    type_match <- lapply(seq_along(type_match), function(i) {
+        if (length(type_match[[i]]) > 0) {
+            paste(condition[i], type_match[[i]], sep = "_")
         } else character()
     })
-
     type_match <- unique(unlist(type_match))
-    return(list(link0df = link0df, type_match = type_match))
+
+    ## return list
+    list(link0df = link0df, type_match = type_match)
 }
 
 #' @name select
@@ -975,21 +979,20 @@ typeMatch_link0 <- function(similarityMatrix, spectra, type, condition) {
 #' @title Select variable based on condition
 #'
 #' @description
-#' `select` returns `mz`, `rt` or `clust` depending on `condition`.
+#' \code{select} returns \code{mz}, \code{rt} or \code{clust} depending on
+#' \code{condition}.
 #'
-#' @param
-#' condition `character`, either `"mz"`, `"retentionTime"` or `"clustering"`
-#'
-#' @param mz object to return if `condition == "mz"`
-#'
-#' @param rt object to return if `condition == "retentionTime"`
-#'
-#' @param clust object to return if `condition == "clustering"`
+#' @param condition \code{character(1)}, either \code{"mz"},
+#' \code{"retentionTime"}, or \code{"clustering"}
+#' @param mz object to return if \code{condition == "mz"}
+#' @param rt object to return if \code{condition == "retentionTime"}
+#' @param clust object to return if \code{condition == "clustering"}
 #'
 #' @details
-#' Helper function for `shinyCircos`, `replayPlotOrder` and `replayPlotAdd`.
+#' Helper function for \code{shinyCircos}, \code{replayPlotOrder} and 
+#' \code{replayPlotAdd}.
 #'
-#' @return `mz`, `rt` or `clust` depending on condition
+#' @return \code{mz}, \code{rt} or \code{clust} depending on \code{condition}
 #'
 #' @examples 
 #' mz <- 1
@@ -1000,17 +1003,12 @@ typeMatch_link0 <- function(similarityMatrix, spectra, type, condition) {
 #' @author Thomas Naake \email{thomasnaake@@googlemail.com}
 select <- function(condition, mz, rt, clust) {
 
-    if (!condition %in% c("mz", "retentionTime", "clustering"))
-        stop("condition not equal to 'mz', 'retentionTime' or 'clustering'")
+    condition <- match.arg(condition, c("mz", "retentionTime", "clustering"))
 
-    if (!is.null(condition)) {
-        if (condition == "mz") res <- mz
-        if (condition == "retentionTime") res <- rt
-        if (condition == "clustering") res <- clust
-    } else {
-        res <- NULL
-    }
-
-    return(res)
+    if (condition == "mz") res <- mz
+    if (condition == "retentionTime") res <- rt
+    if (condition == "clustering") res <- clust
+    
+    res
 }
 
