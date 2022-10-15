@@ -7,20 +7,20 @@
 cart2Polar(x, y)
 }
 \arguments{
-\item{x}{cartesian x coordinate}
+\item{x}{\code{numeric} cartesian x coordinate}
 
-\item{y}{cartesian y coordinate}
+\item{y}{\code{numeric} cartesian y coordinate}
 }
 \value{
-`cart2Polar` returns a list of colar coordinates r and theta
+\code{cart2Polar} returns a \code{list} of colar coordinates r and theta
 }
 \description{
-`cart2Polar` calculates polar coordinates from cartesian coordinates.
+\code{cart2Polar} calculates polar coordinates from cartesian coordinates.
 }
 \details{
-`cart2Polar` is employed to translate cartesian coordinates 
- into polar coordinates especially in interactive shiny applications when
- using hovering and clicking features.
+\code{cart2Polar} is employed to translate cartesian coordinates
+into polar coordinates especially in interactive shiny applications when
+using hovering and clicking features.
 }
 \examples{
 x <- 1; y <- 1
