@@ -4,18 +4,18 @@
 \alias{createLink0df}
 \title{Create a link matrix}
 \usage{
-createLink0df(similarityMatrix, spectra, condition)
+createLink0df(similarityMatrix, sps, condition)
 }
 \arguments{
-\item{similarityMatrix}{`matrix`, a similarity matrix that contains the
+\item{similarityMatrix}{\code{matrix}, a similarity matrix that contains the
 NDP similarity measure between all precursors in the data set}
 
-\item{spectra}{`MSpectra` object}
+\item{sps}{\code{Spectra} object}
 
-\item{condition}{`character`, which conditions should be included?}
+\item{condition}{\code{character}, which conditions should be included?}
 }
 \value{
-createLink0df returns a `matrix` that gives per each row
+\code{createLink0df} returns a `matrix` that gives per each row
 information on linked features
 }
 \description{
@@ -23,16 +23,15 @@ Create a link matrix which links every feature in similarity
 matrix with another.
 }
 \details{
-createLink0df creates a `matrix` from a similarity
-matrix which includes all connections between features in the
-similarity matrix, but
+\code{createLink0df} creates a \code{matrix} from a similarity matrix which 
+includes all connections between features in the similarity matrix, but
 exclude links which have a similarity of exactly 0.
 }
 \examples{
 data("spectra", package = "MetCirc")
 data("similarityMat", package = "MetCirc")
 link0df <- createLink0df(similarityMatrix = similarityMat,
-    spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+    sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 
 }
 \author{
