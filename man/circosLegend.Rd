@@ -7,40 +7,48 @@
 circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 }
 \arguments{
-\item{groupname}{`character` vector containing "group" and "name" to 
-display, that is  a unique identifier of the features, "group" and "name" have 
-to be separated by `"_"` where "group" is the first and "name" is the 
+\item{groupname}{\code{character} vector containing "group" and "name" to 
+display that is  a unique identifier of the features, "group" and "name" have 
+to be separated by \code{"_"} where "group" is the first and "name" is the
 last element}
 
-\item{highlight}{`logical`, should colours be adjusted to highlight settings?}
+\item{highlight}{\code{logical}, should colours be adjusted to highlight 
+settings?}
 
-\item{colour}{`NULL` or `character`, colour defines the colours which are 
-used for plotting, if `NULL` default colours are used}
+\item{colour}{\code{NULL} or \code{character}, \code{colour} defines the 
+colours which are used for plotting, if \code{NULL} default colours are used}
 
-\item{cex}{`numeric`, parameter that controls size of the legend in the plot}
+\item{cex}{\code{numeric}, parameter that controls size of the legend in the 
+plot}
 }
 \value{
 The function will open a new plot and display colours together with labels.
 }
 \description{
-`circosLegend` plots a legend for circos plot using group names.
+\code{circosLegend} plots a legend for circos plot using group names.
 }
 \details{
-Internal use in `shinyCircos` or outside of `shinyCircos` 
+Internal use in \code{shinyCircos} or outside of \code{shinyCircos}
 to reproduce figures.
 }
 \examples{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun = normalizeddotproduct, binSize = 0.01)
-linkDf <- createLinkDf(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue[1:10], 
-    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1) 
+
+## create similarity matrix
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 20, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+
+linkDf <- createLinkDf(similarityMatrix = similarityMat,
+    sps = sps_tissue[1:10],
+    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.01, upper = 1)
+
 ## cut link data.frame (here: only display links between groups)
 linkDf_cut <- cutLinkDf(linkDf, type = "inter")
-groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
             as.character(linkDf_cut[, "spectrum2"]))
 groupname <- unique(groupname)
+
 ## plot legend
 circosLegend(groupname, highlight = TRUE, colour = NULL, cex = 1)
 
