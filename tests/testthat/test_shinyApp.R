@@ -48,16 +48,16 @@ test_that("printInformationSelect", {
     expect_error(MetCirc:::printInformationSelect(
         select = NULL, sps = sps_tissue, linkDfInd = linkDfInds,
         linkDf = linkDf, similarityMatrix = similarityMat),
-        "argument is of length zero")
+        "non-character argument")
     expect_error(MetCirc:::printInformationSelect(
         select = inds_cond[ind], sps = NULL, linkDfInd = linkDfInds,
         linkDf = linkDf, similarityMatrix = similarityMat),
         "non-numeric argument to mathematical function")
-    expect_error(MetCirc:::printInformationSelect( 
+    expect_equal(MetCirc:::printInformationSelect( 
         select = inds_cond[ind], sps = sps_tissue,
         linkDfInd = linkDfInds, linkDf = NULL,
         similarityMatrix = similarityMat),
-        "subscript contains out-of-bounds indices")
+        "LIM_45 (905.47, 1022.54, Unknown, Unknown, Unknown, Unknown) does not connect to any feature ")
     expect_error(MetCirc:::printInformationSelect(
         select = inds_cond[ind], sps = sps_tissue,
         linkDfInd = linkDfInds, linkDf = linkDf, similarityMatrix = NULL),
@@ -66,7 +66,7 @@ test_that("printInformationSelect", {
         select = inds_cond[ind], sps = sps_tissue,
         linkDfInd = numeric(),  linkDf = linkDf,
         similarityMatrix = similarityMat),
-        "LIM_45 (905.47, 1022.54, , , , ) does not connect to any feature ")
+        "LIM_45 (905.47, 1022.54, Unknown, Unknown, Unknown, Unknown) does not connect to any feature ")
 })
 ## END unit test printInformationSelect
 

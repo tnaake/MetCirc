@@ -9,7 +9,6 @@ author:
         Institut de biologie mol\'{e}culaire du m\'{e}tabolisme des plantes,
         Universit\'{e} de Strasbourg, 67084 Strasbourg, France
 package: MetCirc
-      
 output:  
     BiocStyle::html_document:
         toc_float: true
