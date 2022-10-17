@@ -2,7 +2,7 @@
 % Please edit documentation in R/plottingFunctions.R
 \name{plotCircos}
 \alias{plotCircos}
-\title{Circular plot to visualise similarity}
+\title{Circular plot to visualize similarity}
 \usage{
 plotCircos(
   groupname,
@@ -19,58 +19,68 @@ plotCircos(
 )
 }
 \arguments{
-\item{groupname}{`character` vector containing "group" and "name" to
-display, that is a unique identifier of the features, "group" and "name" have
-to be separated
-by `"_"` where "group" is the first and "name" is the last element}
+\item{groupname}{\code{character} vector containing \code{"group"} and 
+\code{"name"} to display that is a unique identifier of the features, 
+\code{"group"} and \code{"name"} have to be separated
+by \code{"_"} where \code{"group"} is the first and \code{"name"} is the 
+last element}
 
-\item{linkDf}{`data.frame` containing linked features in each row, has
-five columns (group1, spectrum1, group2, spectrum2, similarity)}
+\item{linkDf}{\code{data.frame} containing linked features in each row, has
+five columns (\code{group1}, \code{spectrum1}, \code{group2}, 
+\code{spectrum2}, \code{similarity})}
 
-\item{initialize}{`logical`, should plot be initialized?}
+\item{initialize}{\code{logical}, should plot be initialized?}
 
-\item{featureNames}{`logical`, should feature names be displayed?}
+\item{featureNames}{\code{logical}, should feature names be displayed?}
 
-\item{cexFeatureNames}{`numeric` size of feature names}
+\item{cexFeatureNames}{\code{numeric} size of feature names}
 
-\item{groupSector}{`logical`, should groups be displayed with background
+\item{groupSector}{\code{logical}, should groups be displayed with background
 colours?}
 
-\item{groupName}{`logical`, should group names (e.g. compartment names or
-individual names) be displayed?}
+\item{groupName}{\code{logical}, should group names (e.g. compartment names 
+or individual names) be displayed?}
 
-\item{links}{`logical`, should links be plotted?}
+\item{links}{\code{logical}, should links be plotted?}
 
-\item{highlight}{`logical`, highlight is set to `TRUE`}
+\item{highlight}{\code{logical}, \code{highlight} is set to \code{TRUE} 
+by default}
 
-\item{colour}{`NULL` or `character`, colour defines the colours
-which are used for plotting, if `NULL` default colours are used}
+\item{colour}{\code{NULL} or \code{character}, \code{colour} defines the 
+colours which are used for plotting, if \code{NULL} default colours are used}
 
-\item{transparency}{`numeric`, defines the transparency of the colours}
+\item{transparency}{\code{numeric}, defines the transparency of the colours}
 }
 \value{
 The function will initialize a circlize plot and/or will plot
- features of a circlize plot.
+features of a circlize plot.
 }
 \description{
-Circular plot to visualise similarity.
+Circular plot to visualize similarity.
 }
 \details{
-Internal use for `shinyCircos` or used outside of
-`shinyCircos` to reproduce figure
+Internal use for \code{shinyCircos} or used outside of
+\code{shinyCircos} to reproduce figure
 }
 \examples{
+library("MsCoreUtils")
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10],
-    fun = normalizeddotproduct, binSize = 0.01)
+
+## create similarity matrix
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 20, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+
 ## order similarityMat according to retentionTime
-simM <- orderSimilarityMatrix(similarityMat, spectra = spectra_tissue[1:10],
+simM <- orderSimilarityMatrix(similarityMat, sps = sps_tissue[1:10],
             type = "retentionTime")
+            
 ## create link data.frame
-linkDf <- createLinkDf(similarityMatrix = simM, spectra = spectra_tissue,
-     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
+linkDf <- createLinkDf(similarityMatrix = simM, sps = sps_tissue,
+     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.01, upper = 1)
 ## cut link data.frame (here: only display links between groups)
 linkDf_cut <- cutLinkDf(linkDf, type = "inter")
+
 ## set circlize paramters
 circos.clear()
 circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
@@ -78,11 +88,12 @@ circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
 groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
                 as.character(linkDf_cut[, "spectrum2"]))
 groupname <- unique(groupname)
+
 ## actual plotting
 plotCircos(groupname, linkDf_cut, initialize = TRUE,
     featureNames = TRUE, cexFeatureNames = 0.3, groupSector = TRUE,
-     groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL,
-     transparency = 0.2)
+    groupName = FALSE, links = FALSE, highlight = FALSE, colour = NULL,
+    transparency = 0.2)
 
 }
 \author{

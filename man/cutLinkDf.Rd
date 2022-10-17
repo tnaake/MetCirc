@@ -7,31 +7,31 @@
 cutLinkDf(linkDf, type = c("all", "inter", "intra"))
 }
 \arguments{
-\item{linkDf}{`data.frame`, that gives per each row
+\item{linkDf}{\code{data.frame}, that gives per each row
 information on linked features}
 
-\item{type}{`character`, one of "all", "inter" or "intra"}
+\item{type}{\code{character}, one of "all", "inter" or "intra"}
 }
 \value{
-cutLinkDf returns a data.frame that gives per each row
+\code{cutLinkDf} returns a \code{data.frame} that gives per each row
 information on linked features
 }
 \description{
 Create a cut link data frame
 }
 \details{
-This function is used to truncate features from linkDf. If
-type = "all", linkDf will not be changed; if type = "inter" the returned
-linkDf will only contain entries of links which are between groups and
-not inside groups; contrary to that, if type = "intra" the returned linkDf
-will only contain entries of links which are inside groups and not between
-groups.
+This function is used to truncate features from \code{linkDf}. If
+\code{type = "all"}, \code{linkDf} will not be changed; if 
+\code{type = "inter"} the returned \code{linkDf} will only contain entries 
+of links which are between groups and  not inside groups; contrary to that,
+if \code{type = "intra"} the returned \code{linkDf} will only contain entries 
+of links which are inside groups and not between groups.
 }
 \examples{
 data("spectra", package = "MetCirc")
 data("similarityMat", package = "MetCirc")
 linkDf <- createLinkDf(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"),
+    sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"),
     lower = 0.75, upper = 1)
 cutLinkDf(linkDf = linkDf, type = "all")
 

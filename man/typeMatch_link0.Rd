@@ -4,35 +4,38 @@
 \alias{typeMatch_link0}
 \title{Get typeMatch and link0 data frame}
 \usage{
-typeMatch_link0(similarityMatrix, spectra, type, condition)
+typeMatch_link0(similarityMatrix, sps, type, condition)
 }
 \arguments{
-\item{similarityMatrix}{`matrix` with pair-wise similarity values}
+\item{similarityMatrix}{\code{matrix} with pairwise similarity values}
 
-\item{spectra}{`MSpectra` object}
+\item{sps}{\code{Spectra} object}
 
-\item{type}{`character`, either `"mz"`, `"retentionTime"`, `"clustering"`}
+\item{type}{\code{character(1)}, either \code{"mz"}, \code{"retentionTime"}, 
+\code{"clustering"}}
 
-\item{condition}{`character`, tissue}
+\item{condition}{\code{character}}
 }
 \value{
-`list` of length 2,  entry `link0df` is of `data.frame` and 
-entry `type_match` that is a `character` vector
+\code{list} of length 2,  entry \code{link0df} is a \code{data.frame} and 
+entry \code{type_match} is a \code{character} vector
 }
 \description{
-`typeMatch_link0` returns a list with accessors `"link0df"` and
-`"type_match"`
+\code{typeMatch_link0} returns a list with accessors \code{"link0df"} and
+\code{"type_match"}
 }
 \details{
-Helper function for `shinyCircos`.
+Helper function for \code{shinyCircos}.
 }
 \examples{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun = normalizeddotproduct, binSize = 0.01)
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+
 ## order according to retention time 
 MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue, type = "mz", 
+    sps = sps_tissue, type = "mz", 
     condition = c("SPL", "LIM", "ANT", "STY"))
 
 }

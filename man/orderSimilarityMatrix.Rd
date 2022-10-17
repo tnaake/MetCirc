@@ -7,55 +7,62 @@ m/z, retention time and clustering}
 \usage{
 orderSimilarityMatrix(
   similarityMatrix,
-  spectra,
+  sps,
   type = c("retentionTime", "mz", "clustering"),
   group = FALSE
 )
 }
 \arguments{
-\item{similarityMatrix}{`matrix`, `similarityMatrix` contains 
+\item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} contains 
 pair-wise similarity coefficients which give information about the similarity 
 between precursors}
 
-\item{spectra}{`MSpectra` object containing spectra that are compared
-in `similarityMatrix`}
+\item{sps}{\code{Spectra} object containing spectra that are compared
+in \code{similarityMatrix}}
 
-\item{type}{`character`, one of "retentionTime", "mz" or "clustering"}
+\item{type}{\code{character(1)}, one of \code{"retentionTime"}, \code{"mz"}, or 
+\code{"clustering"}}
 
-\item{group}{`logical`, if TRUE group separated by "_" will be cleaved
-from rownames/colnames of similarityMatrix and matched against names of 
-spectra, if FALSE rownames/colnames of similarityMatrix are taken as are 
-and matched against names of spectra}
+\item{group}{\code{logical(1)}, if \code{TRUE} \code{group} separated by 
+\code{"_"} will be cleaved  from \code{rownames}/\code{colnames} of 
+\code{similarityMatrix} and matched against names of \code{sps}
+(\code{sps$name}), if \code{FALSE} \code{rownames}/\code{colnames} of 
+\code{similarityMatrix} are taken as are and matched against names of 
+\code{sps} (\code{sps$name})}
 }
 \value{
-`matrix`, `orderSimilarityMatrix` returns a similarity matrix 
-with ordered rownames according to the `character` vector given to order
+\code{matrix}, \code{orderSimilarityMatrix} returns a similarity 
+matrix with ordered \code{rownames} according to the \code{character} vector 
+\code{type}
 }
 \description{
 Internal function for shiny application. May also be used 
 outside of shiny to reconstruct figures.
 }
 \details{
-`orderSimilarityMatrix` takes  a similarity matrix,
-spectra (containing information on m/z and retentionTime and a 
-`character` vector
-as arguments. It will then reorder rows and columns of 
-the similarityMatrix object such, that it orders rows and columns of 
-similarityMatrix according to m/z, retention time or clustering in 
-each group. `orderSimilarityMatrix` is employed in the `shinyCircos` 
-function to create `similarityMatrix` objects which will allow to switch
+\code{orderSimilarityMatrix} takes a similarity matrix,
+\code{Spectra} object (\code{sps}, containing information on m/z and 
+retention time), and a \code{character} vector as arguments. It will then 
+reorder rows and columns of the \code{similarityMatrix} object such, 
+that it orders rows and columns of \code{similarityMatrix} according to 
+m/z, retention time or clustering in each group. 
+
+\code{orderSimilarityMatrix} is employed in the \code{shinyCircos} 
+function to create \code{similarityMatrix} objects which will allow to switch
 between different types of ordering in between groups (sectors) in the 
 circos plot. It may be used as well externally, to reproduce plots outside
 of the reactive environment (see vignette for a workflow).
 }
 \examples{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun = normalizeddotproduct, binSize = 0.01)
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10], 
+    FUN = MsCoreUtils::ndotproduct, ppm = 10)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+
 ## order according to retention time 
 orderSimilarityMatrix(similarityMatrix = similarityMat, 
-    spectra_tissue, type = "retentionTime", group = FALSE)
-
+    sps = sps_tissue, type = "retentionTime", group = FALSE)
+    
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

@@ -9,8 +9,9 @@
 }
 \source{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue,
-    fun = normalizeddotproduct, binSize = 0.01)
+similarityMat <- Spectra::compareSpectra(sps_tissue,
+    fun = ndotproduct, ppm = 10)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name
 save(similarityMat, file = "similarityMat.RData", compress = "xz")
 }
 \value{

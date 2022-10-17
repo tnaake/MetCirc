@@ -1,9 +1,9 @@
-#' @name spectra_tissue
+#' @name sps_tissue
 #'
-#' @title Example data for `MetCirc`: `spectra_tissue`
+#' @title Example data for `MetCirc`: `sps_tissue`
 #'
-#' @description `spectra_tissue` is a `MSpectra` object containing
-#' `Spectrum2` objects derived from the `idMSMStissueproject` data set.
+#' @description `sps_tissue` is a `Spectra` object
+#' derived from the `idMSMStissueproject` data set.
 #' See the vignette for a workflow to reproduce the object `spectra`.
 #'
 #' @docType data
@@ -19,29 +19,43 @@
 #' id_uniq <- unique(tissue[, "id"])
 #'
 #' ## obtain precursor m/z from id_uniq
-#' prec_mz_l <- lapply(strsplit(as.character(id_uniq), split = "_"), "[", 1)
-#' prec_mz_l <- lapply(prec_mz_l, as.numeric)
+#' prec_mz <- lapply(strsplit(as.character(id_uniq), split = "_"), "[", 1) |>
+#'     unlist() |>
+#'     as.numeric()
 #'
 #' ## obtain m/z from fragments per precursor m/z
-#' mz_l <- lapply(id_uniq, function(x) tissue[tissue[, "id"] == x, "mz"])
+#' mz_l <- lapply(id_uniq, function(id_i) tissue[tissue[, "id"] == id_i, "mz"])
+#' 
 #' ## obtain corresponding intensity values
-#' int_l <- lapply(id_uniq, function(x) {
-#'     tissue[tissue[, "id"] == x, "intensity"]})
+#' int_l <- lapply(id_uniq, function(id_i) tissue[tissue[, "id"] == id_i, "intensity"])
+#'     
+#' ## order mz and intensity values
+#' int_l <- lapply(seq_along(int_l), function(i) int_l[[i]][order(mz_l[[i]])])
+#' mz_l <- lapply(seq_along(mz_l), function(i) sort(mz_l[[i]]))
+#' 
 #' ## obtain retention time by averaging all retention time values
-#' rt_l <- lapply(id_uniq, function(x) tissue[tissue[, "id"] == x, "rt"])
-#' rt_l <- lapply(rt_l, mean)
+#' rt <- lapply(id_uniq, function(id_i) tissue[tissue[, "id"] == id_i, "rt"]) |>
+#'     lapply(mean) |>
+#'     unlist()
 #'
-#' ## create list of spectrum2 objects
-#' spectrum2_tissue <- lapply(1:length(mz_l), function(x) {
-#'         new("Spectrum2", rt = rt_l[[x]], precursorMz = prec_mz_l[[x]], 
-#'         mz = mz_l[[x]], intensity = int_l[[x]])})
+#' ## create list of Spectra objects and concatenate
+#' sps_l <- lapply(seq_len(length(mz_l)), function(i) {
+#'     spd <- S4Vectors::DataFrame(
+#'         name = as.character(i),
+#'         rtime = rt[i], 
+#'         msLevel = 2L,
+#'         precursorMz = prec_mz[i])
+#'     spd$mz <- list(mz_l[[i]])
+#'     spd$intensity <- list(int_l[[i]])
+#'     Spectra::Spectra(spd)})
+#' sps_tissue <- Reduce(c, sps_l)
 #'
 #' ## combine list of spectrum2 objects to MSpectra object, 
 #' ## use SPL, LIM, ANT, STY for further analysis
-#' spectra_tissue <- MSpectra(spectrum2_tissue, 
-#'     elementMetadata = DataFrame(compartmentTissue[, c("SPL", "LIM", "ANT", "STY")])) 
+#' sps_tissue@metadata <- data.frame(
+#'     compartmentTissue[, c("SPL", "LIM", "ANT", "STY")])
 #'
-#' save(spectra_tissue, file = "spectra.RData", compress = "xz")
+#' save(sps_tissue, file = "spectra.RData", compress = "xz")
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 NULL  

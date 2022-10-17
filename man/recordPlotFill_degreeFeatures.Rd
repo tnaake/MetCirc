@@ -7,20 +7,20 @@
 recordPlotFill_degreeFeatures(type_match, ...)
 }
 \arguments{
-\item{type_match}{`character`, ordered vector according to type}
+\item{type_match}{\code{character}, ordered vector according to type}
 
-\item{...}{further arguments passed to `plotCircos`}
+\item{...}{further arguments passed to \code{plotCircos}}
 }
 \value{
-`list` of length 2, entry `plotFill` is of `recordedplot` and 
-entry `degreeFeatures` that is a `list` of vectors of `numeric(1)`
+\code{list} of length 2, entry \code{plotFill} is of \code{recordedplot} and 
+entry \code{degreeFeatures} is a \code{list} of vectors of \code{numeric(1)}
 }
 \description{
-`recordPlotFill_degreeFeatures` records a plot of filled 
+\code{recordPlotFill_degreeFeatures} records a plot of filled 
 features and returns the degree of features.
 }
 \details{
-Helper function for `shinyCircos`.
+Helper function for \code{shinyCircos}.
 }
 \examples{
 type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")

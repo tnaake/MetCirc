@@ -2,24 +2,25 @@
 % Please edit documentation in R/shinyApp.R
 \name{recordPlotHighlight}
 \alias{recordPlotHighlight}
-\title{Return a `recordedplot` of `plotCircos` plot with `highlight = TRUE`}
+\title{Return a \code{recordedplot} of \code{plotCircos} plot with 
+\code{highlight = TRUE}}
 \usage{
 recordPlotHighlight(type_match, ...)
 }
 \arguments{
-\item{type_match}{`character`, ordered vector according to type}
+\item{type_match}{\code{character}, ordered vector according to type}
 
-\item{...}{further arguments passed to `plotCircos`}
+\item{...}{further arguments passed to \code{plotCircos}}
 }
 \value{
-`recordedplot`
+\code{recordedplot}
 }
 \description{
-`recordPlotHighlight` returns a `recordedplot` object of 
-`plotCircos` with `highlight = TRUE`
+\code{recordPlotHighlight} returns a \code{recordedplot} object of 
+\code{plotCircos} with \code{highlight = TRUE}
 }
 \details{
-Helper function for `shinyCircos`.
+Helper function for \code{shinyCircos}.
 }
 \examples{
 type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")

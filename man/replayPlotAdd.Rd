@@ -18,57 +18,66 @@ replayPlotAdd(
 )
 }
 \arguments{
-\item{orderMatch}{orderMatch `character`, either `"mz"`, `"retentionTime"` 
-or `"clustering"`}
+\item{orderMatch}{\code{character(1)}, either \code{"mz"}, 
+\code{"retentionTime"}, or \code{"clustering"}}
 
-\item{onCircle}{`logical`, are coordinates on circle. If FALSE and
-no features are selected (`length(ind) == 0`), then filled plots are 
+\item{onCircle}{\code{logical}, are coordinates on circle. If \code{FALSE} 
+and no features are selected (\code{length(ind) == 0}), then filled plots are 
 replayed, otherwise highlighted plots are replayed.}
 
-\item{linkDf}{`data.frame` that contains information of linked 
+\item{linkDf}{\code{data.frame} that contains information of linked 
 features for given thresholds}
 
-\item{mz_match}{`character`, ordered vector according to m/z}
+\item{mz_match}{\code{character}, ordered vector according to m/z}
 
-\item{rt_match}{`character`, ordered vector according to retention time}
+\item{rt_match}{\code{character}, ordered vector according to retention time}
 
-\item{clust_match}{`character`, ordered vector according to clustering}
+\item{clust_match}{\code{character}, ordered vector according to clustering}
 
-\item{ind}{`numeric`, indices of clicked features}
+\item{ind}{\code{numeric}, indices of clicked features}
 
-\item{indMz}{`numeric`, indices of clicked features for `"mz"` ordering}
+\item{indMz}{\code{numeric}, indices of clicked features for \code{"mz"}
+ordering}
 
-\item{indRT}{`numeric`, indices of clicked features for `"retentionTime"` ordering}
+\item{indRT}{\code{numeric}, indices of clicked features for 
+\code{"retentionTime"} ordering}
 
-\item{indCluster}{`numeric`, indices of clicked features for `"clustering"` ordering}
+\item{indCluster}{\code{numeric}, indices of clicked features for 
+\code{"clustering"} ordering}
 }
 \value{
-Depending on `onCircle` and `indMz` either returns `plotCircos` or 
-`highlight`
+Depending on \code{onCircle} and \code{indMz} either returns 
+\code{plotCircos} or \code{highlight}
 }
 \description{
-`replayPlotAdd` plots additional plots on a plot, either
-plots `plotCircos` or `highlight`.
+\code{replayPlotAdd} plots additional plots on a plot, either
+plots \code{plotCircos} or \code{highlight}.
 }
 \details{
-Helper function for `shinyCircos`.
+Helper function for \code{shinyCircos}.
 }
 \examples{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun = normalizeddotproduct, binSize = 0.01)
-## order according to retention time 
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+  
+## order according to m/z 
 mz_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue, type = "mz", 
+    sps = sps_tissue, type = "mz", 
     condition = c("SPL", "LIM", "ANT", "STY"))
 linkDf <- mz_match[["link0df"]]
 mz_match <- mz_match[["type_match"]]
+
+## order according to retention time 
 rt_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue, type = "retentionTime", 
+    sps = sps_tissue, type = "retentionTime", 
     condition = c("SPL", "LIM", "ANT", "STY"))
 rt_match <- rt_match[["type_match"]]
+
+## order according to clustering
 clust_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue, type = "clustering", 
+    sps = sps_tissue, type = "clustering", 
     condition = c("SPL", "LIM", "ANT", "STY"))
 clust_match <- clust_match[["type_match"]]
 circos.initialize(mz_match,##, levels  =  mz_match),

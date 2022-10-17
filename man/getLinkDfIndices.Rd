@@ -2,28 +2,28 @@
 % Please edit documentation in R/plottingFunctions.R
 \name{getLinkDfIndices}
 \alias{getLinkDfIndices}
-\title{Get indices in linkDf of feature}
+\title{Get indices in \code{linkDf} of feature}
 \usage{
 getLinkDfIndices(groupnameselected, linkDf)
 }
 \arguments{
-\item{groupnameselected}{`character` vector with groupname of selected 
-feature, vector containing "group" and "name" to display, that is 
+\item{groupnameselected}{\code{character} vector with \code{groupname} of 
+selected feature, vector containing "group" and "name" to display, that is
 a unique identifier of the features, "group" and "name" have to be separated
-by `"_"` where "group" is the first and "name" is the last element}
+by \code{"_"} where "group" is the first and "name" is the last element}
 
-\item{linkDf}{`data.frame`, in each row there is information about 
+\item{linkDf}{\code{data.frame}, in each row there is information about
 features to be connected}
 }
 \value{
-`getLinkDfIndices` returns indices concerning `linkDf` to which 
-`groupnameselected` connects
+\code{getLinkDfIndices} returns indices concerning \code{linkDf} to which 
+\code{groupnameselected} connects
 }
 \description{
-Gets indices in linkDf of feature
+Gets indices in \code{linkDf} of feature
 }
 \details{
-Internal use for function `highlight`
+Internal use for function \code{highlight}
 }
 \examples{
 \dontrun{getLinkDfIndices(groupnameselected, linkMatrix)}

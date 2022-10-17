@@ -1,194 +1,70 @@
-#' @importFrom MSnbase MSpectra compareSpectra intensity
-#' @importClassesFrom MSnbase Spectrum2 MSpectra
-#' @importFrom S4Vectors DataFrame
-#' @importFrom utils combn
-#'
-#' @name compare_Spectra
-#'
-#' @title Create similarity matrix from `MSnbase::MSpectra` object
-#'
-#' @description
-#' `compare_Spectra`` creates a similarity matrix of all Spectrum objects in 
-#' `object`
-#'
-#' @param object `MSpectra`
-#'
-#' @param 
-#' fun `function` or `character`, see `?MSnbase::compareSpectra` for further
-#' information
-#'
-#' @param ... arguments passed to `compareSpectra`
-#'
-#' @details
-#' Function inspired by `compareSpectra.OnDiskMSnExp`. Possibly
-#' transfer to `MSnbase`.
-#'``
-#' @author Thomas Naake (inspired by `compareSpectra.OnDiskMSnExp`)
-#'
-#' @examples 
-#' data("spectra", package = "MetCirc")
-#' compare_Spectra(spectra_tissue[1:10], fun = "dotproduct")
-#'
-#' @export
-compare_Spectra <- function(object, fun, ...) {
-
-    nm <- names(object)
-    cb <- combn(nm, 2)
-    cb <- apply(cb, 2, function(x) compareSpectra(object[[x[1]]],
-                    object[[x[[2]]]], fun = fun, ...)) ## "dotproduct"
-
-    m <- matrix(NA, length(object), length(object),
-                dimnames = list(nm, nm))
-
-    ## fill lower triangle of the matrix
-    m[lower.tri(m)] <- cb
-
-    ## copy to upper triangle
-    for (i in 1:nrow(m)) {
-        m[i, ] <- m[, i]
-    }
-
-    diag(m) <- 1
-
-    return(m)
-}
-
-
-#' @name normalizeddotproduct
-#'
-#' @title Calculate the normalized dot product
-#'
-#' @description Calculate the normalized dot product (NDP)
-#'
-#' @param 
-#' x `Spectrum2` object from `MSnbase` containing intensity and m/z values, 
-#' first MS/MS spectrum
-#'
-#' @param 
-#' y `Spectrum2` object from `MSnbase` containing intensity and m/z values, 
-#' second MS/MS spectrum
-#'
-#' @param m `numeric`, exponent to calculate peak intensity-based weights
-#'
-#' @param n `numeric`, exponent to calculate m/z-based weights
-#'
-#' @param ... further arguments passed to MSnbase:::bin_Spectra
-#'
-#' @details
-#' The normalized dot product is calculated according to the 
-#' following formula: 
-#' \deqn{NDP = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) \cdot \sum(W_{S2, i} ^ 2) }}{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2 \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2)},
-#' with \eqn{W = [peak intensity]^{m} \cdot [m/z]^n}. For further information 
-#' see Li et al. (2015): Navigating natural variation in herbivory-induced
-#' secondary metabolism in coyote tobacco populations using MS/MS structural 
-#' analysis. PNAS, E4147--E4155. 
-#' `normalizeddotproduct` returns a numeric 
-#' value ranging between 0 and 1, where 0 
-#' indicates no similarity between the two MS/MS features, while 1 indicates 
-#' that the MS/MS features are identical. Arguments can be passed to 
-#' the function `MSnbase:::bin_Spectra`, e.g. to set the width of bins
-#' (binSize). 
-#' Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values 
-#' are divided by the maximum intensity value.
-#'
-#' @return
-#' `normalizeddotproduct` returns a numeric similarity coefficient between
-#' 0 and 1
-#'
-#' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
-#'
-#' @examples 
-#' data("spectra", package = "MetCirc")
-#' x <- spectra_tissue[[1]]
-#' y <- spectra_tissue[[2]]
-#' normalizeddotproduct(x, y, m = 0.5, n = 2, binSize = 0.01)
-#'
-#' @export
-normalizeddotproduct <- function(x, y, m = 0.5, n = 2, ...) {
-    ## normalize to % intensity
-    x@intensity <- x@intensity / max(x@intensity)*100
-    y@intensity <- y@intensity / max(y@intensity)*100
-    
-    binnedSpectra <- MSnbase:::bin_Spectra(x, y, ...)
-    inten <- lapply(binnedSpectra, intensity)
-    mz <- lapply(binnedSpectra, mz)
-    
-    ws1 <- inten[[1]] ^ m * mz[[1]] ^ n
-    ws2 <- inten[[2]] ^ m * mz[[2]] ^ n
-    
-    sum( ws1*ws2) ^ 2 / ( sum( ws1^2 ) * sum( ws2^2 ) )
-}
-
-
-
 #' @name neutralloss
 #'
 #' @title Calculate similarity based on neutral losses
 #'
 #' @description Calculate similarity based on neutral losses (NLS)
 #'
-#' @param x `Spectrum2` object from `MSnbase` containing
+#' @param x \code{Spectra} object from \code{Spectra} containing
 #' intensity and m/z values, first MS/MS spectrum
-#'
-#' @param y `Spectrum2` object from `MSnbase` containing 
+#' @param y \code{Spectra} object from \code{Spectra} containing 
 #' intensity and m/z values, second MS/MS spectrum
+#' @param m \code{numeric(1)}, exponent to calculate peak intensity-based 
+#' weights
+#' @param n \code{numeric(1)}, exponent to calculate m/z-based weights
+#' @param na.rm \code{logical(1)}, if \code{NA} values should be removed
+#' @param ... further arguments
 #'
-#' @param m `numeric`, exponent to calculate peak intensity-based weights
-#'
-#' @param n `numeric`, exponent to calculate m/z-based weights
-#'
-#' @param ... further arguments passed to `MSnbase:::bin_Spectra`
-#'
-#' @details Similarities of spectra based on neutral losses are calculated 
-#' according to the following formula: 
+#' @details 
+#' Similarities of spectra based on neutral losses are calculated according to 
+#' the following formula: 
+#' 
 #' \deqn{NLS = \frac{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2}{ \sum(W_{S1, i} ^ 2) \cdot \sum(W_{S2, i} ^ 2) }}{\sum(W_{S1, i} \cdot W_{S2, i}) ^ 2 \sum(W_{S1, i} ^ 2) * \sum(W_{S2, i} ^ 2)},
+#' 
 #' with \eqn{W = [ peak intensity] ^{m} \cdot [ NL ]^n} and 
 #' \eqn{NL = | m/z - precursor m/z |}. For further information 
 #' see Li et al. (2015): Navigating natural variation in herbivory-induced
 #' secondary metabolism in coyote tobacco populations using MS/MS structural 
 #' analysis. PNAS, E4147--E4155. 
-#' `neutralloss` returns a numeric 
-#' value ranging between 0 and 1, where 0 
+#' 
+#' In here, the precursor m/z is taken by the m/z feature with the highest 
+#' intensity. 
+#' 
+#' \code{neutralloss} returns a numeric value ranging between 0 and 1, where 0 
 #' indicates no similarity between the two MS/MS features, while 1 indicates 
-#' that the MS/MS features are identical. Arguments can be passed to 
-#' the function `MSnbase:::bin_Spectra`, e.g. to set the width of bins
-#' (binSize). 
+#' that the MS/MS features are identical. 
 #' Prior to calculating \deqn{W_{S1}} or \deqn{W_{S2}}, all intensity values 
 #' are divided by the maximum intensity value.
 #'
 #' @return
-#' `neutralloss` returns a numeric similarity coefficient between 0 and 1
+#' \code{neutralloss} returns a numeric similarity coefficient between 0 and 1
 #' 
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
 #' @examples 
 #' data("spectra", package = "MetCirc")
-#' x <- spectra_tissue[[1]]
-#' y <- spectra_tissue[[2]]
-#' neutralloss(x, y, m = 0.5, n = 2, binSize = 0.01)
+#' Spectra::compareSpectra(sps_tissue[1:10], FUN = neutralloss, m = 0.5, n = 2)
 #'
 #' @export
-neutralloss <- function(x, y, m = 0.5, n = 2, ...) {
+neutralloss <- function(x, y, m = 0.5, n = 2, na.rm = TRUE, ...) {
 
+    ## calculate loss to mz value with highest intensity value
+    x[, 1L] <- abs(x[, 1L] - x[which.max(x[, 2L]), 1L])
+    y[, 1L] <- abs(y[, 1L] - y[which.max(y[, 2L]), 1L])
+    
     ## normalize to % intensity
-    x@intensity <- x@intensity / max(x@intensity)*100
-    y@intensity <- y@intensity / max(y@intensity)*100
+    x[, 2L] <- x[, 2L] / max(x[, 2L], na.rm = TRUE)*100
+    y[, 2L] <- y[, 2L] / max(y[, 2L], na.rm = TRUE)*100
 
-    ## calculate loss to precursorMz value
-    x@mz <- abs(x@mz - x@precursorMz)
-    y@mz <- abs(y@mz - y@precursorMz)
+    wx <- MsCoreUtils:::.weightxy(x[, 1L], x[, 2L], m, n)
+    wy <- MsCoreUtils:::.weightxy(y[, 1L], y[, 2L], m, n)
+    # ws1 <- x[, 2L] ^ m * x[, 1L] ^ n
+    # ws2 <- y[, 2L] ^ m * y[, 1L] ^ n
 
-    binnedSpectra <- MSnbase:::bin_Spectra(x, y, ...)
-    mz <- lapply(binnedSpectra, mz)
-    inten <- lapply(binnedSpectra, intensity)
-
-    ws1 <- inten[[1]] ^ m * mz[[1]] ^ n
-    ws2 <- inten[[2]] ^ m * mz[[2]] ^ n
-
-    sum( ws1*ws2) ^ 2 / ( sum( ws1^2 ) * sum( ws2^2 ) )
+    sum(wx * wy, na.rm = na.rm)^2L/(sum(wx^2L, na.rm = na.rm) * 
+        sum(wy^2L, na.rm = na.rm))
+    # sum(ws1*ws2, na.rm = na.rm) ^ 2 / (sum(ws1^2, na.rm = na.rm) * 
+    #     sum(ws2^2, na.rm = na.rm))
 }
-
-#' @import amap
 
 #' @name orderSimilarityMatrix
 #'
@@ -200,52 +76,55 @@ neutralloss <- function(x, y, m = 0.5, n = 2, ...) {
 #' Internal function for shiny application. May also be used 
 #' outside of shiny to reconstruct figures.
 #'
-#' @param
-#' similarityMatrix `matrix`, `similarityMatrix` contains 
+#' @param similarityMatrix \code{matrix}, \code{similarityMatrix} contains 
 #' pair-wise similarity coefficients which give information about the similarity 
 #' between precursors
-#'
-#' @param
-#' spectra `MSpectra` object containing spectra that are compared
-#' in `similarityMatrix`
-#'
-#' @param
-#' type `character`, one of "retentionTime", "mz" or "clustering"
-#'
-#' @param
-#' group `logical`, if TRUE group separated by "_" will be cleaved
-#' from rownames/colnames of similarityMatrix and matched against names of 
-#' spectra, if FALSE rownames/colnames of similarityMatrix are taken as are 
-#' and matched against names of spectra
+#' @param sps \code{Spectra} object containing spectra that are compared
+#' in \code{similarityMatrix}
+#' @param type \code{character(1)}, one of \code{"retentionTime"}, \code{"mz"}, or 
+#' \code{"clustering"}
+#' @param group \code{logical(1)}, if \code{TRUE} \code{group} separated by 
+#' \code{"_"} will be cleaved  from \code{rownames}/\code{colnames} of 
+#' \code{similarityMatrix} and matched against names of \code{sps}
+#' (\code{sps$name}), if \code{FALSE} \code{rownames}/\code{colnames} of 
+#' \code{similarityMatrix} are taken as are and matched against names of 
+#' \code{sps} (\code{sps$name})
 #'
 #' @details
-#' `orderSimilarityMatrix` takes  a similarity matrix,
-#' spectra (containing information on m/z and retentionTime and a 
-#' `character` vector
-#' as arguments. It will then reorder rows and columns of 
-#' the similarityMatrix object such, that it orders rows and columns of 
-#' similarityMatrix according to m/z, retention time or clustering in 
-#' each group. `orderSimilarityMatrix` is employed in the `shinyCircos` 
-#' function to create `similarityMatrix` objects which will allow to switch
+#' \code{orderSimilarityMatrix} takes a similarity matrix,
+#' \code{Spectra} object (\code{sps}, containing information on m/z and 
+#' retention time), and a \code{character} vector as arguments. It will then 
+#' reorder rows and columns of the \code{similarityMatrix} object such, 
+#' that it orders rows and columns of \code{similarityMatrix} according to 
+#' m/z, retention time or clustering in each group. 
+#' 
+#' \code{orderSimilarityMatrix} is employed in the \code{shinyCircos} 
+#' function to create \code{similarityMatrix} objects which will allow to switch
 #' between different types of ordering in between groups (sectors) in the 
 #' circos plot. It may be used as well externally, to reproduce plots outside
 #' of the reactive environment (see vignette for a workflow).
 #'
-#' @return `matrix`, `orderSimilarityMatrix` returns a similarity matrix 
-#' with ordered rownames according to the `character` vector given to order
+#' @return \code{matrix}, \code{orderSimilarityMatrix} returns a similarity 
+#' matrix with ordered \code{rownames} according to the \code{character} vector 
+#' \code{type}
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
 #' @examples
 #' data("spectra", package = "MetCirc")
-#' similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-#'     fun = normalizeddotproduct, binSize = 0.01)
+#' similarityMat <- Spectra::compareSpectra(sps_tissue[1:10], 
+#'     FUN = MsCoreUtils::ndotproduct, ppm = 10)
+#' rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+#' 
 #' ## order according to retention time 
 #' orderSimilarityMatrix(similarityMatrix = similarityMat, 
-#'     spectra_tissue, type = "retentionTime", group = FALSE)
-#'
+#'     sps = sps_tissue, type = "retentionTime", group = FALSE)
+#'     
+#' @importFrom amap hcluster
+#' @importFrom MsCoreUtils ndotproduct
+#' 
 #' @export
-orderSimilarityMatrix <- function(similarityMatrix, spectra, 
+orderSimilarityMatrix <- function(similarityMatrix, sps, 
         type = c("retentionTime","mz", "clustering"), group = FALSE) {
 
     if (!(group %in% c(TRUE, FALSE))) stop("group has to be TRUE or FALSE")
@@ -264,20 +143,18 @@ orderSimilarityMatrix <- function(similarityMatrix, spectra,
         groupname <- unlist(groupname)
     }
 
-    ## match colnames/rownames of similarityMatrix and names of spectra and
-    ## truncate spectra
-    spectra <- spectra[names(spectra) %in% groupname, ]
+    ## match colnames/rownames of similarityMatrix and names of sps and
+    ## truncate sps
+    sps <- sps[sps$name %in% groupname, ]
 
     ## retentionTime
     if (type == "retentionTime") {
-        rt <- unlist(lapply(spectra, function(x) x@rt))
-        orderNew <- order(rt)
+        orderNew <- order(sps$rtime)
     }
 
     ## mz
     if (type == "mz") {
-        prec_mz <- unlist(lapply(spectra, function(x) x@precursorMz))
-        orderNew <- order(prec_mz)
+        orderNew <- order(sps$precursorMz)
     }
 
     ## clustering
@@ -289,5 +166,5 @@ orderSimilarityMatrix <- function(similarityMatrix, spectra,
     simM <- similarityMatrix[orderNew, orderNew]
     colnames(simM) <- rownames(simM) <- rownames(similarityMatrix)[orderNew]
 
-    return(simM)
+    simM
 }

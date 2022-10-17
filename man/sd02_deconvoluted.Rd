@@ -14,8 +14,8 @@ Li et al. (2015)
 `data.frame`
 }
 \description{
-`sd02_deconvoluted` contains MS/MS data from Li et al. 
-(2015). It is a `data.frame` which hosts m/z values, retention time, 
+`sd02_deconvoluted` contains MS/MS data from Li et al.
+(2015). It is a `data.frame` which hosts m/z values, retention time,
 intensity and the respective precursor m/z values. `sd02_deconvoluted`
 originates from Li et al. (2015). See Li et al. (2015) for further
 information.

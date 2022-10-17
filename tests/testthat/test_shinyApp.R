@@ -1,35 +1,44 @@
 ## create objects which will be used in unit tests
 data("spectra", package = "MetCirc")
+sps_tissue@metadata$names <- rep("Unknown", 259)
+sps_tissue@metadata$information <- rep("Unknown", 259)
+sps_tissue@metadata$classes <- rep("Unknown", 259)
+sps_tissue@metadata$adduct <- rep("Unknown", 259)
+
 ## use only a selection
 condition <- c("SPL", "LIM", "ANT", "STY")
-spectra_tissue <- spectra_tissue[c(1:20, 29:48, 113:132, 240:259),]
-similarityMat <- compare_Spectra(spectra_tissue, fun = normalizeddotproduct)
+sps_tissue <- sps_tissue[c(1:20, 29:48, 113:132, 240:259),]
+similarityMat <- Spectra::compareSpectra(sps_tissue, 
+    fun = MsCoreUtils::ndotproduct, ppm = 20, m = 0.5, n = 2)
+colnames(similarityMat) <- rownames(similarityMat) <- sps_tissue$name
 groupname <- rownames(similarityMat)
-inds <- MetCirc:::spectraCond(spectra_tissue, condition = condition)
-inds_match <- lapply(inds, function(x) {inds_match <- match(groupname, x)
-inds_match <- inds_match[!is.na(inds_match)]; x[inds_match]})
-inds_cond <- lapply(seq_along(inds_match),
-    function(x) {
-        if (length(inds_match[[x]]) > 0) {
-            paste(condition[x], inds_match[[x]], sep = "_")
-        } else character()
+inds <- MetCirc:::spectraCondition(sps = sps_tissue, condition = condition)
+inds_match <- lapply(inds, function(x) {
+    inds_match <- match(groupname, x)
+    inds_match <- inds_match[!is.na(inds_match)]
+    x[inds_match]
+})
+inds_cond <- lapply(seq_along(inds_match), function(x) {
+    if (length(inds_match[[x]]) > 0) {
+        paste(condition[x], inds_match[[x]], sep = "_")
+    } else character()
 })
 inds_cond <- unique(unlist(inds_cond))
 group <- unlist(lapply(strsplit(inds_cond, "_"), "[", 1))
 
 ## create link0df
-linkDf <- createLinkDf(similarityMat, spectra_tissue, condition, 0.75, 1)
+linkDf <- createLinkDf(similarityMat, sps = sps_tissue, condition, 0.01, 1)
 ind <- 18
 linkDfInds <- getLinkDfIndices(inds_cond[ind], linkDf)
 
 ## START unit test shinyCircos
 test_that("shinyCircos", {
-    expect_error(shinyCircos(1:2, spectra, condition), 
-        "no slot of name \"elementMetadata\" for this")
-    expect_error(shinyCircos(similarityMat, NULL, condition),
-        "trying to get slot \"elementMetadata\" from an object")
-    expect_error(shinyCircos(similarityMat, spectra, "a"),
-        "no slot of name \"elementMetadata\" for this")
+    expect_error(shinyCircos(1:2, sps = spectra, condition), 
+        "no slot of name \"metadata\" for this object of class")
+    expect_error(shinyCircos(similarityMat, sps = NULL, condition),
+        "trying to get slot \"metadata\" from an object")
+    expect_error(shinyCircos(similarityMat, sps = spectra, "a"),
+        "no slot of name \"metadata\" for this object of class")
 })
 ## END unit test shinyCircos
 
@@ -37,50 +46,50 @@ test_that("shinyCircos", {
 ## START unit test printInformationSelect
 test_that("printInformationSelect", {
     expect_error(MetCirc:::printInformationSelect(
-        select = NULL, spectra = spectra_tissue, linkDfInd = linkDfInds,
+        select = NULL, sps = sps_tissue, linkDfInd = linkDfInds,
         linkDf = linkDf, similarityMatrix = similarityMat),
         "argument is of length zero")
     expect_error(MetCirc:::printInformationSelect(
-        select = inds_cond[ind], spectra = NULL, linkDfInd = linkDfInds,
+        select = inds_cond[ind], sps = NULL, linkDfInd = linkDfInds,
         linkDf = linkDf, similarityMatrix = similarityMat),
-        "trying to get slot \"precursorMz\" from an object")
+        "non-numeric argument to mathematical function")
     expect_error(MetCirc:::printInformationSelect( 
-        select = inds_cond[ind], spectra = spectra_tissue,
+        select = inds_cond[ind], sps = sps_tissue,
         linkDfInd = linkDfInds, linkDf = NULL,
         similarityMatrix = similarityMat),
-        "subscript is out of bounds")
+        "subscript contains out-of-bounds indices")
     expect_error(MetCirc:::printInformationSelect(
-        select = inds_cond[ind], spectra = spectra_tissue,
+        select = inds_cond[ind], sps = sps_tissue,
         linkDfInd = linkDfInds, linkDf = linkDf, similarityMatrix = NULL),
         "non-numeric argument to mathematical function")
     expect_equal(MetCirc:::printInformationSelect(
-        select = inds_cond[ind], spectra = spectra_tissue,
+        select = inds_cond[ind], sps = sps_tissue,
         linkDfInd = numeric(),  linkDf = linkDf,
         similarityMatrix = similarityMat),
-        "LIM_18 (1398.71, 1018.98, , , , ) does not connect to any feature ")
+        "LIM_45 (905.47, 1022.54, , , , ) does not connect to any feature ")
 })
 ## END unit test printInformationSelect
 
 
 ## START unit test typeMatch_link0
 MZ <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, type = "mz", condition = condition)
+    sps = sps_tissue, type = "mz", condition = condition)
 link0df_mz <- MZ[["link0df"]]
 mz_match <- MZ[["type_match"]]
 RT <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, type = "retentionTime", condition = condition)
+    sps = sps_tissue, type = "retentionTime", condition = condition)
 link0df_rt <- RT[["link0df"]]
 rt_match <- RT[["type_match"]]
 Clust <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, type = "clustering", condition = condition)
+    sps = sps_tissue, type = "clustering", condition = condition)
 link0df_clust <- Clust[["link0df"]]
 clust_match <- Clust[["type_match"]]
 
 test_that("typeMatch_link0",  {
-    expect_equal(length(mz_match), 106)
+    expect_equal(length(mz_match), 107)
     expect_equal(length(mz_match), length(rt_match))
     expect_equal(length(mz_match), length(clust_match))
-    expect_equal(dim(link0df_mz), c(5521, 5))
+    expect_equal(dim(link0df_mz), c(5578, 5))
     expect_equal(dim(link0df_mz), dim(link0df_rt))
     expect_equal(dim(link0df_mz), dim(link0df_clust))
     expect_true(is.character(mz_match))
@@ -90,16 +99,16 @@ test_that("typeMatch_link0",  {
     expect_true(is.data.frame(link0df_rt))
     expect_true(is.data.frame(link0df_clust))
     expect_error(MetCirc:::typeMatch_link0(similarityMatrix = NULL,
-        spectra = spectra_tissue, type = "mz", condition = condition),
+        sps = sps_tissue, type = "mz", condition = condition),
         "only matrix diagonals can be replaced")
     expect_error(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-        spectra = NULL, type = "mz", condition = condition),
+        sps = NULL, type = "mz", condition = condition),
         "argument 1 is not a vector")
     expect_error(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-        spectra = spectra_tissue, type = "a", condition = condition),
+        sps = sps_tissue, type = "a", condition = condition),
         "should be one of ")
     expect_error(MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-        spectra = spectra_tissue, type = "mz", condition = "abc"),
+        sps = sps_tissue, type = "mz", condition = "abc"),
         "n < m")
 })
 ## END unit test typeMatch_link0
@@ -149,11 +158,11 @@ test_that("recordPlotHighlight", {
 
 ## START unit test replayPlotOrder
 plot_l <- list(highlightMz = highlightMz, highlightRT = highlightRt,
-               highlightClust = highlightClust, fillMz = plotFill_mz,
-               fillRT = plotFill_rt, fillClust = plotFill_clust)
+    highlightClust = highlightClust, fillMz = plotFill_mz,
+    fillRT = plotFill_rt, fillClust = plotFill_clust)
 plot_l_mock <- list(highlightMz = NULL, highlightRT = highlightRt,
-               highlightClust = highlightClust, fillMz = plotFill_mz,
-               fillRT = plotFill_rt, fillClust = plotFill_clust)
+    highlightClust = highlightClust, fillMz = plotFill_mz,
+    fillRT = plotFill_rt, fillClust = plotFill_clust)
 ## plots that work
 MetCirc:::replayPlotOrder(orderMatch = "mz", onCircle = FALSE,
     plot_l = plot_l, ind = NULL) ## fill mz
@@ -180,7 +189,7 @@ test_that("replayPlotOrder", {
         "invalid argument type")
     expect_error(MetCirc:::replayPlotOrder(orderMatch = "a",
         onCircle = FALSE, plot_l = plot_l, ind = 1),
-        "condition not equal to 'mz', 'retentionTime' or 'clustering'")
+        "'arg' should be one of ")
 })
 ## END unit test replayPlotOrder
 
@@ -188,14 +197,14 @@ test_that("replayPlotOrder", {
 ## START unit test replayPlotAdd
 ## order according to retention time
 mz_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, type = "mz", condition = condition)
+    sps = sps_tissue, type = "mz", condition = condition)
 linkDf <- mz_match[["link0df"]]
 mz_match <- mz_match[["type_match"]]
 rt_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, type = "retentionTime", condition = condition)
+    sps = sps_tissue, type = "retentionTime", condition = condition)
 rt_match <- rt_match[["type_match"]]
 clust_match <- MetCirc:::typeMatch_link0(similarityMatrix = similarityMat,
-    spectra = spectra_tissue, type = "clustering", condition = condition)
+    sps = sps_tissue, type = "clustering", condition = condition)
 clust_match <- clust_match[["type_match"]]
 circos.clear()
 circos.initialize(factor(mz_match, levels = mz_match),
@@ -212,7 +221,7 @@ test_that("replayPlotAdd", {
         linkDf = link0df_mz, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = NULL, indRT = NULL,
         indCluster = NULL),
-        "condition not equal to 'mz', 'retentionTime' or 'clustering'")
+        "'arg' should be one of ")
     expect_error(MetCirc:::replayPlotAdd(orderMatch = "mz", onCircle = "a",
         linkDf = link0df_mz, mz_match = mz_match, rt_match = rt_match,
         clust_match = clust_match, ind = 1, indMz = NULL, indRT = NULL,

@@ -1,55 +1,37 @@
 data("convertMsp2Spectra", package = "MetCirc")
 spl <- convertMsp2Spectra(msp2spectra)
 
-simMat <- compare_Spectra(spl[1:2], fun = "dotproduct")
+simMat <- Spectra::compareSpectra(spl, FUN = ndotproduct, m = 0.5, n = 2)
+rownames(simMat) <- colnames(simMat) <- spl$name
 
-## START unit test compare_Spectra
-test_that("compare_Spectra", {
-    expect_equal(simMat, 
-        matrix(c(1, 1.004575e-05, 1.004575e-05, 1),
-            ncol = 2, dimnames = list(1:2, 1:2)), tolerance = 1e-6)
-    expect_error(compare_Spectra(spl[1], "dotproduct"), "n < m")
-    expect_error(compare_Spectra(spl[1:2], "dotproduct2"), 
-        "'arg' should be one of ")
+## START unit test compareSpectra
+test_that("compareSpectra", {
+    expect_equal(sum(simMat), 38.22854, tolerance = 1e-06)
+    expect_equal(simMat["Isoquercitrin M-H     ", "Rutin M-H     "], 0.9887026,
+        tolerance = 1e-06)
 })
-## END unit test compare_Spectra
-
-## START unit test normalizeddotproduct
-ndp <- normalizeddotproduct(spl[[1]], spl[[2]])
-test_that("normalizeddotproduct", {
-    expect_equal(ndp, 1.591002e-07, tolerance = 1e-6)
-    expect_error(normalizeddotproduct(spl[[1]], 1), 
-        "trying to get slot \"intensity\"")
-    expect_error(normalizeddotproduct(1, spl[[1]]),
-        "trying to get slot \"intensity\"")
-    expect_error(normalizeddotproduct(spl[[1]], spl[[2]], "a"),
-        "non-numeric argument to binary operator")
-    expect_error(normalizeddotproduct(spl[[1]], spl[[2]], 1, "a"),
-        "non-numeric argument to binary operator")
-})
-## END unit test normalizeddotproduct
+## END unit test compareSpectra
 
 ## START unit test neutralloss
-nl <- neutralloss(spl[[1]], spl[[2]])
+nl <- neutralloss(
+    matrix(c(unlist(spl[1]$mz), unlist(spl[1]$intensity)), ncol = 2), 
+    matrix(c(unlist(spl[1]$mz), unlist(spl[1]$intensity)), ncol = 2))
 test_that("neutralloss", {
-    expect_equal(nl, 5.899399e-05, tolerance = 1e-6)
-    expect_error(neutralloss(spl[[1]], 1),
-        "trying to get slot \"intensity\"")
-    expect_error(neutralloss(1, spl[[1]]),
-        "trying to get slot \"intensity\"")
-    expect_error(neutralloss(spl[[1]], spl[[2]], "a"),
-        "non-numeric argument to binary operator")
-    expect_error(neutralloss(spl[[1]], spl[[2]], 1, "a"),
-        "non-numeric argument to binary operator")
+    expect_equal(nl, 1, tolerance = 1e-6)
+    simMat_nl <- Spectra::compareSpectra(spl, FUN = neutralloss, m = 0.5, n = 2)
+    rownames(simMat_nl) <- colnames(simMat_nl) <- spl$name
+    expect_equal(sum(simMat_nl), 25.9532, tolerance = 1e-04)
+    expect_equal(simMat_nl["Isoquercitrin M-H     ", "Rutin M-H     "], 0.182,
+                 tolerance = 1e-03)
 })
 ## END unit test neutralloss
 
 
 ## START unit test orderSimilarityMatrix
-simMat_o_mz <- orderSimilarityMatrix(simMat, spl, type = "mz", group = FALSE)
-simMat_o_rt <- orderSimilarityMatrix(simMat, spl, type = "retentionTime",
+simMat_o_mz <- orderSimilarityMatrix(simMat, sps = spl, type = "mz", group = FALSE)
+simMat_o_rt <- orderSimilarityMatrix(simMat, sps = spl, type = "retentionTime",
     group = FALSE)
-simMat_o_cl <- orderSimilarityMatrix(simMat, spl, type = "clustering",
+simMat_o_cl <- orderSimilarityMatrix(simMat, sps = spl, type = "clustering",
     group = FALSE)
 
 ## create a matrix with groups
@@ -58,9 +40,9 @@ rownames(simMat_gr) <- colnames(simMat_gr) <- paste("A", rownames(simMat),
     sep = "_")
 
 test_that("orderSimilarityMatrix", {
-    expect_error(orderSimilarityMatrix(simMat, spl, type = "foo"),
+    expect_error(orderSimilarityMatrix(simMat, sps = spl, type = "foo"),
         "'arg' should be one of ")
-    expect_error(orderSimilarityMatrix(simMat, spl, type = "mz", group = "a"),
+    expect_error(orderSimilarityMatrix(simMat, sps = spl, type = "mz", group = "a"),
         "group has to be TRUE or FALSE")
     expect_error(orderSimilarityMatrix(type = "mz"), 
         "is missing, with no default")
@@ -68,12 +50,14 @@ test_that("orderSimilarityMatrix", {
         "is missing, with no default")
     expect_error(orderSimilarityMatrix(type = "clustering"),
         "is missing, with no default")
-    expect_equal(colnames(simMat), colnames(simMat_o_mz))
-    expect_equal(rownames(simMat), rownames(simMat_o_mz))
+    expect_equal(colnames(simMat_o_mz), spl$name[order(spl$precursorMz)])
+    expect_equal(rownames(simMat_o_mz), spl$name[order(spl$precursorMz)])
     expect_equal(colnames(simMat_o_mz), rownames(simMat_o_mz))
     expect_equal(dim(simMat), dim(simMat_o_mz))
     expect_true(is.matrix(simMat_o_mz))
     expect_true(is.numeric(simMat_o_mz))
+    expect_equal(colnames(simMat_o_rt), spl$name[order(spl$rtime)])
+    expect_equal(rownames(simMat_o_rt), spl$name[order(spl$rtime)])
     expect_equal(colnames(simMat_o_rt), rownames(simMat_o_rt))
     expect_equal(dim(simMat), dim(simMat_o_rt))
     expect_true(is.matrix(simMat_o_rt))
@@ -83,12 +67,32 @@ test_that("orderSimilarityMatrix", {
     expect_true(is.matrix(simMat_o_cl))
     expect_true(is.numeric(simMat_o_cl))
     expect_true(is.matrix(
-        orderSimilarityMatrix(simMat_gr, spl, type = "mz", group = TRUE)))
+        orderSimilarityMatrix(simMat_gr, sps = spl, type = "mz", group = TRUE)))
     expect_true(is.numeric(
-        orderSimilarityMatrix(simMat_gr, spl, type = "mz", group = TRUE)))
-    expect_equal(rownames(orderSimilarityMatrix(simMat_gr, spl, type = "mz",
-            group = TRUE)), c("A_1", "A_2"))
-    expect_equal(colnames(orderSimilarityMatrix(simMat_gr, spl, type = "mz",
-            group = TRUE)), c("A_1", "A_2"))
+        orderSimilarityMatrix(simMat_gr, sps = spl, type = "mz", group = TRUE)))
+    expect_equal(rownames(orderSimilarityMatrix(simMat_gr, sps = spl, 
+        type = "mz", group = TRUE)), 
+        c("A_Chrysin M-H     ",  "A_Apigenin M-H     ", "A_Baicalein M-H     ",
+            "A_Galangin M-H     ", "A_Pinostrobin M-H     ",
+            "A_Naringenin M-H     ", "A_Acacetin M-H     ", 
+            "A_Kaempferol M-H     ", "A_Luteolin M-H     ",
+            "A_Quercetin M-H     ", "A_Homoeriodictyol M-H     ",
+            "A_Hesperetin M-H     ", "A_3-O-methylquercetin M-H     ",
+            "A_Apigetrin M-H     ", "A_Avicularin M-H     ",
+            "A_Swertisin M-H     ", "A_Isoquercitrin M-H     ",
+            "A_2O-rhamnosyl-swertisin M-H     ", "A_Tiliroside M-H     ",
+            "A_Vicenin-2 M-H     ", "A_Rutin M-H     ", "A_Hesperedin M-H     "))
+    expect_equal(colnames(orderSimilarityMatrix(simMat_gr, sps = spl, 
+        type = "mz", group = TRUE)), 
+        c("A_Chrysin M-H     ",  "A_Apigenin M-H     ", "A_Baicalein M-H     ",
+          "A_Galangin M-H     ", "A_Pinostrobin M-H     ",
+          "A_Naringenin M-H     ", "A_Acacetin M-H     ", 
+          "A_Kaempferol M-H     ", "A_Luteolin M-H     ",
+          "A_Quercetin M-H     ", "A_Homoeriodictyol M-H     ",
+          "A_Hesperetin M-H     ", "A_3-O-methylquercetin M-H     ",
+          "A_Apigetrin M-H     ", "A_Avicularin M-H     ",
+          "A_Swertisin M-H     ", "A_Isoquercitrin M-H     ",
+          "A_2O-rhamnosyl-swertisin M-H     ", "A_Tiliroside M-H     ",
+          "A_Vicenin-2 M-H     ", "A_Rutin M-H     ", "A_Hesperedin M-H     "))
 })
 ## END unit test orderSimilarityMatrix

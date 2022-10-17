@@ -4,41 +4,42 @@
 \alias{createLinkDf}
 \title{Create a data frame which contains features to link (indices)}
 \usage{
-createLinkDf(similarityMatrix, spectra, condition, lower, upper)
+createLinkDf(similarityMatrix, sps, condition, lower, upper)
 }
 \arguments{
-\item{similarityMatrix}{`matrix`, a similarity matrix that contains the
+\item{similarityMatrix}{\code{matrix}, a similarity matrix that contains the
 similarity measure between all precursors in the data set}
 
-\item{spectra}{MSpectra object containing spectra of similarityMatrix}
+\item{sps}{\code{Spectra} object containing spectral data corresponding to 
+features in \code{similarityMatrix}}
 
-\item{condition}{`character`, vector containing the
-conditions/samples for which a linkDf is created}
+\item{condition}{\code{character} \code{vector} containing the
+conditions/samples for which a \code{linkDf} is created}
 
-\item{lower}{`numeric`, threshold value for similarity values,
-below this value linked features will not be included}
+\item{lower}{\code{numeric(1)}, threshold value for similarity values,
+linked features below this value will not be included}
 
-\item{upper}{`numeric`, threshold value for similarity values,
-above this value linked features will not be included}
+\item{upper}{\code{numeric(1)}, threshold value for similarity values,
+linked features above this value will not be included}
 }
 \value{
-`createLinkDf` returns a data frame that gives per each row
-information on linked features
+\code{createLinkDf} returns a \code{data.frame} that gives per each 
+row information on linked features
 }
 \description{
 Create a data frame which contains features to link (indices).
 }
 \details{
-`lower` and `upper` are numerical values
-and truncate similar spectra. The function createLinkDf is a wrapper
-for the functions `createLink0df` and `thresholdLinkDf`.
+\code{lower} and \code{upper} are numerical values and truncate 
+spectra based on their similarity. The function \code{createLinkDf} is 
+a wrapper for the functions \code{createLink0df} and \code{thresholdLinkDf}.
 }
 \examples{
 data("spectra", package = "MetCirc")
 data("similarityMat", package = "MetCirc")
 link0df <- createLink0df(similarityMatrix = similarityMat,
-    spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
-createLinkDf(similarityMatrix = similarityMat, spectra = spectra_tissue,
+    sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+createLinkDf(similarityMatrix = similarityMat, sps = sps_tissue,
     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 
 }

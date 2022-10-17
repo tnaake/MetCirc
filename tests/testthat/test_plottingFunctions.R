@@ -1,28 +1,30 @@
-## load ggplot2
-library(ggplot2)
-
 ## create objects which will be used in unit tests
 data("spectra", package = "MetCirc")
+
 ## use only a selection
 condition <- c("SPL", "LIM", "ANT", "STY")
-spectra_tissue <- spectra_tissue[c(1:20, 29:48, 113:132, 240:259), ]
-similarityMat <- compare_Spectra(spectra_tissue, fun = normalizeddotproduct)
+sps_tissue <- sps_tissue[c(1:20, 29:48, 113:132, 240:259), ]
+similarityMat <- Spectra::compareSpectra(sps_tissue, 
+    FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name
 groupname <- rownames(similarityMat)
-inds <- MetCirc:::spectraCond(spectra_tissue, condition = condition)
-inds_match <- lapply(inds, function(x) {inds_match <- match(groupname, x)
-inds_match <- inds_match[!is.na(inds_match)]; x[inds_match]})
-inds_cond <- lapply(seq_along(inds_match),
-    function(x) {
-        if (length(inds_match[[x]]) > 0) {
-            paste(condition[x], inds_match[[x]], sep = "_")
-        } else character()
+inds <- spectraCondition(sps = sps_tissue, condition = condition)
+inds_match <- lapply(inds, function(x) {
+    inds_match <- match(groupname, x)
+    inds_match <- inds_match[!is.na(inds_match)]
+    x[inds_match]
+})
+inds_cond <- lapply(seq_along(inds_match), function(x) {
+    if (length(inds_match[[x]]) > 0) {
+        paste(condition[x], inds_match[[x]], sep = "_")
+    } else character()
 })
 inds_cond <- unique(unlist(inds_cond))
 group <- unlist(lapply(strsplit(inds_cond, "_"), "[", 1))
 
 ## create link0df
-linkDf <- createLinkDf(similarityMat, spectra_tissue, condition, lower = 0.95,
-    upper = 1)
+linkDf <- createLinkDf(similarityMat, sps = sps_tissue, condition, 
+    lower = 0.95, upper = 1)
 
 ## START unit test for plotCircos
 circos.clear()
@@ -97,7 +99,7 @@ plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3, initialize = TRUE,
     highlight = FALSE, colour = NULL, transparency = 0.3)
 plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3, initialize = TRUE,
     featureNames = FALSE, groupSector = TRUE, groupName = FALSE, links = TRUE,
-    highlight = FALSE, colour = c(1, 2, 3, 4), transparency = 0.3)
+    highlight = FALSE, colour = c(2, 3, 4), transparency = 0.3)
 plotCircos(inds_cond, linkDf, cexFeatureNames = 0.3, initialize = TRUE,
     featureNames = TRUE, groupSector = FALSE, groupName = TRUE, links = TRUE,
     highlight = FALSE, colour = NULL, transparency = 0.3)
@@ -162,9 +164,9 @@ plotCircos(inds_cond, NULL, initialize = TRUE, featureNames = FALSE,
     groupSector = FALSE, groupName = FALSE, links = FALSE, highlight = FALSE)
 test_that("getLinkDfIndices",  {
     expect_equal(getLinkDfIndices(inds_cond[4], linkDf), numeric())
-    expect_equal(getLinkDfIndices(inds_cond[9], linkDf), 1)
-    expect_equal(getLinkDfIndices(inds_cond[12], linkDf), c(2, 3))
-    expect_equal(getLinkDfIndices(inds_cond[4:12], linkDf), c(1:3))
+    expect_equal(getLinkDfIndices(inds_cond[10], linkDf), c(1, 2))
+    expect_equal(getLinkDfIndices(inds_cond[17], linkDf), c(3, 1))
+    expect_equal(getLinkDfIndices(inds_cond[4:12], linkDf), c(1:2))
     expect_error(getLinkDfIndices(inds_cond[1], NULL), 
         "incorrect number of dimensions")
 })
@@ -174,8 +176,8 @@ test_that("getLinkDfIndices",  {
 degreeFeatures <- lapply(inds_cond,
     function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
 test_that("minFragCart2Polar",  {
-    expect_equal(minFragCart2Polar(1, 0, degreeFeatures), 106)
-    expect_equal(minFragCart2Polar(0.1, 0.9, degreeFeatures), 82)
+    expect_equal(minFragCart2Polar(1, 0, degreeFeatures), 107)
+    expect_equal(minFragCart2Polar(0.1, 0.9, degreeFeatures), 83)
     expect_equal(minFragCart2Polar(1, 1, degreeFeatures), NA)
     expect_equal(minFragCart2Polar(1, 0, NULL), integer())
     expect_error(minFragCart2Polar(NA, NA, degreeFeatures), 
@@ -208,17 +210,21 @@ test_that("cart2Polar",  {
 
 ## START unit test plotSpectra
 ## plot which does not fail
-gg <- plotSpectra(spectra_tissue, subject = "SPL_1", query = "SPL_2")
+gg <- plotSpectra(sps = sps_tissue, subject = "SPL_1", query = "SPL_2")
 
 test_that("plotSpectra", {
-    expect_error(plotSpectra(NULL, "LIM_1", "LIM_1"),
-        "trying to get slot \"listData\" from an object of a basic class ")
-    expect_error(plotSpectra(spectra_tissue, NULL, "LIM_1"),
+    suppressWarnings(expect_error(
+        plotSpectra(sps = NULL, subject = "LIM_1", query = "LIM_1"),
+        "arguments imply differing number of rows"))
+    expect_error(
+        plotSpectra(sps = sps_tissue, subject = NULL, query = "LIM_1"),
         "non-character argument")
-    expect_error(plotSpectra(spectra_tissue, "LIM_1", NULL),
+    expect_error(
+        plotSpectra(sps = sps_tissue, subject = "LIM_1", query = NULL),
         "non-character argument")
-    expect_error(plotSpectra(spectra_tissue, "LIM_1", "LIM_0"),
-        "subscript contains invalid names")
-    expect_equal(is(gg), "gg")
+    suppressWarnings(expect_error(
+        plotSpectra(sps = sps_tissue, subject = "LIM_1", query = "LIM_0"),
+        "arguments imply differing number of rows"))
+    expect_is(gg, "gg")
 })
 ## END unit test plotSpectra

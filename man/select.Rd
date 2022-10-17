@@ -7,22 +7,25 @@
 select(condition, mz, rt, clust)
 }
 \arguments{
-\item{condition}{`character`, either `"mz"`, `"retentionTime"` or `"clustering"`}
+\item{condition}{\code{character(1)}, either \code{"mz"},
+\code{"retentionTime"}, or \code{"clustering"}}
 
-\item{mz}{object to return if `condition == "mz"`}
+\item{mz}{object to return if \code{condition == "mz"}}
 
-\item{rt}{object to return if `condition == "retentionTime"`}
+\item{rt}{object to return if \code{condition == "retentionTime"}}
 
-\item{clust}{object to return if `condition == "clustering"`}
+\item{clust}{object to return if \code{condition == "clustering"}}
 }
 \value{
-`mz`, `rt` or `clust` depending on condition
+\code{mz}, \code{rt} or \code{clust} depending on \code{condition}
 }
 \description{
-`select` returns `mz`, `rt` or `clust` depending on `condition`.
+\code{select} returns \code{mz}, \code{rt} or \code{clust} depending on
+\code{condition}.
 }
 \details{
-Helper function for `shinyCircos`, `replayPlotOrder` and `replayPlotAdd`.
+Helper function for \code{shinyCircos}, \code{replayPlotOrder} and 
+\code{replayPlotAdd}.
 }
 \examples{
 mz <- 1

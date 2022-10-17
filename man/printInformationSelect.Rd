@@ -6,7 +6,7 @@
 \usage{
 printInformationSelect(
   select,
-  spectra = NULL,
+  sps = NULL,
   linkDfInd,
   linkDf,
   similarityMatrix,
@@ -14,48 +14,56 @@ printInformationSelect(
 )
 }
 \arguments{
-\item{select}{`character`, obtained from groupname, `character` of selected feature}
+\item{select}{\code{character}, obtained from \code{groupname}, 
+\code{character} of selected feature}
 
-\item{spectra}{`MSpectra` object containing spectra that are compared in 
-`similarityMatrix`}
+\item{sps}{\code{Spectra} object containing spectra that are compared in 
+\code{similarityMatrix}}
 
-\item{linkDfInd}{`numeric` indices of selected features}
+\item{linkDfInd}{\code{numeric} indices of selected features}
 
-\item{linkDf}{`data.frame` that contains information of linked features for given 
-thresholds}
+\item{linkDf}{\code{data.frame} that contains information of linked features 
+for given thresholds}
 
-\item{similarityMatrix}{`matrix` that is used to get information on the 
-degree of similarity, `similarityMat` is an ordered version of a 
-similarity matrix, see `?orderSimilarityMatrix`}
+\item{similarityMatrix}{\code{matrix} that is used to get information on the 
+degree of similarity, \code{similarityMatrix} is an ordered version of a 
+similarity matrix, see \code{?orderSimilarityMatrix}}
 
-\item{roundDigits}{`numeric`,  how many digits should be displayed?}
+\item{roundDigits}{\code{numeric(1)},  how many digits should be displayed?}
 }
 \value{
-`character` that is in HTML format
+\code{character} that is in HTML format
 }
 \description{
 Displays information on connected features of selected features.
 }
 \details{
-`printInformationSelect` is for internal use.
+\code{printInformationSelect} is for internal use.
 }
 \examples{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10],
-    fun = normalizeddotproduct, binSize = 0.01)
+sps_tissue@metadata$names <- rep("Unknown", 259)
+sps_tissue@metadata$information <- rep("Unknown", 259)
+sps_tissue@metadata$classes <- rep("Unknown", 259)
+sps_tissue@metadata$adduct <- rep("Unknown", 259)
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 20, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
 linkDf <- createLinkDf(similarityMatrix = similarityMat,
-    spectra = spectra_tissue[1:10], 
-    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
+    sps = sps_tissue[1:10], 
+    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.01, upper = 1)
+    
 ## cut link data.frame (here: only display links between groups)
 linkDf_cut <- cutLinkDf(linkDf, type = "inter")
 groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
             as.character(linkDf_cut[, "spectrum2"]))
 groupname <- unique(groupname)
+
 ## arbitrarily select a feature
 ind <- 2
 linkDfInds <- getLinkDfIndices(groupname[ind], linkDf_cut)
-MetCirc:::printInformationSelect(groupname[ind], 
-    spectra = spectra_tissue[1:10], linkDfInd = linkDfInds, 
+MetCirc:::printInformationSelect(select = groupname[ind], 
+    sps = sps_tissue[1:10], linkDfInd = linkDfInds, 
     linkDf = linkDf_cut, similarityMatrix = similarityMat)
 
 }

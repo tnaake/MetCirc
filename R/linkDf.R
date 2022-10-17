@@ -1,43 +1,44 @@
-#' @name spectraCond
+#' @name spectraCondition
 #'
 #' @title Get MS/MS spectra that are present in condition
 #'
 #' @description
-#' `spectraCond` returns the names of `spectra` that are
+#' \code{spectraCondition} returns the names of \code{Spectra} that are
 #' present in condition, corresponding to the slot
-#' `elementMetadata@listData`.
+#' \code{metadata}.
 #'
-#' @param
-#' spectra `MSpectra` object of `MSnbase` package
-#'
-#' @param
-#' condition `character`, vector with conditions found as columns
-#' in the elementMetadata slot
+#' @param sps \code{Spectra} object of \code{Spectra} package
+#' @param condition \code{character}, vector with conditions found as columns
+#' in the metadata slot
 #'
 #' @details
-#' Helper function in `createLink0df` and `shinyCircos`.
+#' Helper function in \code{createLink0df} and \code{shinyCircos}.
 #'
 #' @return
-#' `list`, named `list` with `character` vector as entries that contains
-#' the names of the MS/MS entries in `spectra` that are present in the
-#' `conditon` (tissues, stress conditions, time points, etc.)
+#' \code{list}, named \code{list} with \code{character} vector as entries that
+#' contains the names of the MS/MS entries in \code{spectra} that are present 
+#' in the \code{conditon} (tissues, stress conditions, time points, etc.)
 #'
 #' @author Thomas Naake \email{thomasnaake@@googlemail.com}
 #'
 #' @examples
 #' data("spectra", package = "MetCirc")
-#' MetCirc:::spectraCond(spectra_tissue,
+#' MetCirc:::spectraCondition(sps = sps_tissue,
 #'     condition = c("SPL", "LIM", "ANT", "STY"))
-spectraCond <- function(spectra, condition) {
+spectraCondition <- function(sps, condition) {
 
-    inds <- lapply(condition, function(x) {
-        which(spectra@elementMetadata@listData[[x]] == 1)
+    ## get the indices 
+    inds <- lapply(condition, function(condition_i) {
+        which(sps@metadata[[condition_i]] == 1)
     })
-
+    
+    ## return the names of the features that are present in condition
+    inds <- lapply(inds, function(inds_i) {
+        inds_i <- sps$name[inds_i]
+        inds_i[!is.na(inds_i)]
+    })
     names(inds) <- condition
-    inds <- lapply(inds, function(x) names(spectra)[x])
-
-    return(inds)
+    inds
 }
 
 #' @name createLink0df
@@ -48,21 +49,17 @@ spectraCond <- function(spectra, condition) {
 #' Create a link matrix which links every feature in similarity
 #' matrix with another.
 #'
-#' @param
-#' similarityMatrix `matrix`, a similarity matrix that contains the
+#' @param similarityMatrix \code{matrix}, a similarity matrix that contains the
 #' NDP similarity measure between all precursors in the data set
-#'
-#' @param spectra `MSpectra` object
-#'
-#' @param condition `character`, which conditions should be included?
+#' @param sps \code{Spectra} object
+#' @param condition \code{character}, which conditions should be included?
 #'
 #' @details
-#' createLink0df creates a `matrix` from a similarity
-#' matrix which includes all connections between features in the
-#' similarity matrix, but
+#' \code{createLink0df} creates a \code{matrix} from a similarity matrix which 
+#' includes all connections between features in the similarity matrix, but
 #' exclude links which have a similarity of exactly 0.
 #'
-#' @return createLink0df returns a `matrix` that gives per each row
+#' @return \code{createLink0df} returns a `matrix` that gives per each row
 #' information on linked features
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
@@ -71,10 +68,12 @@ spectraCond <- function(spectra, condition) {
 #' data("spectra", package = "MetCirc")
 #' data("similarityMat", package = "MetCirc")
 #' link0df <- createLink0df(similarityMatrix = similarityMat,
-#'     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+#'     sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 #'
+#' @importFrom utils combn
+#' 
 #' @export
-createLink0df <- function(similarityMatrix, spectra, condition) {
+createLink0df <- function(similarityMatrix, sps, condition) {
 
     if (!all(colnames(similarityMatrix) == rownames(similarityMatrix))) {
         stop("colnames(similarityMatrix) != rownames(similarityMatrix)")
@@ -84,10 +83,10 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
     ## a later step)
     diag(similarityMatrix) <- 0
 
-    ## truncate spectra that it has the same spectra as in similarityMatrix
-    spectra <- spectra[names(spectra) %in% colnames(similarityMatrix), ]
+    ## truncate sps that it has the same sps as in similarityMatrix
+    sps <- sps[sps$name %in% colnames(similarityMatrix), ]
 
-    inds <- MetCirc:::spectraCond(spectra, condition)
+    inds <- spectraCondition(sps, condition)
     inds_cond <- lapply(seq_along(inds),
         function(x) {
             if (length(inds[[x]]) > 0) {
@@ -97,7 +96,7 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
 
     inds_uniq <- unique(unlist(inds_cond))
 
-    inds_uniq_combn <- combn(inds_uniq, 2)
+    inds_uniq_combn <- utils::combn(inds_uniq, 2)
 
     ## get similarity values for all combinations
     sim <- lapply(seq_len(ncol(inds_uniq_combn)), function(x) {
@@ -117,37 +116,33 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
         spectrum2 = inds_uniq_combn[2, ],
         similarity = as.numeric(sim))
 
-    mat0 <- mat0[!mat0[, "similarity"] == 0, ]
-
-    return(mat0)
+    mat0[!mat0[, "similarity"] == 0, ]
 }
 
 #' @name thresholdLinkDf
 #'
 #' @title Threshold a data frame containing information on links
 #'
-#' @description Threshold a link data frame based on lower and upper
-#' similarity values. The function will return that lie within the defined
-#' bounds.
+#' @description 
+#' Threshold a link data frame based on lower and upper similarity values. 
+#' The function will return the links that lie within the defined bounds.
 #'
-#' @param
-#' link0df `data.frame`, a link data frame that gives per each row
+#' @param link0df \code{data.frame}, a link data frame that gives per each row
 #' information on linked features
 #'
-#' @param
-#' lower `numeric`, threshold value for similarity values, below
+#' @param lower \code{numeric}, threshold value for similarity values, below
 #' this value linked features will not be returned
 #'
 #' @param
-#' upper `numeric`, threshold value for similarity values, above
+#' upper \code{numeric}, threshold value for similarity values, above
 #' this value linked features will not be returned
 #'
 #' @details
-#' `lower` and `upper` are numerical values
-#' and truncates mass spectra based on their similarity values.
+#' \code{lower} and \code{upper} are numerical values
+#' and truncate mass spectra based on their similarity values.
 #'
 #' @return
-#' `thresholdLinkDf` returns a data frame that gives per each row
+#' \code{thresholdLinkDf} returns a \code{data.frame} that gives per each row
 #' information on linked features which are linked within certain thresholds.
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
@@ -156,7 +151,7 @@ createLink0df <- function(similarityMatrix, spectra, condition) {
 #' data("spectra", package = "MetCirc")
 #' data("similarityMat", package = "MetCirc")
 #' link0df <- createLink0df(similarityMatrix = similarityMat,
-#'     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+#'     sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 #' thresholdLinkDf(link0df = link0df, lower = 0.5, upper = 1)
 #'
 #' @export
@@ -174,10 +169,9 @@ thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
     ## which rows have a coefficient >= threshold?
     indThr <- which(sim >= lower & sim <= upper)
 
-    ## cut linkDf
-    thrDf <- link0df[indThr, ]
+    ## cut linkDf and return
+    link0df[indThr, ]
 
-    return(thrDf)
 }
 
 #' @name createLinkDf
@@ -187,27 +181,28 @@ thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
 #' @description
 #' Create a data frame which contains features to link (indices).
 #'
-#' @param
-#' similarityMatrix `matrix`, a similarity matrix that contains the
+#' @param similarityMatrix \code{matrix}, a similarity matrix that contains the
 #' similarity measure between all precursors in the data set
 #'
-#' @param spectra MSpectra object containing spectra of similarityMatrix
+#' @param sps \code{Spectra} object containing spectral data corresponding to 
+#' features in \code{similarityMatrix}
 #'
-#' @param condition `character`, vector containing the
-#' conditions/samples for which a linkDf is created
+#' @param condition \code{character} \code{vector} containing the
+#' conditions/samples for which a \code{linkDf} is created
 #'
-#' @param lower `numeric`, threshold value for similarity values,
-#' below this value linked features will not be included
+#' @param lower \code{numeric(1)}, threshold value for similarity values,
+#' linked features below this value will not be included
 #'
-#' @param upper `numeric`, threshold value for similarity values,
-#' above this value linked features will not be included
+#' @param upper \code{numeric(1)}, threshold value for similarity values,
+#' linked features above this value will not be included
 #'
-#' @details `lower` and `upper` are numerical values
-#' and truncate similar spectra. The function createLinkDf is a wrapper
-#' for the functions `createLink0df` and `thresholdLinkDf`.
+#' @details 
+#' \code{lower} and \code{upper} are numerical values and truncate 
+#' spectra based on their similarity. The function \code{createLinkDf} is 
+#' a wrapper for the functions \code{createLink0df} and \code{thresholdLinkDf}.
 #'
-#' @return `createLinkDf` returns a data frame that gives per each row
-#' information on linked features
+#' @return \code{createLinkDf} returns a \code{data.frame} that gives per each 
+#' row information on linked features
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
@@ -215,21 +210,20 @@ thresholdLinkDf <- function(link0df, lower = 0.75, upper = 1) {
 #' data("spectra", package = "MetCirc")
 #' data("similarityMat", package = "MetCirc")
 #' link0df <- createLink0df(similarityMatrix = similarityMat,
-#'     spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
-#' createLinkDf(similarityMatrix = similarityMat, spectra = spectra_tissue,
+#'     sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+#' createLinkDf(similarityMatrix = similarityMat, sps = sps_tissue,
 #'     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
 #'
 #' @export
-createLinkDf <- function(similarityMatrix, spectra, condition, lower, upper) {
+createLinkDf <- function(similarityMatrix, sps, condition, lower, upper) {
 
     ## first create a link0Matrix
     link0df <- createLink0df(similarityMatrix = similarityMatrix,
-        spectra = spectra, condition = condition)
+        sps = sps, condition = condition)
 
-    ## than threshold link0Matrix
-    thrLinkDf <- thresholdLinkDf(link0df = link0df, lower = lower, upper = upper)
+    ## than threshold link0Matrix and return
+    thresholdLinkDf(link0df = link0df, lower = lower, upper = upper)
 
-    return(thrLinkDf)
 }
 
 #' @name cutLinkDf
@@ -238,21 +232,21 @@ createLinkDf <- function(similarityMatrix, spectra, condition, lower, upper) {
 #'
 #' @description Create a cut link data frame
 #'
-#' @param linkDf `data.frame`, that gives per each row
+#' @param linkDf \code{data.frame}, that gives per each row
 #' information on linked features
 #'
-#' @param type `character`, one of "all", "inter" or "intra"
+#' @param type \code{character}, one of "all", "inter" or "intra"
 #'
 #' @details
-#' This function is used to truncate features from linkDf. If
-#' type = "all", linkDf will not be changed; if type = "inter" the returned
-#' linkDf will only contain entries of links which are between groups and
-#' not inside groups; contrary to that, if type = "intra" the returned linkDf
-#' will only contain entries of links which are inside groups and not between
-#' groups.
+#' This function is used to truncate features from \code{linkDf}. If
+#' \code{type = "all"}, \code{linkDf} will not be changed; if 
+#' \code{type = "inter"} the returned \code{linkDf} will only contain entries 
+#' of links which are between groups and  not inside groups; contrary to that,
+#' if \code{type = "intra"} the returned \code{linkDf} will only contain entries 
+#' of links which are inside groups and not between groups.
 #'
 #' @return
-#' cutLinkDf returns a data.frame that gives per each row
+#' \code{cutLinkDf} returns a \code{data.frame} that gives per each row
 #' information on linked features
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
@@ -261,7 +255,7 @@ createLinkDf <- function(similarityMatrix, spectra, condition, lower, upper) {
 #' data("spectra", package = "MetCirc")
 #' data("similarityMat", package = "MetCirc")
 #' linkDf <- createLinkDf(similarityMatrix = similarityMat,
-#'     spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"),
+#'     sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"),
 #'     lower = 0.75, upper = 1)
 #' cutLinkDf(linkDf = linkDf, type = "all")
 #'
@@ -280,5 +274,5 @@ cutLinkDf <- function(linkDf, type = c("all", "inter", "intra")) {
     if (type == "intra")
         linkDf <- linkDf[which(linkDf[, "group1"] == linkDf[, "group2"]), ]
 
-    return(linkDf)
+    linkDf
 }

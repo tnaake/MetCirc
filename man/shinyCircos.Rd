@@ -5,59 +5,60 @@
 \title{Interactive visualisation of similarity and navigation of MS/MS
 features}
 \usage{
-shinyCircos(similarityMatrix, spectra, condition, ...)
+shinyCircos(similarityMatrix, sps, condition, ...)
 }
 \arguments{
-\item{similarityMatrix}{`matrix`, `similarityMatrix` contains 
-pair-wise similarity coefficients which give information about the similarity 
-between MS/MS features}
+\item{similarityMatrix}{\code{matrix}, \code{similarityMatrix} 
+contains pair-wise similarity coefficients which give information about the
+similarity between MS/MS features}
 
-\item{spectra}{an S4 object of class `MSpectra`, the 
-`MSpectra` object will be used to display information about the selected 
-feature and will store information of annotation}
+\item{sps}{\code{Spectra}, \code{sps} will be used to display information 
+about the selected feature and will store information of annotation}
 
-\item{condition}{`character` vector, specifies which condtions/samples
+\item{condition}{\code{character} vector, specifies which conditions/samples
 are displayed}
 
-\item{...}{further arguments passed to `shinyCircos`, e.g. 
-`cexFeatureNames` to pass to `plotCircos` to set font size in 
-`plotCircos` of feature names}
+\item{...}{further arguments passed to \code{shinyCircos}, e.g.
+\code{cexFeatureNames} to pass to \code{plotCircos} to set font size in
+\code{plotCircos} of feature names}
 }
 \value{
-`character`, `shinyCircos` returns a `character` vector with the 
-permanently selected precursors and an object with the `MSpectra`
-object containing the annotation.
+\code{character}, \code{shinyCircos} returns a \code{character} 
+vector with the permanently selected precursors and an object with the 
+\code{MSpectra} object containing the annotation.
 }
 \description{
 Visualise the similarity of MS/MS features in a reactive 
-context. See `Details` the vignette for further descriptions on how to use 
-`shinyCircos`.
+context. See \code{Details} the vignette for further descriptions on how to 
+use \code{shinyCircos}.
 }
 \details{
-The function is based on the `shiny` and `circlize` package. 
-The user can choose interactively thresholds, type of links (between or 
-within groups), display information about MS/MS features, permanently select 
-MS/MS features and export selected precursors. The `MSpectra` object
-stores annotation information about the MS/MS features. Names of features 
-within the `similarityMatrix` have to be found as entries 
-in `MSpectra`. `names(MSpectra)` are used as identifiers and 
-`colnames`/`rownames` from `similarityMatrix` are cleaved 
-by the group identifier (separated by "_"). Annotation information is taken
-from `spectra` from the columns "names", "information", "classes" and
-"adduct" in the slot `elementMetadata` of `spectra`. After exiting 
-the application, the annotation will be written to the respective columns
-in the slot `elementMetadata`. If one or several of these columns is 
-already present in `elementMetadata`, the column(s) will be used as the 
-source of annotation information.
+The function is based on the \code{shiny} and \code{circlize} package.
+The user can choose interactively thresholds, type of links (between or
+within groups), display information about MS/MS features, permanently select
+MS/MS features and export selected precursors. The \code{Spectra} object
+stores annotation information about the MS/MS features. Names of features
+within the \code{similarityMatrix} have to be found as entries
+in \code{Spectra}. \code{sps$name} are used as identifiers and
+\code{colnames}/\code{rownames} from \code{similarityMatrix} are cleaved
+by the group identifier (separated by \code{"_"}). Annotation information 
+is taken from \code{spectra} from the columns "names", "information", 
+"classes" and "adduct" in the slot \code{metadata} of \code{spectra}. 
+After exiting the application, the annotation will be written to the 
+respective columns in the slot \code{metadata}. If one or several of these 
+columns is already present in \code{metadata}, the column(s) will be used as 
+the source of annotation information.
 }
 \examples{
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10],
-    fun = normalizeddotproduct, binSize = 0.01)
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
 \dontrun{
-shinyCircos(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
+shinyCircos(similarityMatrix = similarityMat,
+    sps = sps_tissue, condition = c("SPL", "LIM", "ANT", "STY"))
 }
+
 }
 \author{
 Thomas Naake, \email{thomasnaake@googlemail.com}

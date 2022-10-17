@@ -596,12 +596,16 @@ shinyCircos <- function(similarityMatrix, sps, condition, ...) {
 #'
 #' @examples
 #' data("spectra", package = "MetCirc")
+#' sps_tissue@metadata$names <- rep("Unknown", 259)
+#' sps_tissue@metadata$information <- rep("Unknown", 259)
+#' sps_tissue@metadata$classes <- rep("Unknown", 259)
+#' sps_tissue@metadata$adduct <- rep("Unknown", 259)
 #' similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
-#'     FUN = MsCoreUtils::ndotproduct, ppm = 10, m = 0.5, n = 2)
+#'     FUN = MsCoreUtils::ndotproduct, ppm = 20, m = 0.5, n = 2)
 #' rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
 #' linkDf <- createLinkDf(similarityMatrix = similarityMat,
 #'     sps = sps_tissue[1:10], 
-#'     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
+#'     condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.01, upper = 1)
 #'     
 #' ## cut link data.frame (here: only display links between groups)
 #' linkDf_cut <- cutLinkDf(linkDf, type = "inter")

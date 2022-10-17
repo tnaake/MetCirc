@@ -8,48 +8,56 @@ coordinates}
 minFragCart2Polar(x, y, degreeOfFeatures)
 }
 \arguments{
-\item{x}{cartesian x coordinate}
+\item{x}{\code{numeric}, cartesian x coordinate}
 
-\item{y}{cartesian y coordinate}
+\item{y}{\code{numeric}, cartesian y coordinate}
 
-\item{degreeOfFeatures}{`list` of positions of features}
+\item{degreeOfFeatures}{\code{list} of positions of features}
 }
 \value{
-`minFragCart2Polar` returns the index of the feature that has the
-smallest distance to the given coordinates. As `minFragCart2Polar` is 
-used in `shinyCircos` for the track 1 only polar r coordinates between
-0.8 and 1 will be used to find the feature with smallest distance.
+\code{minFragCart2Polar} returns the index of the feature that has the
+smallest distance to the given coordinates. As \code{minFragCart2Polar} is
+used in \code{shinyCircos} for the track 1 only polar \code{r} coordinates 
+between 0.8 and 1 will be used to find the feature with smallest distance.
 }
 \description{
-Calculates the nearest feature in polar coordinates given 
+Calculates the nearest feature in polar coordinates given
 cartesian coordinates.
 }
 \details{
-`minFragCart2Polar` is employed to find the feature with 
+\code{minFragCart2Polar} is employed to find the feature with
 the smallest distance from given cartesian coordinates.
 }
 \examples{
+library("MsCoreUtils")
 data("spectra", package = "MetCirc")
-similarityMat <- compare_Spectra(spectra_tissue[1:10], 
-    fun = normalizeddotproduct, binSize = 0.01)
-linkDf <- createLinkDf(similarityMatrix = similarityMat, 
-    spectra = spectra_tissue[1:10], 
-    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1) 
+
+## create similarity matrix
+similarityMat <- Spectra::compareSpectra(sps_tissue[1:10],
+    FUN = MsCoreUtils::ndotproduct, ppm = 20, m = 0.5, n = 2)
+rownames(similarityMat) <- colnames(similarityMat) <- sps_tissue$name[1:10]
+
+linkDf <- createLinkDf(similarityMatrix = similarityMat,
+    sps = sps_tissue[1:10],
+    condition = c("SPL", "LIM", "ANT", "STY"), lower = 0.5, upper = 1)
+
 ## cut link data.frame (here: only display links between groups)
 linkDf_cut <- cutLinkDf(linkDf, type = "inter")
-groupname <- c(as.character(linkDf_cut[, "spectrum1"]), 
+groupname <- c(as.character(linkDf_cut[, "spectrum1"]),
                 as.character(linkDf_cut[, "spectrum2"]))
 groupname <- unique(groupname)
+
 ## set circlize parameters
 circos.clear()
 circos.par(gap.degree = 0, cell.padding = c(0.0, 0, 0.0, 0),
     track.margin = c(0.0, 0))
-plotCircos(groupname, NULL, initialize = TRUE, featureNames = FALSE, 
+plotCircos(groupname, NULL, initialize = TRUE, featureNames = FALSE,
     groupName = FALSE, groupSector = FALSE, links = FALSE, highlight = FALSE)
 x <- 1
 y <- 0
-degreeFeatures <- lapply(groupname, 
- function(x) mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
+degreeFeatures <- lapply(groupname,
+    function(x) 
+        mean(circlize:::get.sector.data(x)[c("start.degree", "end.degree")]))
 minFragCart2Polar(x, y, degreeOfFeatures = degreeFeatures)
 
 }

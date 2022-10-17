@@ -1,12 +1,12 @@
 #' @name convertMsp2Spectra
 #'
-#' @title Convert MSP data frame into object of class `MSpectra`
+#' @title Convert MSP data frame into object of class \code{Spectra}
 #'
-#' @description Convert msp data frame into object of class [MSpectra()]
+#' @description Convert msp data frame into object of class [Spectra()]
 #'
 #' @param
-#' msp `data.frame` that mimicks the .msp file format, see Details for further
-#' information
+#' msp \code{data.frame} that mimicks the .msp file format, see Details for 
+#' further information.
 #'
 #' @details
 #' msp is a data frame of a .msp file, a typical data file for
@@ -16,7 +16,7 @@
 #' and information on fragments and peak areas/intensities and will
 #' extract the respective information in the second column.
 #'
-#' @return `convertMsp2Spectra` returns an object of class `MSpectra`
+#' @return \code{convertMsp2Spectra} returns an object of class `Spectra`
 #'
 #' @author Thomas Naake, \email{thomasnaake@@googlemail.com}
 #'
@@ -24,6 +24,9 @@
 #' data("convertMsp2Spectra", package = "MetCirc")
 #' convertMsp2Spectra(msp = msp2spectra)
 #'
+#' @importFrom S4Vectors DataFrame
+#' @importFrom Spectra Spectra
+#' 
 #' @export
 convertMsp2Spectra <- function(msp) {
 
@@ -61,29 +64,42 @@ convertMsp2Spectra <- function(msp) {
         rep(NaN, numEntries)
     }
 
-    spN_l <- vector("list", numEntries)
+    sps_l <- vector("list", numEntries)
 
-    for (i in 1:numEntries) {
+    for (i in seq_len(numEntries)) {
+        
         beg <- numpeaksInd[i] + 1
         end <- numpeaksInd[i] + NUMPEAKS[i]
-        fragment <- as.numeric(as.character(msp[beg:end, 1]))
-        intensity <- as.numeric(as.character(msp[beg:end, 2]))
+        mzs <- as.character(msp[beg:end, 1]) |>
+            as.numeric()
+        intensity <- as.character(msp[beg:end, 2]) |>
+            as.numeric()
 
         ## sort fragments according to increasing fragment values
-        fragment <- sort(fragment)
-        intensity <- intensity[order(fragment)]
+        sorted_intensity <- intensity[order(mzs)]
+        sorted_mzs <- sort(mzs)
 
         ## delete double entries
-        intensity <- intensity[!duplicated(fragment)]
-        fragment <- fragment[!duplicated(fragment)]
+        sorted_intensity <- sorted_intensity[!duplicated(sorted_mzs)]
+        sorted_mzs <- sorted_mzs[!duplicated(sorted_mzs)]
 
         ## calculate percentages
         ##intensity <- intensity / max(intensity) * 100
-
-        spN_l[[i]] <- new("Spectrum2", rt = RT[i], precursorMz = MZ[i],
-                         mz = fragment, intensity = intensity)
+        spd <- S4Vectors::DataFrame(
+            msLevel = 2L,
+            rtime = RT[i],
+            precursorMz = MZ[i],
+            name = NAMES[i]
+        )
+        spd$intensity <- list(sorted_intensity)
+        spd$mz <- list(sorted_mzs)
+        
+        ## create Spectra object and write to list entry
+        sps_l[[i]] <- Spectra::Spectra(spd)
     }
-
-    spl <- MSpectra(spN_l, elementMetadata = DataFrame(names = NAMES))
-    return(spl)
+    
+    ## combine the different entries and return 
+    sps <- Reduce(c, sps_l)
+    sps
 }
+

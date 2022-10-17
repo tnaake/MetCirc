@@ -2,31 +2,31 @@
 % Please edit documentation in R/shinyApp.R
 \name{replayPlotOrder}
 \alias{replayPlotOrder}
-\title{Wrapper for `replayPlot`}
+\title{Wrapper for \code{replayPlot}}
 \usage{
 replayPlotOrder(orderMatch = "mz", onCircle = FALSE, plot_l, ind)
 }
 \arguments{
-\item{orderMatch}{`character`, either `"mz"`, `"retentionTime"` or 
-`"clustering"`}
+\item{orderMatch}{\code{character}, either \code{"mz"}, 
+\code{"retentionTime"} or \code{"clustering"}}
 
-\item{onCircle}{`logical`, are coordinates on circle. If FALSE and
-no features are selected (`length(ind) == 0`), then filled plots are 
-replayed, otherwise highlighted plots are replayed.}
+\item{onCircle}{\code{logical}, are coordinates on circle. If \code{FALSE} 
+and no features are selected (\code{length(ind) == 0}), then filled plots 
+are replayed, otherwise highlighted plots are replayed.}
 
-\item{plot_l}{`list` with plots}
+\item{plot_l}{\code{list} with plots}
 
-\item{ind}{`numeric`, indices of clicked features}
+\item{ind}{\code{numeric}, indices of clicked features}
 }
 \value{
-`replayedplot`
+\code{replayedplot}
 }
 \description{
-`replayPlotOrder` will call `replayPlot` from `grDevices` with 
-a `recordedplot` object based on `orderMatch`.
+\code{replayPlotOrder} will call \code{replayPlot} from \code{grDevices} with
+a \code{recordedplot} object based on \code{orderMatch}.
 }
 \details{
-Helper function for `shinyCircos`.
+Helper function for \code{shinyCircos}.
 }
 \examples{
 type_match <- c("a_1", "a_2", "a_3", "b_1", "b_2", "b_3", "c_1", "c_2")
