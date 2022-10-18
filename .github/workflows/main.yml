@@ -177,7 +177,9 @@ jobs:
           remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = TRUE, upgrade = TRUE)
           ## Manually install required packages
           BiocManager::install("BiocStyle", ask = FALSE, update = TRUE)
+          BiocManager::install("rmarkdown", ask = FALSE, update = TRUE)
           BiocManager::install("Spectra", ask = FALSE, update = FALSE)
+          BiocManager::install("MsCoreUtils", ask = FALSE, update = FALSE)
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
           remotes::install_cran("rcmdcheck")
