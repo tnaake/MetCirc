@@ -1,8 +1,9 @@
-Changes in version 1.27.2 (2022-10-13)
+Changes in version 1.27.2 (2022-10-19)
 + use Spectra from Spectra for spectral representation instead of MSpectra
   from MSnbase
 + remove compare_Spectra and normalizeddotproduct functions and use 
   compareSpectra from Spectra package
++ change vignette from Rnw to Rmd 
 
 Changes in version 1.27.1 (2022-10-12)
 + add ShinyApps in biocViews
