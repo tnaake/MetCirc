@@ -2,6 +2,7 @@ Package: MetCirc
 Type: Package
 Title: Navigating mass spectral similarity in high-resolution MS/MS 
     metabolomics data
+    metabolomics data
 Version: 1.29.1
 Date: 2022-11-23
 Authors@R: c(person(given = "Thomas", family = "Naake",
