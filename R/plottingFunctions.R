@@ -597,7 +597,7 @@ cart2Polar <- function(x, y) {
 #' data("spectra", package = "MetCirc")
 #' plotSpectra(sps = sps_tissue, subject = "SPL_1", query = "SPL_2")
 #' 
-#' @importFrom ggplot2 ggplot geom_segment aes_string xlab scale_y_continuous 
+#' @importFrom ggplot2 ggplot geom_segment aes xlab scale_y_continuous 
 #' @importFrom ggplot2 theme_light theme element_blank
 #' 
 #' @export
@@ -627,8 +627,9 @@ plotSpectra <- function(sps, subject, query) {
 
     ggplot2::ggplot(df) +
         ggplot2::geom_segment(
-            ggplot2::aes_string(x = "mz", xend = "mz_add", y = "int", 
-                yend = 0, col = "is"),
+            ggplot2::aes(x = !!ggplot2::sym("mz"), 
+                xend = !!ggplot2::sym("mz_add"), y = !!ggplot2::sym("int"), 
+                yend = 0, col = !!ggplot2::sym("is")),
             stat = "identity") +
         ggplot2::xlab("m/z") +
         ggplot2::scale_y_continuous("intensity (%)", 
