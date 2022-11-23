@@ -589,13 +589,13 @@ interactive context also promotes reproducibility of such figures.</p>
 </h3>
 <p>All software and respective versions to build this vignette are
 listed here:</p>
-<pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
+<pre><code><span><span class="co">## R Under development (unstable) (2022-11-17 r83363)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">## Running under: Ubuntu 20.04.5 LTS</span></span>
+<span><span class="co">## Running under: Ubuntu 22.04.1 LTS</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3</span></span>
-<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/liblapack.so.3</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -605,38 +605,41 @@ listed here:</p>
 <span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
 <span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
 <span><span class="co">## </span></span>
+<span><span class="co">## time zone: UTC</span></span>
+<span><span class="co">## tzcode source: system (glibc)</span></span>
+<span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats4    stats     graphics  grDevices utils     datasets  methods  </span></span>
 <span><span class="co">## [8] base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">##  [1] MsCoreUtils_1.9.2    MetCirc_1.27.2       Spectra_1.7.3       </span></span>
-<span><span class="co">##  [4] ProtGenerics_1.29.1  BiocParallel_1.31.13 S4Vectors_0.35.4    </span></span>
-<span><span class="co">##  [7] BiocGenerics_0.43.4  shiny_1.7.2          scales_1.2.1        </span></span>
-<span><span class="co">## [10] circlize_0.4.15      amap_0.8-18          knitr_1.40          </span></span>
-<span><span class="co">## [13] BiocStyle_2.25.0    </span></span>
+<span><span class="co">##  [1] MsCoreUtils_1.11.1  MetCirc_1.27.2      Spectra_1.9.0      </span></span>
+<span><span class="co">##  [4] ProtGenerics_1.31.0 BiocParallel_1.33.0 S4Vectors_0.37.0   </span></span>
+<span><span class="co">##  [7] BiocGenerics_0.45.0 shiny_1.7.3         scales_1.2.1       </span></span>
+<span><span class="co">## [10] circlize_0.4.15     amap_0.8-19         knitr_1.41         </span></span>
+<span><span class="co">## [13] BiocStyle_2.27.0   </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] Rcpp_1.0.9          rprojroot_2.0.3     digest_0.6.29      </span></span>
-<span><span class="co">##  [4] utf8_1.2.2          mime_0.12           R6_2.5.1           </span></span>
-<span><span class="co">##  [7] evaluate_0.17       ggplot2_3.3.6       pillar_1.8.1       </span></span>
-<span><span class="co">## [10] GlobalOptions_0.1.2 rlang_1.0.6         jquerylib_0.1.4    </span></span>
-<span><span class="co">## [13] rmarkdown_2.17      pkgdown_2.0.6.9000  textshaping_0.3.6  </span></span>
-<span><span class="co">## [16] desc_1.4.2          stringr_1.4.1       munsell_0.5.0      </span></span>
-<span><span class="co">## [19] compiler_4.2.1      httpuv_1.6.6        xfun_0.33          </span></span>
-<span><span class="co">## [22] pkgconfig_2.0.3     systemfonts_1.0.4   shape_1.4.6        </span></span>
-<span><span class="co">## [25] htmltools_0.5.3     tibble_3.1.8        bookdown_0.29      </span></span>
-<span><span class="co">## [28] IRanges_2.31.2      codetools_0.2-18    fansi_1.0.3        </span></span>
-<span><span class="co">## [31] later_1.3.0         MASS_7.3-58.1       grid_4.2.1         </span></span>
-<span><span class="co">## [34] jsonlite_1.8.2      xtable_1.8-4        gtable_0.3.1       </span></span>
-<span><span class="co">## [37] lifecycle_1.0.3     magrittr_2.0.3      cli_3.4.1          </span></span>
-<span><span class="co">## [40] stringi_1.7.8       cachem_1.0.6        farver_2.1.1       </span></span>
-<span><span class="co">## [43] fs_1.5.2            promises_1.2.0.1    bslib_0.4.0        </span></span>
-<span><span class="co">## [46] vctrs_0.4.2         ellipsis_0.3.2      ragg_1.2.3         </span></span>
-<span><span class="co">## [49] tools_4.2.1         glue_1.6.2          purrr_0.3.5        </span></span>
-<span><span class="co">## [52] parallel_4.2.1      fastmap_1.1.0       yaml_2.3.5         </span></span>
-<span><span class="co">## [55] clue_0.3-61         colorspace_2.0-3    cluster_2.1.4      </span></span>
-<span><span class="co">## [58] BiocManager_1.30.18 memoise_2.0.1       sass_0.4.2</span></span></code></pre>
+<span><span class="co">##  [1] gtable_0.3.1        shape_1.4.6         xfun_0.35          </span></span>
+<span><span class="co">##  [4] bslib_0.4.1         ggplot2_3.4.0       GlobalOptions_0.1.2</span></span>
+<span><span class="co">##  [7] vctrs_0.5.1         tools_4.3.0         parallel_4.3.0     </span></span>
+<span><span class="co">## [10] fansi_1.0.3         tibble_3.1.8        cluster_2.1.4      </span></span>
+<span><span class="co">## [13] pkgconfig_2.0.3     desc_1.4.2          lifecycle_1.0.3    </span></span>
+<span><span class="co">## [16] farver_2.1.1        compiler_4.3.0      stringr_1.4.1      </span></span>
+<span><span class="co">## [19] textshaping_0.3.6   munsell_0.5.0       codetools_0.2-18   </span></span>
+<span><span class="co">## [22] clue_0.3-63         httpuv_1.6.6        htmltools_0.5.3    </span></span>
+<span><span class="co">## [25] sass_0.4.3          yaml_2.3.6          later_1.3.0        </span></span>
+<span><span class="co">## [28] pkgdown_2.0.6.9000  pillar_1.8.1        jquerylib_0.1.4    </span></span>
+<span><span class="co">## [31] MASS_7.3-58.1       ellipsis_0.3.2      cachem_1.0.6       </span></span>
+<span><span class="co">## [34] mime_0.12           digest_0.6.30       stringi_1.7.8      </span></span>
+<span><span class="co">## [37] purrr_0.3.5         bookdown_0.30       rprojroot_2.0.3    </span></span>
+<span><span class="co">## [40] fastmap_1.1.0       grid_4.3.0          colorspace_2.0-3   </span></span>
+<span><span class="co">## [43] cli_3.4.1           magrittr_2.0.3      utf8_1.2.2         </span></span>
+<span><span class="co">## [46] promises_1.2.0.1    rmarkdown_2.18      ragg_1.2.4         </span></span>
+<span><span class="co">## [49] memoise_2.0.1       evaluate_0.18       IRanges_2.33.0     </span></span>
+<span><span class="co">## [52] rlang_1.0.6         Rcpp_1.0.9          xtable_1.8-4       </span></span>
+<span><span class="co">## [55] glue_1.6.2          BiocManager_1.30.19 jsonlite_1.8.3     </span></span>
+<span><span class="co">## [58] R6_2.5.1            systemfonts_1.0.4   fs_1.5.2</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 class="unnumbered" id="neutral-losses">Neutral losses<a class="anchor" aria-label="anchor" href="#neutral-losses"></a>
