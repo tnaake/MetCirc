@@ -257,7 +257,7 @@ jobs:
         run: R CMD INSTALL .
 
       - name: Deploy package
-        if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux'
+        if: github.ref == 'refs/heads/master' && env.run_pkgdown == 'true' && runner.os == 'Linux' 
         run: |
           git config --global --add safe.directory /__w/MetCirc/MetCirc
           git config --local user.email "actions@github.com"
