@@ -36,7 +36,7 @@ test_that("shinyCircos", {
     expect_error(shinyCircos(1:2, sps = spectra, condition), 
         "no slot of name \"metadata\" for this object of class")
     expect_error(shinyCircos(similarityMat, sps = NULL, condition),
-        "trying to get slot \"metadata\" from an object")
+        "no applicable method for ")
     expect_error(shinyCircos(similarityMat, sps = spectra, "a"),
         "no slot of name \"metadata\" for this object of class")
 })
