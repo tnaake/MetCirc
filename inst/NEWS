@@ -1,3 +1,7 @@
+Changes in version 1.29.2 (2023-04-18)
++ replace the error message in shinyCircos test
+
+
 Changes in version 1.29.1 (2022-11-23)
 + replace aes_string by aes since aes_string is deprecated in newest ggplot2 
   version

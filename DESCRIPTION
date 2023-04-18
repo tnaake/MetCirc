@@ -3,8 +3,8 @@ Type: Package
 Title: Navigating mass spectral similarity in high-resolution MS/MS 
     metabolomics data
     metabolomics data
-Version: 1.29.1
-Date: 2022-11-23
+Version: 1.29.2
+Date: 2023-04-18
 Authors@R: c(person(given = "Thomas", family = "Naake",
     email = "thomasnaake@googlemail.com",
     role = c("aut","cre")),
