@@ -13,7 +13,7 @@ Please visit [MetCirc](https://bioconductor.org/packages/MetCirc) for further in
 
 You are welcome to 
 
- * write a mail to <thomasnaake (at) googlemail (dot) com> 
+ * write a mail to `thomasnaake (at) googlemail (dot) com`
  * submit suggestions and issues: <https://github.com/tnaake/MetCirc/issues>
  * send a pull request: <https://github.com/tnaake/MetCirc/issues> 
 
