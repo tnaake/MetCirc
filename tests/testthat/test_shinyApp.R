@@ -33,12 +33,15 @@ linkDfInds <- getLinkDfIndices(inds_cond[ind], linkDf)
 
 ## START unit test shinyCircos
 test_that("shinyCircos", {
-    expect_error(shinyCircos(1:2, sps = spectra, condition), 
-        "no slot of name \"metadata\" for this object of class")
+    ## incorrect similarityMatrix argument
+    expect_error(shinyCircos(1:2, sps = sps_tissue, condition), 
+        "only matrix diagonals can be replaced")
+    ## incorrect sps argument
     expect_error(shinyCircos(similarityMat, sps = NULL, condition),
         "no applicable method for ")
-    expect_error(shinyCircos(similarityMat, sps = spectra, "a"),
-        "no slot of name \"metadata\" for this object of class")
+    ## incorrect condition argument
+    expect_error(shinyCircos(similarityMat, sps = sps_tissue, "a"),
+        "n < m")
 })
 ## END unit test shinyCircos
 
