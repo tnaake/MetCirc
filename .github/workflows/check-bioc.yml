@@ -168,13 +168,7 @@ jobs:
           ## https://stat.ethz.ch/pipermail/bioc-devel/2020-April/016675.html
           ## https://github.com/r-lib/remotes/issues/296
           ## Ideally, all dependencies should get installed in the first pass.
-          
-          ## Manually install required packages
-          BiocManager::install("BiocStyle", ask = FALSE, update = TRUE, force = TRUE)
-          BiocManager::install("rmarkdown", ask = FALSE, update = TRUE, force = TRUE)
-          BiocManager::install("Spectra", ask = FALSE, update = FALSE, force = TRUE)
-          BiocManager::install("MsCoreUtils", ask = FALSE, update = FALSE, force = TRUE)
-          
+
           ## For running the checks
           message(paste('****', Sys.time(), 'installing rcmdcheck and BiocCheck ****'))
           install.packages(c("rcmdcheck", "BiocCheck"), repos = BiocManager::repositories())
@@ -182,7 +176,6 @@ jobs:
           ## Pass #1 at installing dependencies
           message(paste('****', Sys.time(), 'pass number 1 at installing dependencies: local dependencies ****'))
           remotes::install_local(dependencies = TRUE, repos = BiocManager::repositories(), build_vignettes = FALSE, upgrade = TRUE)
-          
         continue-on-error: true
         shell: Rscript {0}
 
